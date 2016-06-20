@@ -1,4 +1,4 @@
-package ru.vat78.HomeMoney.config;
+package ru.vat78.homeMoney.config;
 
 import org.springframework.web.WebApplicationInitializer;
 import org.springframework.web.context.ContextLoaderListener;
