@@ -8,8 +8,10 @@ import org.springframework.test.context.testng.AbstractTransactionalTestNGSpring
 import ru.vat78.homeMoney.config.HibernateConfiguration;
 import ru.vat78.homeMoney.config.HibernateConfigurationTest;
 import ru.vat78.homeMoney.model.Dictionary;
+import ru.vat78.homeMoney.model.TreeDictionary;
 
 import java.util.List;
+import java.util.Set;
 
 import static org.testng.Assert.*;
 
@@ -27,21 +29,71 @@ public class CommonEntryDaoTest extends AbstractTransactionalTestNGSpringContext
     protected void makeDictionaryTest(DictionaryDao dao, Dictionary element) {
 
         long cnt = dao.getCount();
-        Dictionary template = element;
+        Dictionary result = addingAndSearchingTest(dao, element);
 
-        dao.save(template);
+        result = changeAndSaveTest(dao, result);
+
+        dao.delete(result);
+        assertEquals(dao.getCount(),cnt);
+    }
+
+    protected void makeTreeDictionaryTest(TreeDictionaryDao dao, List<? extends TreeDictionary> elements) {
+
+        long cnt = dao.getCount();
+
+        TreeDictionary parent = (TreeDictionary) addingAndSearchingTest(dao, elements.get(0));
+        TreeDictionary child = elements.get(1);
+
+        child.setParent(parent);
+        child = (TreeDictionary) addingAndSearchingTest(dao, child);
+
+        StringBuilder sb = new StringBuilder(parent.getFullName())
+                .append("/")
+                .append(child.getName());
+        assertEquals(child.getFullName(),sb.toString());
+
+        assertEquals(parent, child.getParent());
+
+        List<TreeDictionary> topLevelParents = dao.getAllChildren(null);
+        assertTrue(topLevelParents.contains(parent));
+
+        List<TreeDictionary> children = dao.getAllChildren(parent);
+        assertTrue(children.contains(child));
+
+
+        //Todo: fix cascade
+        dao.deleteAllChildren(parent);
+        dao.delete(parent);
+        assertEquals(dao.getCount(),cnt);
+    }
+
+    private Dictionary addingAndSearchingTest(DictionaryDao dao, Dictionary element) {
+
+        long cnt = dao.getCount();
+        dao.save(element);
         assertEquals(dao.getCount(),cnt+1);
 
-        Dictionary result = dao.findByName(template.getName());
-        assertEquals(result, template);
+        Dictionary result = dao.findByName(element.getName());
+        assertEquals(result, element);
 
         result = (Dictionary) dao.findById(result.getId());
-        assertEquals(result, template);
+        assertEquals(result, element);
 
         List<Dictionary> list = dao.findAllByName("test");
         assertTrue(list.contains(result));
 
-        dao.delete(result);
-        assertEquals(dao.getCount(),cnt);
+        return result;
+    }
+
+    private Dictionary changeAndSaveTest(DictionaryDao dao, Dictionary element) {
+
+        String newName = "new name";
+        element.setName(newName);
+        dao.save(element);
+
+        Dictionary result = dao.findByName(newName);
+        assertEquals(result, element);
+
+        return result;
     }
 }

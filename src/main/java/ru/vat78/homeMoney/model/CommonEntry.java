@@ -7,15 +7,14 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 
-@Entity
-@Table(name = "objects")
+@MappedSuperclass
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public abstract class CommonEntry implements Serializable {
 
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.TABLE)
-    private long id;
+    private Long id;
 
     @DateTimeFormat(pattern="dd/MM/yyyy")
     @Column(name = "created_on", nullable = false)
@@ -39,7 +38,7 @@ public abstract class CommonEntry implements Serializable {
     @Column(name = "object_type")
     private int type;
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 

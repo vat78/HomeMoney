@@ -44,6 +44,9 @@ public abstract class Dictionary extends CommonEntry {
 
     @Override
     public int hashCode(){
+
+        if (searchingName == null) return 0;
         return searchingName.hashCode();
+
     }
 }
