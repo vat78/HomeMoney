@@ -7,21 +7,19 @@ import ru.vat78.homeMoney.model.Category;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.testng.Assert.*;
-
 public class CategoriesDaoTest extends CommonEntryDaoTest {
 
     @Autowired
     CategoriesDao categoriesDao;
 
     @Test
-    public void CategoryTreeDictionaryTest(){
+    public void categoryTreeDictionaryTest(){
 
-        makeTreeDictionaryTest(categoriesDao, generateTestCategoryes());
+        makeTreeDictionaryTest(categoriesDao, generateTestCategories());
 
     }
 
-    private List<Category> generateTestCategoryes() {
+    public static List<Category> generateTestCategories() {
 
         List<Category> result = new ArrayList<Category>();
         result.add(new Category());

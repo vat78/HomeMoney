@@ -67,7 +67,7 @@ public class CommonEntryDaoTest extends AbstractTransactionalTestNGSpringContext
         assertEquals(dao.getCount(),cnt);
     }
 
-    private Dictionary addingAndSearchingTest(DictionaryDao dao, Dictionary element) {
+    protected static Dictionary addingAndSearchingTest(DictionaryDao dao, Dictionary element) {
 
         long cnt = dao.getCount();
         dao.save(element);
@@ -85,7 +85,7 @@ public class CommonEntryDaoTest extends AbstractTransactionalTestNGSpringContext
         return result;
     }
 
-    private Dictionary changeAndSaveTest(DictionaryDao dao, Dictionary element) {
+    protected Dictionary changeAndSaveTest(DictionaryDao dao, Dictionary element) {
 
         String newName = "new name";
         element.setName(newName);

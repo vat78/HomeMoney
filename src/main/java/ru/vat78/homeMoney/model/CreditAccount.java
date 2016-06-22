@@ -13,4 +13,19 @@ public class CreditAccount extends SimpleAccount {
     @Column(name = "credit_rate")
     private float rate;
 
+    public Contractor getCreditOrganization() {
+        return creditOrganization;
+    }
+
+    public float getRate() {
+        return rate;
+    }
+
+    public void setCreditOrganization(Contractor creditOrganization) {
+        this.creditOrganization = creditOrganization;
+    }
+
+    public void setRate(float rate) {
+        this.rate = rate;
+    }
 }

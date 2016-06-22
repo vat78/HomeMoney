@@ -9,6 +9,6 @@ import ru.vat78.homeMoney.model.SimpleAccount;
 @Transactional
 public class SimpleAccountsDao extends DictionaryDao<SimpleAccount> {
 
-    protected Class<SimpleAccount> getEntityClass() { return SimpleAccount.class;}
+    protected Class<? extends SimpleAccount> getEntityClass() { return SimpleAccount.class;}
 
 }
