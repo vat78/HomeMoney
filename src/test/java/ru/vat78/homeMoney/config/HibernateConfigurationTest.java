@@ -26,7 +26,7 @@ public class HibernateConfigurationTest {
     public org.springframework.orm.hibernate5.LocalSessionFactoryBean sessionFactory() {
         org.springframework.orm.hibernate5.LocalSessionFactoryBean sessionFactory = new org.springframework.orm.hibernate5.LocalSessionFactoryBean();
         sessionFactory.setDataSource(dataSource());
-        sessionFactory.setPackagesToScan(new String[] { "ru.vat78.homeMoney.model" });
+        sessionFactory.setPackagesToScan("ru.vat78.homeMoney.model");
         sessionFactory.setHibernateProperties(hibernateProperties());
         return sessionFactory;
     }

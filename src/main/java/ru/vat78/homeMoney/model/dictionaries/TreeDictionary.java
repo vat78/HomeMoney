@@ -1,4 +1,4 @@
-package ru.vat78.homeMoney.model;
+package ru.vat78.homeMoney.model.dictionaries;
 
 import javax.persistence.*;
 import java.util.Set;

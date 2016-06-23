@@ -12,31 +12,27 @@ import java.util.Date;
 public abstract class CommonEntry implements Serializable {
 
     @Id
-    @Column(name = "id")
+    @Column(name = Defenitions.FIELDS.ID)
     @GeneratedValue(strategy = GenerationType.TABLE)
     private Long id;
 
-    @DateTimeFormat(pattern="dd/MM/yyyy")
-    @Column(name = "created_on", nullable = false)
+    @DateTimeFormat(pattern=Defenitions.DATE_FORMAT)
+    @Column(name = Defenitions.FIELDS.CREATE_ON, nullable = false)
     private Date createOn;
 
     @NotNull
     @ManyToOne(cascade = {CascadeType.REFRESH})
-    @JoinColumn(name="created_by", referencedColumnName = "id")
+    @JoinColumn(name= Defenitions.FIELDS.CREATE_BY, referencedColumnName = Defenitions.FIELDS.ID)
     private User createBy;
 
-    @DateTimeFormat(pattern="dd/MM/yyyy")
-    @Column(name = "modified_on", nullable = false)
+    @DateTimeFormat(pattern=Defenitions.DATE_FORMAT)
+    @Column(name = Defenitions.FIELDS.MODIFY_ON, nullable = false)
     private Date modifyOn;
 
     @NotNull
     @ManyToOne(cascade = {CascadeType.REFRESH})
-    @JoinColumn(name="modified_by", referencedColumnName = "id")
+    @JoinColumn(name= Defenitions.FIELDS.MODIFY_BY, referencedColumnName = Defenitions.FIELDS.ID)
     private User modifyBy;
-
-    @NotNull
-    @Column(name = "object_type")
-    private int type;
 
     public Long getId() {
         return id;
@@ -56,10 +52,6 @@ public abstract class CommonEntry implements Serializable {
 
     public User getModifyBy() {
         return modifyBy;
-    }
-
-    public int getType() {
-        return type;
     }
 
     public void setId(long id) {
@@ -82,7 +74,4 @@ public abstract class CommonEntry implements Serializable {
         this.modifyBy = modifyBy;
     }
 
-    public void setType(int type) {
-        this.type = type;
-    }
 }

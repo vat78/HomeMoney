@@ -6,12 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.testng.AbstractTransactionalTestNGSpringContextTests;
 import ru.vat78.homeMoney.config.HibernateConfiguration;
-import ru.vat78.homeMoney.config.HibernateConfigurationTest;
-import ru.vat78.homeMoney.model.Dictionary;
-import ru.vat78.homeMoney.model.TreeDictionary;
+import ru.vat78.homeMoney.dao.dictionaries.DictionaryDao;
+import ru.vat78.homeMoney.dao.dictionaries.TreeDictionaryDao;
+import ru.vat78.homeMoney.model.dictionaries.Dictionary;
+import ru.vat78.homeMoney.model.dictionaries.TreeDictionary;
 
 import java.util.List;
-import java.util.Set;
 
 import static org.testng.Assert.*;
 

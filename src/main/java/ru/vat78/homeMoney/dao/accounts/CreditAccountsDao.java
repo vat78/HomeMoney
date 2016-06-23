@@ -1,10 +1,9 @@
-package ru.vat78.homeMoney.dao;
+package ru.vat78.homeMoney.dao.accounts;
 
 
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-import ru.vat78.homeMoney.model.CreditAccount;
-import ru.vat78.homeMoney.model.SimpleAccount;
+import ru.vat78.homeMoney.model.accounts.CreditAccount;
 
 @Repository("creditAccountsDao")
 @Transactional

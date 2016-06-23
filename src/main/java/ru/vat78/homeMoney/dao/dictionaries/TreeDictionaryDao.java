@@ -1,11 +1,11 @@
-package ru.vat78.homeMoney.dao;
+package ru.vat78.homeMoney.dao.dictionaries;
 
 import org.hibernate.Criteria;
-import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.transaction.annotation.Transactional;
-import ru.vat78.homeMoney.model.TreeDictionary;
+import ru.vat78.homeMoney.model.Defenitions;
+import ru.vat78.homeMoney.model.dictionaries.TreeDictionary;
 
 import java.util.List;
 
@@ -17,12 +17,12 @@ public abstract class TreeDictionaryDao<T extends TreeDictionary> extends Dictio
         Criteria criteria = getCriteria();
 
         if (parent == null) {
-            criteria.add(Restrictions.isNull("parent"));
+            criteria.add(Restrictions.isNull(Defenitions.FIELDS.PARENT_ID));
         } else {
-            criteria.add(Restrictions.eq("parent", parent));
+            criteria.add(Restrictions.eq(Defenitions.FIELDS.PARENT_ID, parent));
         }
 
-        criteria.addOrder(Order.asc("name"));
+        criteria.addOrder(Order.asc(Defenitions.FIELDS.NAME));
         return (List<T>) criteria.list();
     }
 

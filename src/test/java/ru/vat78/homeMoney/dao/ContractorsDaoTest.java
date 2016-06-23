@@ -2,9 +2,8 @@ package ru.vat78.homeMoney.dao;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.testng.annotations.Test;
-import ru.vat78.homeMoney.model.Contractor;
-
-import static org.testng.Assert.*;
+import ru.vat78.homeMoney.dao.dictionaries.ContractorsDao;
+import ru.vat78.homeMoney.model.dictionaries.Contractor;
 
 
 public class ContractorsDaoTest extends CommonEntryDaoTest {

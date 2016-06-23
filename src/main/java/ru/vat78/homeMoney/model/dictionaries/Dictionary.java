@@ -1,6 +1,8 @@
-package ru.vat78.homeMoney.model;
+package ru.vat78.homeMoney.model.dictionaries;
 
 import com.sun.istack.internal.NotNull;
+import ru.vat78.homeMoney.model.CommonEntry;
+import ru.vat78.homeMoney.model.Defenitions;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
@@ -8,13 +10,13 @@ import javax.validation.constraints.Size;
 @MappedSuperclass
 public abstract class Dictionary extends CommonEntry {
 
-    @Column
+    @Column (name = Defenitions.FIELDS.NAME)
     @NotNull
-    @Size(min=2, max=250,
+    @Size(min=Defenitions.DICTIONARY_NAME_MIN, max=Defenitions.DICTIONARY_NAME_MAX,
             message="Name must be at least 2 characters long.")
     private String name;
 
-    @Column(name = "search_name")
+    @Column(name = Defenitions.FIELDS.SEARCH_NAME)
     private String searchingName;
 
     public String getName() {

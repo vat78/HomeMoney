@@ -2,7 +2,8 @@ package ru.vat78.homeMoney.dao;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.testng.annotations.Test;
-import ru.vat78.homeMoney.model.Person;
+import ru.vat78.homeMoney.dao.dictionaries.PersonsDao;
+import ru.vat78.homeMoney.model.dictionaries.Person;
 
 public class PersonsDaoTest extends CommonEntryDaoTest{
 

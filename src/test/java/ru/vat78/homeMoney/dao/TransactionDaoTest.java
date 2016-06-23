@@ -2,12 +2,15 @@ package ru.vat78.homeMoney.dao;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import ru.vat78.homeMoney.model.Bill;
-import ru.vat78.homeMoney.model.SimpleAccount;
-import ru.vat78.homeMoney.model.Transaction;
-import ru.vat78.homeMoney.model.Transfer;
+import ru.vat78.homeMoney.dao.accounts.SimpleAccountsDao;
+import ru.vat78.homeMoney.dao.transactions.BillsDao;
+import ru.vat78.homeMoney.dao.transactions.TransactionDao;
+import ru.vat78.homeMoney.dao.transactions.TransferDao;
+import ru.vat78.homeMoney.model.transactions.Bill;
+import ru.vat78.homeMoney.model.accounts.SimpleAccount;
+import ru.vat78.homeMoney.model.transactions.Transaction;
+import ru.vat78.homeMoney.model.transactions.Transfer;
 
 import java.util.Date;
 import java.util.List;

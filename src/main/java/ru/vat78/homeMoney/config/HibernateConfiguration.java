@@ -28,7 +28,7 @@ public class HibernateConfiguration {
     public LocalSessionFactoryBean sessionFactory() {
         LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();
         sessionFactory.setDataSource(dataSource());
-        sessionFactory.setPackagesToScan(new String[] { "ru.vat78.homeMoney.model" });
+        sessionFactory.setPackagesToScan("ru.vat78.homeMoney.model");
         sessionFactory.setHibernateProperties(hibernateProperties());
         return sessionFactory;
     }

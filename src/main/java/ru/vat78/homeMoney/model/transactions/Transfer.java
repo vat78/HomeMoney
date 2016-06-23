@@ -1,20 +1,22 @@
-package ru.vat78.homeMoney.model;
+package ru.vat78.homeMoney.model.transactions;
 
 import com.sun.istack.internal.NotNull;
+import ru.vat78.homeMoney.model.accounts.SimpleAccount;
+import ru.vat78.homeMoney.model.Defenitions;
 
 import javax.persistence.*;
 
 @Entity
-@Table(name = "transfers")
-@DiscriminatorValue(value = "transfer")
+@Table(name = Defenitions.TABLES.TRANSFERS)
+@DiscriminatorValue(value = Defenitions.TRANSACTION_TYPE.TRANSFER)
 public class Transfer extends Transaction {
 
     @NotNull
     @ManyToOne(cascade = {CascadeType.REFRESH})
-    @JoinColumn(name="corresponding", referencedColumnName = "id")
+    @JoinColumn(name= Defenitions.FIELDS.CORRESPONDING_ACCOUNT, referencedColumnName = Defenitions.FIELDS.ID)
     private SimpleAccount corrAccount;
 
-    @Column
+    @Column(name = Defenitions.FIELDS.CONVERSION)
     private float conversion;
 
     public SimpleAccount getCorrAccount() {

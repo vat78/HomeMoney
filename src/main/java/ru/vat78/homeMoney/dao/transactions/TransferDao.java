@@ -1,8 +1,9 @@
-package ru.vat78.homeMoney.dao;
+package ru.vat78.homeMoney.dao.transactions;
 
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-import ru.vat78.homeMoney.model.Transfer;
+import ru.vat78.homeMoney.dao.transactions.TransactionDao;
+import ru.vat78.homeMoney.model.transactions.Transfer;
 
 @Repository("transfersDao")
 @Transactional

@@ -52,7 +52,7 @@ public abstract class CommonEntryDao<T extends CommonEntry> {
         return cnt;
     }
 
-    abstract Class<T> getEntityClass();
+    protected abstract Class<T> getEntityClass();
 
     protected Session getSession(){
         return sessionFactory.getCurrentSession();

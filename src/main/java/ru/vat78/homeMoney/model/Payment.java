@@ -1,47 +1,51 @@
 package ru.vat78.homeMoney.model;
 
 import com.sun.istack.internal.NotNull;
+import ru.vat78.homeMoney.model.dictionaries.Category;
+import ru.vat78.homeMoney.model.dictionaries.Person;
+import ru.vat78.homeMoney.model.dictionaries.Tag;
+import ru.vat78.homeMoney.model.transactions.Bill;
 
 import javax.persistence.*;
 
 @Entity
-@Table(name = "payments")
+@Table(name = Defenitions.TABLES.PAYMENTS)
 public class Payment {
 
     @Id
-    @Column(name = "id")
+    @Column(name = Defenitions.FIELDS.ID)
     @GeneratedValue(strategy = GenerationType.TABLE)
     private Long id;
 
     @NotNull
     @ManyToOne(cascade = {CascadeType.REFRESH})
-    @JoinColumn(name="category", referencedColumnName = "id")
+    @JoinColumn(name= Defenitions.FIELDS.CATEGORY_ID, referencedColumnName = Defenitions.FIELDS.ID)
     private Category category;
 
     @NotNull
     @ManyToOne(cascade = {CascadeType.REFRESH})
-    @JoinColumn(name="bill", referencedColumnName = "id")
+    @JoinColumn(name= Defenitions.FIELDS.BILL_ID, referencedColumnName = Defenitions.FIELDS.ID)
     private Bill bill;
 
     @NotNull
-    @Column
+    @Column(name = Defenitions.FIELDS.SUM)
     private float sum;
 
-    @Column
+    @Column(name = Defenitions.FIELDS.QUANTITY)
     private float quantity;
 
-    @Column
+    @Column(name = Defenitions.FIELDS.PRICE)
     private float price;
 
     @ManyToOne(cascade = {CascadeType.REFRESH})
-    @JoinColumn(name="tag", referencedColumnName = "id")
+    @JoinColumn(name= Defenitions.FIELDS.TAG_ID, referencedColumnName = Defenitions.FIELDS.ID)
     private Tag tag;
 
     @ManyToOne(cascade = {CascadeType.REFRESH})
-    @JoinColumn(name="person", referencedColumnName = "id")
+    @JoinColumn(name= Defenitions.FIELDS.PERSON_ID, referencedColumnName = Defenitions.FIELDS.ID)
     private Person person;
 
-    @Column
+    @Column(name = Defenitions.FIELDS.COMMENTS)
     String comments;
 
     public Category getCategory() {

@@ -1,13 +1,14 @@
-package ru.vat78.homeMoney.dao;
+package ru.vat78.homeMoney.dao.dictionaries;
 
 
-import com.sun.org.apache.xerces.internal.impl.xpath.regex.Match;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.transaction.annotation.Transactional;
-import ru.vat78.homeMoney.model.Dictionary;
+import ru.vat78.homeMoney.dao.CommonEntryDao;
+import ru.vat78.homeMoney.model.Defenitions;
+import ru.vat78.homeMoney.model.dictionaries.Dictionary;
 
 import java.util.List;
 
@@ -17,7 +18,7 @@ public abstract class DictionaryDao<T extends Dictionary> extends CommonEntryDao
     public T findByName(String name) {
 
         Criteria criteria = getCriteria();
-        criteria.add(Restrictions.eq("name", name));
+        criteria.add(Restrictions.eq(Defenitions.FIELDS.NAME, name));
         return (T) criteria.uniqueResult();
     }
 
@@ -25,8 +26,8 @@ public abstract class DictionaryDao<T extends Dictionary> extends CommonEntryDao
     public List<T> findAllByName(String name) {
 
         Criteria criteria = getCriteria();
-        criteria.add(Restrictions.like("name", name, MatchMode.ANYWHERE))
-                .addOrder(Order.asc("name"));
+        criteria.add(Restrictions.like(Defenitions.FIELDS.NAME, name, MatchMode.ANYWHERE))
+                .addOrder(Order.asc(Defenitions.FIELDS.NAME));
         return (List<T>) criteria.list();
 
     }

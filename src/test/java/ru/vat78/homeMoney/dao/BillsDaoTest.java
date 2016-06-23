@@ -3,13 +3,15 @@ package ru.vat78.homeMoney.dao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import ru.vat78.homeMoney.model.Bill;
-import ru.vat78.homeMoney.model.Category;
+import ru.vat78.homeMoney.dao.accounts.SimpleAccountsDao;
+import ru.vat78.homeMoney.dao.dictionaries.CategoriesDao;
+import ru.vat78.homeMoney.dao.transactions.BillsDao;
+import ru.vat78.homeMoney.model.transactions.Bill;
+import ru.vat78.homeMoney.model.dictionaries.Category;
 import ru.vat78.homeMoney.model.Payment;
-import ru.vat78.homeMoney.model.SimpleAccount;
+import ru.vat78.homeMoney.model.accounts.SimpleAccount;
 
 import java.util.Date;
-import java.util.List;
 
 import static org.testng.Assert.*;
 
@@ -60,7 +62,7 @@ public class BillsDaoTest extends CommonEntryDaoTest{
         test.getPositions().add(generateTestPayment(category));
         test.getPositions().add(generateTestPayment(category));
 
-        test = (Bill) billsDao.save(test);
+        test = billsDao.save(test);
 
         getSession().getTransaction().commit();
         getSession().beginTransaction();

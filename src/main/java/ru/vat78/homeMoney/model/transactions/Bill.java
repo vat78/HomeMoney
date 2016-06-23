@@ -1,19 +1,23 @@
-package ru.vat78.homeMoney.model;
+package ru.vat78.homeMoney.model.transactions;
+
+import ru.vat78.homeMoney.model.Defenitions;
+import ru.vat78.homeMoney.model.dictionaries.Contractor;
+import ru.vat78.homeMoney.model.Payment;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "bills")
-@DiscriminatorValue(value = "bill")
+@Table(name = Defenitions.TABLES.BILLS)
+@DiscriminatorValue(value = Defenitions.TRANSACTION_TYPE.BILL)
 public class Bill extends Transaction {
 
     @ManyToOne(cascade = {CascadeType.REFRESH})
-    @JoinColumn(name="contractor", referencedColumnName = "id")
+    @JoinColumn(name= Defenitions.FIELDS.CONTRACTOR_ID, referencedColumnName = Defenitions.FIELDS.ID)
     private Contractor contractor;
 
-    @OneToMany(mappedBy = "bill", fetch = FetchType.EAGER, orphanRemoval=true, cascade = {CascadeType.ALL})
+    @OneToMany(mappedBy = Defenitions.FIELDS.BILL_ID, fetch = FetchType.EAGER, orphanRemoval=true, cascade = {CascadeType.ALL})
     List<Payment> positions = new ArrayList<Payment>();
 
     public Contractor getContractor() {
