@@ -10,7 +10,7 @@ public class CurrencyDaoTest extends CommonEntryDaoTest {
     @Autowired
     CurrencyDao currencyDao;
 
-    @Test
+    @Test(groups = {"dao"})
     public void currencyDictionaryTest() {
 
         makeDictionaryTest(currencyDao, getTestCurrency());

@@ -37,7 +37,7 @@ public class SimpleAccountsDaoTest extends CommonEntryDaoTest {
         return test;
     }
 
-    @Test
+    @Test(groups = {"dao"})
     public void accountsTests(){
 
         long cnt = accountsDao.getCount();

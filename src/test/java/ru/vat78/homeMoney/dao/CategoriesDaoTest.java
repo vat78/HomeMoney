@@ -13,7 +13,7 @@ public class CategoriesDaoTest extends CommonEntryDaoTest {
     @Autowired
     CategoriesDao categoriesDao;
 
-    @Test
+    @Test(groups = {"dao"})
     public void categoryTreeDictionaryTest(){
 
         makeTreeDictionaryTest(categoriesDao, generateTestCategories());

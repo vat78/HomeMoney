@@ -10,7 +10,7 @@ public class PersonsDaoTest extends CommonEntryDaoTest{
     @Autowired
     PersonsDao personsDao;
 
-    @Test
+    @Test(groups = {"dao"})
     public void personDictionaryTest() {
 
         makeDictionaryTest(personsDao, getTestPerson());

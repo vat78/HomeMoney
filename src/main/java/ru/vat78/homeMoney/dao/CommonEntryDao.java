@@ -24,9 +24,7 @@ public abstract class CommonEntryDao<T extends CommonEntry> {
 
     @Transactional(readOnly = false)
     public T save(T entity){
-
         return (T) getSession().merge(fillProtocolFields(entity));
-
     }
 
     @Transactional(readOnly = false)

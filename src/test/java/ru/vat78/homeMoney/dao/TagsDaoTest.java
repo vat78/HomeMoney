@@ -11,7 +11,7 @@ public class TagsDaoTest extends CommonEntryDaoTest {
     @Autowired
     TagsDao tagsDao;
 
-    @Test
+    @Test(groups = {"dao"})
     public void tagsDictonaryTest(){
 
         makeDictionaryTest(tagsDao, getTestTag());

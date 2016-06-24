@@ -41,7 +41,7 @@ public class TransactionDaoTest extends CommonEntryDaoTest {
 
     }
 
-    @Test
+    @Test(groups = {"dao"})
     public void transactionsTests(){
 
         long cnt = transactionsDao.getCount();

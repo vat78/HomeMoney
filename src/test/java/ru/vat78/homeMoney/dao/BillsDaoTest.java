@@ -52,7 +52,7 @@ public class BillsDaoTest extends CommonEntryDaoTest{
     }
 
 
-    @Test
+    @Test(groups = {"dao"})
     public void billsAndPaymentsTest(){
 
         long cnt = billsDao.getCount();

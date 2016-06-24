@@ -1,5 +1,7 @@
 package ru.vat78.homeMoney.model;
 
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
 import javax.persistence.*;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
@@ -10,7 +12,7 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private long id;
 
     @Size(min=Defenitions.USER_NAME_MIN, max=Defenitions.USER_NAME_MAX,
             message = "User name must be at least 3 characters long")
@@ -19,7 +21,7 @@ public class User {
     @Column(name = Defenitions.FIELDS.NAME, nullable = false, unique = true)
     private String name;
 
-    @Size(min=Defenitions.PASSWORD_MIN, max=Defenitions.PASSWORD_MAX,
+    @Size(min=Defenitions.PASSWORD_MIN,
             message="The password must be at least 3 characters long.")
     @Column(name = Defenitions.FIELDS.PASSWORD, nullable = false)
     private String password;
@@ -27,7 +29,46 @@ public class User {
     @Column(name = Defenitions.FIELDS.FULL_NAME)
     private String fullName;
 
-    @Column(name= Defenitions.FIELDS.IS_ADMIN)
+    @Column(name = Defenitions.FIELDS.IS_ADMIN)
     private boolean admin = false;
 
+    public long getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public boolean isAdmin() {
+        return admin;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setPassword(String password) {
+        this.password = new BCryptPasswordEncoder().encode(password);
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
+    public void setAdmin(boolean admin) {
+        this.admin = admin;
+    }
 }

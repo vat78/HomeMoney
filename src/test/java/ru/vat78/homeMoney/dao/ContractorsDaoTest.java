@@ -11,7 +11,7 @@ public class ContractorsDaoTest extends CommonEntryDaoTest {
     @Autowired
     ContractorsDao contractorsDao;
 
-    @Test
+    @Test(groups = {"dao"})
     public void contractorDictionaryTest() {
 
         makeDictionaryTest(contractorsDao, getTestContractor());
