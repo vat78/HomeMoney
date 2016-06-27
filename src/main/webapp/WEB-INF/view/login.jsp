@@ -11,29 +11,34 @@
 
 <s:url var="authUrl" value="/j_spring_security_check" />
 
-<div  align="center">
-<h3>Please login</h3>
+<div class="row">
+    <div class="col-xs-10 col-xs-offset-1 col-sm-8 col-sm-offset-2 col-md-4 col-md-offset-4">
+    <div class="login-panel panel panel-default">
+        <div class="panel-heading">Log in</div>
+        <c:if test="${error}"><div><c:out value="${message}" /></div></c:if>
 
-<c:if test="${error}"><div><c:out value="${message}" /></div></c:if>
+        <div class="panel-body">
 
-<form name='login' class="signin" action="${authUrl}" method='POST'>
-    <fieldset>
-        <table>
-            <tr>
-                <th> User name</th>
-                <td><input type='text' id="j_username" name='username' value=''></td>
-            </tr>
+            <form role="form" name='login' class="signin" action="${authUrl}" method='POST'>
+                <fieldset>
+                    <div class="form-group">
+                        <input class="form-control" placeholder="User name" type='text' id="j_username" name="username" autofocus=""></td>
+                    </div>
 
-            <tr>
-                <th>Password</th>
-                <td><input type='password' id="j_password" name='password' /></td>
-            </tr>
-            <tr>
-                <td colspan='2'><input name="submit" type="submit" value="submit" /></td>
-            </tr>
-        </table>
+                    <div class="form-group">
+                        <input class="form-control" placeholder="Password" name="password" type="password" id="j_password" value="">
+                    </div>
 
-    </fieldset>
-</form>
+                    <div class="checkbox">
+                        <label>
+                            <input name="remember" type="checkbox" value="Remember Me">Remember Me
+                        </label>
+                    </div>
+                    <input name="submit" type="submit" class="btn btn-primary" value="submit" />
+                </fieldset>
+            </form>
+        </div>
+    </div>
+    </div><!-- /.col-->
 </div>
 <csrf disabled="true"/>

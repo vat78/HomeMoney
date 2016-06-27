@@ -8,6 +8,7 @@
 
     <definition name="main-template" template="/WEB-INF/view/main.jsp">
 
+        <put-attribute name="sidebar" value="" />
         <put-attribute name="content" value="" />
 
     </definition>
