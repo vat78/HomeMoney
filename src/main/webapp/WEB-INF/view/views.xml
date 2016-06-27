@@ -9,6 +9,7 @@
     <definition name="main-template" template="/WEB-INF/view/main.jsp">
 
         <put-attribute name="sidebar" value="" />
+        <put-attribute name="buttons" value="/WEB-INF/view/buttons.jsp" />
         <put-attribute name="content" value="" />
 
     </definition>
@@ -19,6 +20,12 @@
 
     <definition name="login" extends="main-template">
         <put-attribute name="content" value="/WEB-INF/view/login.jsp" />
+        <put-attribute name="buttons" value="" />
+    </definition>
+
+    <definition name="dictionaries" extends="main-template">
+        <put-attribute name="content" value="/WEB-INF/view/login.jsp" />
+        <put-attribute name="buttons" value="" />
     </definition>
 
 </tiles-definitions>

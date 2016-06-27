@@ -55,10 +55,23 @@
     </nav>
 
     <div id="sidebar-collapse" class="col-sm-3 col-lg-2 sidebar">
+        <form role="search">
+            <div class="form-group">
+                <input type="text" class="form-control" placeholder="Search">
+            </div>
+        </form>
         <tiles:insertAttribute name="sidebar" />
+
+        <div class="panel-body">
+            <p align="center">All rights reserved by <a href="http://vat78.ru">vat78</a></p>
+            <p align="center">Graphical template: <a href="http://medialoot.com/item/lumino-admin-bootstrap-template/">Lumino</a></p>
+        </div>
     </div><!--/.sidebar-->
 
     <div class="col-sm-9 col-sm-offset-3 col-lg-10 col-lg-offset-2 main">
+        <div class="row">
+            <tiles:insertAttribute name="buttons" />
+        </div>
         <tiles:insertAttribute name="content" />
     </div>	<!--/.main-->
 
