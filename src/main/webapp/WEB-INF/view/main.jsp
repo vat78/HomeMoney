@@ -21,6 +21,7 @@
     <script src="/resources/lumino/js/html5shiv.js"></script>
     <script src="/resources/lumino/js/respond.min.js"></script>
     <![endif]-->
+    <script src="/resources/lumino/js/jquery-1.11.1.min.js"></script>
 
 </head>
 
@@ -75,13 +76,13 @@
         <tiles:insertAttribute name="content" />
     </div>	<!--/.main-->
 
-    <script src="/resources/lumino/js/jquery-1.11.1.min.js"></script>
     <script src="/resources/lumino/js/bootstrap.min.js"></script>
     <script src="/resources/lumino/js/chart.min.js"></script>
     <script src="/resources/lumino/js/chart-data.js"></script>
     <script src="/resources/lumino/js/easypiechart.js"></script>
     <script src="/resources/lumino/js/easypiechart-data.js"></script>
     <script src="/resources/lumino/js/bootstrap-datepicker.js"></script>
+    <script src="/resources/lumino/js/bootstrap-table.js"></script>
     <script>
         $('#calendar').datepicker({
         });

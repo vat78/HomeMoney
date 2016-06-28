@@ -4,6 +4,7 @@ package ru.vat78.homeMoney.dao;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,6 +36,19 @@ public abstract class CommonEntryDao<T extends CommonEntry> {
     @Transactional(readOnly = true)
     public List<T> getAll(){
         return getCriteria().list();
+    }
+
+    @Transactional(readOnly = true)
+    public List<T> getPart(int offset, int size, String sortColumn, String sortOrder){
+        Criteria criteria = getCriteria();
+        if (sortOrder == "desc") {
+            criteria.addOrder(Order.desc(sortColumn));
+        } else {
+            criteria.addOrder(Order.asc(sortColumn));
+        }
+        criteria.setFirstResult(offset * size);
+        criteria.setMaxResults(size);
+        return criteria.list();
     }
 
     @Transactional

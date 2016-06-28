@@ -16,6 +16,7 @@
         <hibernate.version>5.1.0.Final</hibernate.version>
         <mysql.connector.version>5.1.22</mysql.connector.version>
         <apache.log4j>2.5</apache.log4j>
+        <jackson.version>2.7.5</jackson.version>
         <junit.version>4.12</junit.version>
         <mockito.version>2.0.52-beta</mockito.version>
     </properties>
@@ -146,6 +147,24 @@
             <version>5.2.4.Final</version>
         </dependency>
 
+        <!-- JSON dependencies -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.6.2</version>
+        </dependency>
 
         <!-- Tests -->
         <dependency>

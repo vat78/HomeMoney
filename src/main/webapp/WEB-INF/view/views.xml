@@ -24,8 +24,14 @@
     </definition>
 
     <definition name="dictionaries" extends="main-template">
-        <put-attribute name="content" value="/WEB-INF/view/login.jsp" />
-        <put-attribute name="buttons" value="" />
+        <put-attribute name="sidebar" value="/WEB-INF/view/dictionaries/dictionary_sidebar.jsp" />
+        <put-attribute name="content" value="" />
+
+    </definition>
+
+    <definition name="simple_dictionary" extends="main-template">
+        <put-attribute name="sidebar" value="/WEB-INF/view/dictionaries/dictionary_sidebar.jsp" />
+        <put-attribute name="content" value="/WEB-INF/view/dictionaries/simple_dic.jsp" />
     </definition>
 
 </tiles-definitions>

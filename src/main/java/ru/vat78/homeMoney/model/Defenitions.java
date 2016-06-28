@@ -13,6 +13,8 @@ public final class Defenitions {
     public static final int DISCRIMINATOR_LENGTH = 10;
     public static final int DICTIONARY_NAME_MIN = 2;
     public static final int DICTIONARY_NAME_MAX = 250;
+    public static final String TRUE = "true";
+    public static final String FALSE = "false";
 
     public final static class TABLES{
 
