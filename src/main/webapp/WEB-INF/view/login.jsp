@@ -22,7 +22,7 @@
             <form role="form" name='login' class="signin" action="${authUrl}" method='POST'>
                 <fieldset>
                     <div class="form-group">
-                        <input class="form-control" placeholder="User name" type='text' id="j_username" name="username" autofocus=""></td>
+                        <input class="form-control" placeholder="User name" type='text' id="j_username" name="username" autofocus="">
                     </div>
 
                     <div class="form-group">

@@ -10,4 +10,7 @@ public class PersonsDao extends DictionaryDao<Person> {
 
     @Override
     protected Class<Person> getEntityClass() {return Person.class;}
+
+    @Override
+    public Person getNewEntity() { return new Person();}
 }

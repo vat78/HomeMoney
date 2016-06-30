@@ -12,4 +12,6 @@ public class TransferDao extends TransactionDao {
     @Override
     protected Class<Transfer> getEntityClass() { return Transfer.class;}
 
+    @Override
+    public Transfer getNewEntity() { return new Transfer();}
 }

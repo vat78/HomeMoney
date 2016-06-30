@@ -12,4 +12,6 @@ public class CreditAccountsDao extends SimpleAccountsDao {
     @Override
     protected Class<CreditAccount> getEntityClass() { return CreditAccount.class;}
 
+    @Override
+    public CreditAccount getNewEntity() { return new CreditAccount();}
 }

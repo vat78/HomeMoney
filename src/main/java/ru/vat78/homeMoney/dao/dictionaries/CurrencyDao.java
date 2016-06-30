@@ -11,4 +11,7 @@ public class CurrencyDao extends DictionaryDao<Currency> {
 
     @Override
     protected Class<Currency> getEntityClass() {return Currency.class;}
+
+    @Override
+    public Currency getNewEntity() { return new Currency();}
 }

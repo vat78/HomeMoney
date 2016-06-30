@@ -10,4 +10,7 @@ public class TagsDao extends DictionaryDao<Tag> {
 
     @Override
     protected Class<Tag> getEntityClass() {return Tag.class;}
+
+    @Override
+    public Tag getNewEntity(){ return new Tag();}
 }

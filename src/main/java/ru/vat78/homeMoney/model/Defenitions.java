@@ -36,22 +36,22 @@ public final class Defenitions {
     public final static class FIELDS{
 
         public static final String ID = "id";
-        public static final String CREATE_ON = "created_on";
-        public static final String CREATE_BY = "created_by";
-        public static final String MODIFY_ON = "modified_on";
-        public static final String MODIFY_BY = "modified_by";
+        public static final String CREATE_ON = "createdOn";
+        public static final String CREATE_BY = "createdBy";
+        public static final String MODIFY_ON = "modifiedOn";
+        public static final String MODIFY_BY = "modifiedBy";
 
         public static final String NAME = "name";
-        public static final String SEARCH_NAME = "search_name";
+        public static final String SEARCH_NAME = "searchingName";
         public static final String PARENT_ID = "parent";
-        public static final String FULL_NAME = "full_name";
+        public static final String FULL_NAME = "fullName";
         public static final String SYMBOL = "symbol";
 
         public static final String ACTIVE = "active";
         public static final String CURRENCY = "currency";
-        public static final String CREDIT_RATE = "credit_rate";
-        public static final String OPENING_DATE = "opening_date";
-        public static final String ORGANIZATION = "organization";
+        public static final String CREDIT_RATE = "creditRate";
+        public static final String OPENING_DATE = "openingDate";
+        public static final String ORGANIZATION = "creditOrganization";
         public static final String ACCOUNT_TYPE = "account_type";
 
         public static final String PASSWORD = "password";

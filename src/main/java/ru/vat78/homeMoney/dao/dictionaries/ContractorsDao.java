@@ -10,4 +10,7 @@ public class ContractorsDao extends DictionaryDao<Contractor> {
 
     @Override
     protected Class<Contractor> getEntityClass() {return Contractor.class;}
+
+    @Override
+    public Contractor getNewEntity() { return new Contractor();}
 }

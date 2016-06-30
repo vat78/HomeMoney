@@ -11,6 +11,7 @@ import ru.vat78.homeMoney.model.Defenitions;
 import ru.vat78.homeMoney.model.dictionaries.Dictionary;
 
 import java.util.List;
+import java.util.Map;
 
 public abstract class DictionaryDao<T extends Dictionary> extends CommonEntryDao {
 
@@ -18,7 +19,7 @@ public abstract class DictionaryDao<T extends Dictionary> extends CommonEntryDao
     public T findByName(String name) {
 
         Criteria criteria = getCriteria();
-        criteria.add(Restrictions.eq(Defenitions.FIELDS.NAME, name));
+        criteria.add(Restrictions.eq(Defenitions.FIELDS.SEARCH_NAME, name.toLowerCase()));
         return (T) criteria.uniqueResult();
     }
 
@@ -26,9 +27,10 @@ public abstract class DictionaryDao<T extends Dictionary> extends CommonEntryDao
     public List<T> findAllByName(String name) {
 
         Criteria criteria = getCriteria();
-        criteria.add(Restrictions.like(Defenitions.FIELDS.NAME, name, MatchMode.ANYWHERE))
+        criteria.add(Restrictions.like(Defenitions.FIELDS.SEARCH_NAME, name.toLowerCase(), MatchMode.ANYWHERE))
                 .addOrder(Order.asc(Defenitions.FIELDS.NAME));
         return (List<T>) criteria.list();
 
     }
+
 }

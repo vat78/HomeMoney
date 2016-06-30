@@ -10,4 +10,7 @@ public class CategoriesDao extends TreeDictionaryDao<Category> {
 
     @Override
     protected Class<Category> getEntityClass() {return Category.class;}
+
+    @Override
+    public Category getNewEntity() { return new Category();}
 }

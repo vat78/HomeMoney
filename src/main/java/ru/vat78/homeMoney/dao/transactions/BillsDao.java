@@ -12,6 +12,9 @@ public class BillsDao extends TransactionDao {
     @Override
     protected Class<Bill> getEntityClass() { return Bill.class;}
 
+    @Override
+    public Bill getNewEntity() { return new Bill();}
+
     @Transactional(readOnly = false)
     public Bill save(Bill entity){
 

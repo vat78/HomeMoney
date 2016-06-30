@@ -14,7 +14,7 @@ import java.util.List;
 
 @Repository("transactionsDao")
 @Transactional
-public class TransactionDao extends CommonEntryDao {
+public abstract class TransactionDao extends CommonEntryDao {
 
     @Override
     protected Class<? extends Transaction> getEntityClass() { return Transaction.class;}
@@ -28,4 +28,5 @@ public class TransactionDao extends CommonEntryDao {
 
         return criteria.list();
     }
+
 }
