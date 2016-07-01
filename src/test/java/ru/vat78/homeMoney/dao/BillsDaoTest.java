@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import ru.vat78.homeMoney.dao.accounts.SimpleAccountsDao;
-import ru.vat78.homeMoney.dao.dictionaries.CategoriesDao;
+import ru.vat78.homeMoney.dao.dictionaries.DictionaryDaoFactory;
 import ru.vat78.homeMoney.dao.transactions.BillsDao;
 import ru.vat78.homeMoney.model.transactions.Bill;
 import ru.vat78.homeMoney.model.dictionaries.Category;
@@ -29,7 +29,8 @@ public class BillsDaoTest extends CommonEntryDaoTest{
     SimpleAccount account;
 
     @Autowired
-    CategoriesDao categoriesDao;
+    DictionaryDaoFactory daoFactory;
+    //CategoriesDao categoriesDao;
 
     Category category;
 
@@ -47,7 +48,7 @@ public class BillsDaoTest extends CommonEntryDaoTest{
 
         account = (SimpleAccount) addingAndSearchingTest(accountsDao, SimpleAccountsDaoTest.generateTestSimpleAccount());
 
-        category = (Category) addingAndSearchingTest(categoriesDao, CategoriesDaoTest.generateTestCategories().get(0));
+        category = (Category) addingAndSearchingTest(daoFactory.getDao("categories"), CategoriesDaoTest.generateTestCategories().get(0));
 
     }
 

@@ -6,7 +6,7 @@ import ru.vat78.homeMoney.model.dictionaries.Person;
 
 @Repository("personsDao")
 @Transactional
-public class PersonsDao extends DictionaryDao<Person> {
+class PersonsDao extends DictionaryDao<Person> {
 
     @Override
     protected Class<Person> getEntityClass() {return Person.class;}

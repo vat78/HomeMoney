@@ -2,7 +2,8 @@ package ru.vat78.homeMoney.dao;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.testng.annotations.Test;
-import ru.vat78.homeMoney.dao.dictionaries.CategoriesDao;
+import ru.vat78.homeMoney.dao.dictionaries.DictionaryDaoFactory;
+import ru.vat78.homeMoney.dao.dictionaries.TreeDictionaryDao;
 import ru.vat78.homeMoney.model.dictionaries.Category;
 
 import java.util.ArrayList;
@@ -11,12 +12,13 @@ import java.util.List;
 public class CategoriesDaoTest extends CommonEntryDaoTest {
 
     @Autowired
-    CategoriesDao categoriesDao;
+    DictionaryDaoFactory daoFactory;
+    //CategoriesDao categoriesDao;
 
     @Test(groups = {"dao"})
     public void categoryTreeDictionaryTest(){
 
-        makeTreeDictionaryTest(categoriesDao, generateTestCategories());
+        makeTreeDictionaryTest((TreeDictionaryDao)daoFactory.getDao("categories"), generateTestCategories());
 
     }
 

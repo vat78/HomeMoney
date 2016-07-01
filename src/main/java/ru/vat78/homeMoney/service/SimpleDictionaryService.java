@@ -10,15 +10,18 @@ import ru.vat78.homeMoney.dao.dictionaries.*;
 import ru.vat78.homeMoney.model.Defenitions;
 import ru.vat78.homeMoney.model.dictionaries.Dictionary;
 
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
 
 @Service
 public class SimpleDictionaryService {
 
+    /*
     @Autowired
     UsersDao usersDao;
 
@@ -35,25 +38,28 @@ public class SimpleDictionaryService {
     TagsDao tagsDao;
 
     private Map<String, DictionaryDao> dbEngines;
+    */
+
+    @Autowired
+    DictionaryDaoFactory daoFactory;
 
     public long getCount(String dictionary){
         if (!checkDictionaryName(dictionary)) return 0;
-        return dbEngines.get(dictionary).getCount();
+        return daoFactory.getDao(dictionary).getCount();
     }
 
     public List<Dictionary> getRecords(String dictionary, int offset, int size, String sortColumn, String sortOrder){
         if (!checkDictionaryName(dictionary)) return Collections.emptyList();
-        return dbEngines.get(dictionary).getPart(offset,size,sortColumn,sortOrder);
+        return daoFactory.getDao(dictionary).getPart(offset,size,sortColumn,sortOrder);
     }
 
     public Dictionary getRecordByName(String dictionary, String name){
         if (!checkDictionaryName(dictionary)) return null;
-        return dbEngines.get(dictionary).findByName(name);
+        return daoFactory.getDao(dictionary).findByName(name);
     }
 
     public boolean checkDictionaryName(String dictionary) {
-        if (dbEngines == null) fillMap();
-        return dbEngines.containsKey(dictionary);
+        return (daoFactory.getDao(dictionary) != null);
     }
 
     public boolean saveRecord(String dictionary, Dictionary entity){
@@ -61,47 +67,16 @@ public class SimpleDictionaryService {
         if (!checkDictionaryName(dictionary)) return false;
 
         try {
-            dbEngines.get(dictionary).save(entity);
+            daoFactory.getDao(dictionary).save(entity);
         } catch (Exception ignored) {return false;}
 
         return true;
     }
 
-    public Dictionary convertToDBObject(String dictionary, Map<String,String> data){
+
+    public Dictionary getNewEntry(String dictionary){
         if (!checkDictionaryName(dictionary)) return null;
-        PropertyValues values = convertMapToProperties(data);
-        Dictionary entity = (Dictionary) dbEngines.get(dictionary).getNewEntity();
-        DataBinder binder = new DataBinder(entity);
-        binder.bind(values);
-        if (binder.getBindingResult().hasErrors()) return null;
-        return entity;
+        return (Dictionary) daoFactory.getDao(dictionary).getNewEntity();
     }
 
-    private void fillMap(){
-        dbEngines = new HashMap<String, DictionaryDao>();
-        dbEngines.put(Defenitions.TABLES.CONTRACTORS, contractorsDao);
-        dbEngines.put(Defenitions.TABLES.CURRENCY, currencyDao);
-        dbEngines.put(Defenitions.TABLES.PERSONS, personsDao);
-        dbEngines.put(Defenitions.TABLES.TAGS, tagsDao);
-    }
-
-    private PropertyValues convertMapToProperties(Map<String,String> data){
-
-        MutablePropertyValues values = new MutablePropertyValues();
-        for (String field : data.keySet()){
-            if (field.equals(Defenitions.FIELDS.ID)){
-                if (data.get(field) == null || data.get(field).length() == 0) {
-                    values.add(field, 0);
-                } else {
-                    values.add(field, Long.valueOf(data.get(field)));
-                }
-                continue;
-            }
-            if (field.equals(Defenitions.FIELDS.NAME)){
-                values.add(field,data.get(field));
-                continue;
-            }
-        }
-        return values;
-    }
 }

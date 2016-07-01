@@ -7,7 +7,7 @@ import ru.vat78.homeMoney.model.dictionaries.Currency;
 
 @Repository("currenciesDao")
 @Transactional
-public class CurrencyDao extends DictionaryDao<Currency> {
+class CurrencyDao extends DictionaryDao<Currency> {
 
     @Override
     protected Class<Currency> getEntityClass() {return Currency.class;}

@@ -1,22 +1,27 @@
 package ru.vat78.homeMoney.controller;
 
 import com.google.gson.Gson;
+import org.hibernate.validator.internal.engine.ConstraintViolationImpl;
+import org.springframework.beans.MutablePropertyValues;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.DataBinder;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import ru.vat78.homeMoney.model.Defenitions;
+import ru.vat78.homeMoney.model.dictionaries.Currency;
 import ru.vat78.homeMoney.model.dictionaries.Dictionary;
 import ru.vat78.homeMoney.model.tools.ColumnDefinition;
 import ru.vat78.homeMoney.model.tools.UserColumnsSettings;
 import ru.vat78.homeMoney.service.SecurityService;
 import ru.vat78.homeMoney.service.SimpleDictionaryService;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import javax.validation.*;
+import java.util.*;
 
 @Controller
 @Secured({"ROLE_USER","ROLE_ADMIN"})
@@ -50,7 +55,7 @@ public class DictionaryController {
         return mv;
     }
 
-    @RequestMapping(value = "/ajax", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
+    @RequestMapping(value = "/data.json", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public String getTable(@RequestParam Map<String,String> allRequestParams){
 
@@ -70,30 +75,81 @@ public class DictionaryController {
         return gson.toJson(table);
     }
 
-    @RequestMapping(value = "/check", method = RequestMethod.POST, produces = "application/json")
+    @RequestMapping(value = "/check", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
-    public String isNameOfEntryUnique(@RequestParam Map<String,String> allRequestParams){
-        if (allRequestParams.get("table") == null) return Defenitions.FALSE;
-        if (allRequestParams.get("name") == null) return Defenitions.FALSE;
-        if (simpleDictionaryService.getRecordByName(
-                allRequestParams.get("table"),
-                allRequestParams.get("name")
-            ) != null) return Defenitions.FALSE;
+    public String isNameOfEntryUnique(@Valid Dictionary entry, BindingResult result){
+
+        long id = entry.getId();
+        if (result.hasErrors()){
+
+        }
         return Defenitions.TRUE;
     }
 
-    @RequestMapping(value = "/save", method = RequestMethod.POST)
+    @RequestMapping(value = "/save", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    @ResponseBody
     public String saveEntry(@RequestParam Map<String,String> allRequestParams){
 
-        if (isNameOfEntryUnique(allRequestParams) == Defenitions.FALSE) return null;
+        Response res = new Response();
 
-        Dictionary entity = simpleDictionaryService.convertToDBObject(allRequestParams.get("table"),allRequestParams);
-        if (entity == null) return null;
+        Dictionary entity = loadEntryFromParams(allRequestParams);
 
-        entity.setModifyBy(securityService.getCurrentUser());
+        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+        Validator validator = factory.getValidator();
+        Set result = validator.validate(entity);
 
-        if (!simpleDictionaryService.saveRecord(allRequestParams.get("table"),entity)) return null;
-        return "ok";
+        if (result.size() > 0) {
+            res.setStatus("FAIL");
+            List<ErrorMessage> errorMesages = new ArrayList<ErrorMessage>();
+            for (Object val : result){
+                ConstraintViolation error = (ConstraintViolation) val;
+                errorMesages.add(new ErrorMessage(error.getPropertyPath().toString(), error.getMessage()));
+            }
+            res.setResult(errorMesages);
+        }
+
+        checkUniqueName(allRequestParams.get("table"), entity, res);
+        saveEntityToDb(allRequestParams.get("table"), entity, res);
+
+        Gson gson = new Gson();
+        return gson.toJson(res);
+    }
+
+    private Dictionary loadEntryFromParams(Map<String,String> params){
+
+        Dictionary result = simpleDictionaryService.getNewEntry(params.get("table"));
+        WebDataBinder binder = new WebDataBinder(result);
+        binder.bind(new MutablePropertyValues(params));
+        result.setModifyBy(securityService.getCurrentUser());
+
+        return result;
+    }
+
+    private void checkUniqueName(String dictionary, Dictionary entity, Response response){
+
+        if (response.getResult() == null) {
+            Dictionary inDB = simpleDictionaryService.getRecordByName(dictionary, entity.getName());
+            if (inDB != null && inDB.getId() != entity.getId()){
+                response.setStatus("FAIL");
+                List<ErrorMessage> errorMesages = new ArrayList<ErrorMessage>();
+                errorMesages.add(new ErrorMessage("name", "Such name already exists"));
+                response.setResult(errorMesages);
+            }
+        }
+    }
+
+    private void saveEntityToDb(String dictionary, Dictionary entity, Response response) {
+
+        if (response.getResult() == null) {
+            if (simpleDictionaryService.saveRecord(dictionary,entity)) {
+                response.setStatus("SUCCESS");
+            } else {
+                response.setStatus("FAIL");
+                List<ErrorMessage> errorMesages = new ArrayList<ErrorMessage>();
+                errorMesages.add(new ErrorMessage("name", "Can't save to database."));
+                response.setResult(errorMesages);
+            }
+        }
     }
 
     private List<UserColumnsSettings> defaultDictionaryColumns(String dictionaryName){
@@ -109,11 +165,13 @@ public class DictionaryController {
                 .setColumnName("name")
                 .setNum(2)
                 .setVisible(true));
+        /*
         result.add(new UserColumnsSettings()
                 .setTableName(dictionaryName)
                 .setColumnName("searchName")
                 .setNum(3)
                 .setVisible(false));
+                */
         result.add(new UserColumnsSettings()
                 .setTableName(dictionaryName)
                 .setColumnName("createOn")

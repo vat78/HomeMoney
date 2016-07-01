@@ -6,7 +6,7 @@ import ru.vat78.homeMoney.model.dictionaries.Contractor;
 
 @Repository("contractorsDao")
 @Transactional
-public class ContractorsDao extends DictionaryDao<Contractor> {
+class ContractorsDao extends DictionaryDao<Contractor> {
 
     @Override
     protected Class<Contractor> getEntityClass() {return Contractor.class;}

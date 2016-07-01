@@ -2,18 +2,19 @@ package ru.vat78.homeMoney.dao;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.testng.annotations.Test;
-import ru.vat78.homeMoney.dao.dictionaries.PersonsDao;
+import ru.vat78.homeMoney.dao.dictionaries.DictionaryDaoFactory;
 import ru.vat78.homeMoney.model.dictionaries.Person;
 
 public class PersonsDaoTest extends CommonEntryDaoTest{
 
     @Autowired
-    PersonsDao personsDao;
+    DictionaryDaoFactory daoFactory;
+    //PersonsDao personsDao;
 
     @Test(groups = {"dao"})
     public void personDictionaryTest() {
 
-        makeDictionaryTest(personsDao, getTestPerson());
+        makeDictionaryTest(daoFactory.getDao("persons"), getTestPerson());
 
     }
 

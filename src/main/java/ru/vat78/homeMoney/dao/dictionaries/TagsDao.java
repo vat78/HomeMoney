@@ -6,7 +6,7 @@ import ru.vat78.homeMoney.model.dictionaries.Tag;
 
 @Repository("tagsDao")
 @Transactional
-public class TagsDao extends DictionaryDao<Tag> {
+class TagsDao extends DictionaryDao<Tag> {
 
     @Override
     protected Class<Tag> getEntityClass() {return Tag.class;}

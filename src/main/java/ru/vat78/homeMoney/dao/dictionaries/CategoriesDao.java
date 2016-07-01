@@ -6,7 +6,7 @@ import ru.vat78.homeMoney.model.dictionaries.Category;
 
 @Repository("categoriesDao")
 @Transactional
-public class CategoriesDao extends TreeDictionaryDao<Category> {
+class CategoriesDao extends TreeDictionaryDao<Category> {
 
     @Override
     protected Class<Category> getEntityClass() {return Category.class;}
