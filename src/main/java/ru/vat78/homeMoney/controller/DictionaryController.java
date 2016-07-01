@@ -1,19 +1,15 @@
 package ru.vat78.homeMoney.controller;
 
 import com.google.gson.Gson;
-import org.hibernate.validator.internal.engine.ConstraintViolationImpl;
 import org.springframework.beans.MutablePropertyValues;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.DataBinder;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import ru.vat78.homeMoney.model.Defenitions;
-import ru.vat78.homeMoney.model.dictionaries.Currency;
 import ru.vat78.homeMoney.model.dictionaries.Dictionary;
 import ru.vat78.homeMoney.model.tools.ColumnDefinition;
 import ru.vat78.homeMoney.model.tools.UserColumnsSettings;
@@ -73,17 +69,6 @@ public class DictionaryController {
         Gson gson = new Gson();
         String gres = gson.toJson(table);
         return gson.toJson(table);
-    }
-
-    @RequestMapping(value = "/check", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
-    @ResponseBody
-    public String isNameOfEntryUnique(@Valid Dictionary entry, BindingResult result){
-
-        long id = entry.getId();
-        if (result.hasErrors()){
-
-        }
-        return Defenitions.TRUE;
     }
 
     @RequestMapping(value = "/save", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
