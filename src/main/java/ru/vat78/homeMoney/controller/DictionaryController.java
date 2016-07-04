@@ -1,6 +1,7 @@
 package ru.vat78.homeMoney.controller;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import org.springframework.beans.MutablePropertyValues;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import ru.vat78.homeMoney.model.User;
 import ru.vat78.homeMoney.model.dictionaries.Dictionary;
 import ru.vat78.homeMoney.model.tools.ColumnDefinition;
 import ru.vat78.homeMoney.model.tools.UserColumnsSettings;
@@ -64,7 +66,13 @@ public class DictionaryController {
         table.setTotal(simpleDictionaryService.getCount(allRequestParams.get("table")));
         table.setRows(result);
 
-        Gson gson = new Gson();
+        Gson gson = new GsonBuilder()
+                .disableInnerClassSerialization()
+                .serializeNulls()
+                .registerTypeAdapter(User.class, GsonSerializerBuilder.getSerializer(User.class))
+                .setDateFormat("dd.MM.yyyy")
+                .create();
+        String res = gson.toJson(table);
         return gson.toJson(table);
     }
 
@@ -93,7 +101,7 @@ public class DictionaryController {
         checkUniqueName(allRequestParams.get("table"), entity, res);
         saveEntityToDb(allRequestParams.get("table"), entity, res);
 
-        Gson gson = new Gson();
+        Gson gson = new GsonBuilder().create();
         return gson.toJson(res);
     }
 

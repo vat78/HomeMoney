@@ -1,5 +1,6 @@
 package ru.vat78.homeMoney.model.dictionaries;
 
+import com.google.gson.annotations.Expose;
 import com.sun.istack.internal.NotNull;
 import ru.vat78.homeMoney.model.CommonEntry;
 import ru.vat78.homeMoney.model.Defenitions;
@@ -16,6 +17,7 @@ public abstract class Dictionary extends CommonEntry {
             message="Name must be at least 2 characters long.")
     private String name;
 
+    @Expose(serialize = false, deserialize = false)
     @Column(name = Defenitions.FIELDS.SEARCH_NAME)
     private String searchingName;
 
