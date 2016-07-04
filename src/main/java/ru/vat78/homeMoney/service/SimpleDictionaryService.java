@@ -48,9 +48,9 @@ public class SimpleDictionaryService {
         return daoFactory.getDao(dictionary).getCount();
     }
 
-    public List<Dictionary> getRecords(String dictionary, int offset, int size, String sortColumn, String sortOrder){
+    public List<Dictionary> getRecords(String dictionary, int offset, int size, String sortColumn, String sortOrder, String searchString){
         if (!checkDictionaryName(dictionary)) return Collections.emptyList();
-        return daoFactory.getDao(dictionary).getPart(offset,size,sortColumn,sortOrder);
+        return daoFactory.getDao(dictionary).getPart(offset,size,sortColumn,sortOrder,searchString);
     }
 
     public Dictionary getRecordByName(String dictionary, String name){

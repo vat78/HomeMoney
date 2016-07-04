@@ -56,7 +56,8 @@ public class DictionaryController {
                 allRequestParams.get("table"),
                 Integer.valueOf(allRequestParams.get("offset")),
                 Integer.valueOf(allRequestParams.get("limit")),
-                allRequestParams.get("sort"),allRequestParams.get("order"));
+                allRequestParams.get("sort"),allRequestParams.get("order"),
+                allRequestParams.get("search"));
         if (result == null) result = Collections.emptyList();
 
         TableForJson table = new TableForJson();

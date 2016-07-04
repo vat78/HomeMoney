@@ -41,8 +41,8 @@ public abstract class CommonEntryDao<T extends CommonEntry> {
     }
 
     @Transactional(readOnly = true)
-    public List<T> getPart(int offset, int size, String sortColumn, String sortOrder){
-        Criteria criteria = getCriteria();
+    public List<T> getPart(int offset, int size, String sortColumn, String sortOrder, String searchString){
+        Criteria criteria = getCriteriaWithSearching(searchString);
         if (sortOrder.equals("desc")) {
             criteria.addOrder(Order.desc(sortColumn));
         } else {
@@ -76,6 +76,10 @@ public abstract class CommonEntryDao<T extends CommonEntry> {
 
     protected Criteria getCriteria(){
         return getSession().createCriteria(getEntityClass());
+    }
+
+    protected Criteria getCriteriaWithSearching(String searchString){
+        return getCriteria();
     }
 
     private T fillProtocolFields(T entity){

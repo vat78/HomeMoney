@@ -33,4 +33,12 @@ public abstract class DictionaryDao<T extends Dictionary> extends CommonEntryDao
 
     }
 
+    @Override
+    protected Criteria getCriteriaWithSearching(String searchString){
+        Criteria criteria = getCriteria();
+        if (searchString != null && searchString.length()>1){
+            criteria.add(Restrictions.like(Defenitions.FIELDS.SEARCH_NAME,searchString.toLowerCase(), MatchMode.ANYWHERE));
+        }
+        return criteria;
+    }
 }
