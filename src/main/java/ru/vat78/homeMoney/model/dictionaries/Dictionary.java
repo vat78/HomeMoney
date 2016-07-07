@@ -4,6 +4,7 @@ import com.google.gson.annotations.Expose;
 import com.sun.istack.internal.NotNull;
 import ru.vat78.homeMoney.model.CommonEntry;
 import ru.vat78.homeMoney.model.Defenitions;
+import ru.vat78.homeMoney.model.UIDef;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
@@ -11,6 +12,7 @@ import javax.validation.constraints.Size;
 @MappedSuperclass
 public abstract class Dictionary extends CommonEntry {
 
+    @UIDef(caption = "Name", shown = true, editable = true, num = 10)
     @Column (name = Defenitions.FIELDS.NAME)
     @NotNull
     @Size(min=Defenitions.DICTIONARY_NAME_MIN, max=Defenitions.DICTIONARY_NAME_MAX,

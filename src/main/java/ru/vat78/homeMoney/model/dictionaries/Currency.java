@@ -1,6 +1,7 @@
 package ru.vat78.homeMoney.model.dictionaries;
 
 import ru.vat78.homeMoney.model.Defenitions;
+import ru.vat78.homeMoney.model.UIDef;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,6 +13,7 @@ import javax.validation.constraints.Size;
 @Table(name = Defenitions.TABLES.CURRENCY, uniqueConstraints = {@UniqueConstraint(columnNames = Defenitions.FIELDS.SEARCH_NAME)})
 public class Currency extends Dictionary {
 
+    @UIDef(caption = "Symbol", shown = true, editable = true, num = 20)
     @Size(min=Defenitions.CURRNECY_SYMBOL_MIN, max=Defenitions.CURRNECY_SYMBOL_MAX,
             message = "Short name must be less than 5 symbols")
     @Column(name = Defenitions.FIELDS.SYMBOL)

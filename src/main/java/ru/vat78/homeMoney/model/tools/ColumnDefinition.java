@@ -1,22 +1,45 @@
 package ru.vat78.homeMoney.model.tools;
 
+import ru.vat78.homeMoney.model.Defenitions;
 
-public class ColumnDefinition {
+import javax.persistence.*;
 
+@Entity
+@Table(name = Defenitions.TABLES.COLUMNS)
+public class ColumnDefinition implements Comparable<ColumnDefinition> {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
+
+    @Column(name = Defenitions.FIELDS.NAME)
     private String name;
-    private boolean editing;
-    private boolean shown;
+
+    @Column(name = Defenitions.FIELDS.CAPTION)
     private String caption;
-    private boolean required;
-    private String regexp;
+
+    @Column(name = Defenitions.FIELDS.VISIBLE)
+    private boolean visible;
+
+    @Column(name = Defenitions.FIELDS.NUM)
+    private int num;
+
+    private boolean editable;
+
+    private boolean shown;
+
+    @Override
+    public int compareTo(ColumnDefinition o) {
+        return num - o.getNum();
+    }
 
     public ColumnDefinition setName(String name) {
         this.name = name;
         return this;
     }
 
-    public ColumnDefinition setEditing(boolean editing) {
-        this.editing = editing;
+    public ColumnDefinition setEditable(boolean editable) {
+        this.editable = editable;
         return this;
     }
 
@@ -30,22 +53,20 @@ public class ColumnDefinition {
         return this;
     }
 
-    public ColumnDefinition setRequired(boolean required) {
-        this.required = required;
-        return this;
+    public void setNum(int num) {
+        this.num = num;
     }
 
-    public ColumnDefinition setRegexp(String regexp) {
-        this.regexp = regexp;
-        return this;
+    public void setVisible(boolean visible) {
+        this.visible = visible;
     }
 
     public String getName() {
         return name;
     }
 
-    public boolean isEditing() {
-        return editing;
+    public boolean isEditable() {
+        return editable;
     }
 
     public boolean isShown() {
@@ -56,11 +77,15 @@ public class ColumnDefinition {
         return caption;
     }
 
-    public boolean isRequired() {
-        return required;
+    public boolean isVisible() {
+        return visible;
     }
 
-    public String getRegexp() {
-        return regexp;
+    public long getId() {
+        return id;
+    }
+
+    public int getNum() {
+        return num;
     }
 }

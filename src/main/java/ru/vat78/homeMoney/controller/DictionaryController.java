@@ -12,9 +12,10 @@ import org.springframework.web.servlet.ModelAndView;
 import ru.vat78.homeMoney.model.User;
 import ru.vat78.homeMoney.model.dictionaries.Dictionary;
 import ru.vat78.homeMoney.model.tools.ColumnDefinition;
-import ru.vat78.homeMoney.model.tools.UserColumnsSettings;
+import ru.vat78.homeMoney.model.tools.UserTableSettings;
 import ru.vat78.homeMoney.service.SecurityService;
 import ru.vat78.homeMoney.service.SimpleDictionaryService;
+import ru.vat78.homeMoney.service.UserSettingsService;
 
 import javax.validation.*;
 import java.util.*;
@@ -30,6 +31,9 @@ public class DictionaryController {
     @Autowired
     SecurityService securityService;
 
+    @Autowired
+    UserSettingsService userSettingsService;
+
     @RequestMapping(method = RequestMethod.GET)
     public ModelAndView showDefaultPage(){
         return new ModelAndView("dictionaries");
@@ -43,10 +47,16 @@ public class DictionaryController {
         }
 
         ModelAndView mv = new ModelAndView("simple_dictionary");
-        mv.addObject("tableName", name);
-        mv.addObject("dictionaryName", name);
-        mv.addObject("columns", defaultDictionaryColumns(name));
-        mv.addObject("form", getEditingColumns(name));
+
+        UserTableSettings settings = userSettingsService.getTableSettings(securityService.getCurrentUser(),name);
+        mv.addObject("tableDef", settings);
+        TreeSet<ColumnDefinition> columns = new TreeSet<ColumnDefinition>();
+        columns.addAll(settings.getColumns().values());
+        mv.addObject("columns", columns);
+        //mv.addObject("tableName", name);
+        //mv.addObject("dictionaryName", name);
+        //mv.addObject("columns", defaultDictionaryColumns(name));
+        //mv.addObject("form", getEditingColumns(name));
         return mv;
     }
 
@@ -142,42 +152,37 @@ public class DictionaryController {
         }
     }
 
-    private List<UserColumnsSettings> defaultDictionaryColumns(String dictionaryName){
+    /*
+    private List<UserTableSettings> defaultDictionaryColumns(String dictionaryName){
 
-        List<UserColumnsSettings> result = new ArrayList<UserColumnsSettings>(7);
-        result.add(new UserColumnsSettings()
+        List<UserTableSettings> result = new ArrayList<UserTableSettings>(7);
+        result.add(new UserTableSettings()
                 .setTableName(dictionaryName)
                 .setColumnName("id")
                 .setNum(1)
                 .setVisible(false));
-        result.add(new UserColumnsSettings()
+        result.add(new UserTableSettings()
                 .setTableName(dictionaryName)
                 .setColumnName("name")
                 .setNum(2)
                 .setVisible(true));
-        /*
-        result.add(new UserColumnsSettings()
-                .setTableName(dictionaryName)
-                .setColumnName("searchName")
-                .setNum(3)
-                .setVisible(false));
-                */
-        result.add(new UserColumnsSettings()
+
+        result.add(new UserTableSettings()
                 .setTableName(dictionaryName)
                 .setColumnName("createOn")
                 .setNum(4)
                 .setVisible(false));
-        result.add(new UserColumnsSettings()
+        result.add(new UserTableSettings()
                 .setTableName(dictionaryName)
                 .setColumnName("createBy")
                 .setNum(5)
                 .setVisible(false));
-        result.add(new UserColumnsSettings()
+        result.add(new UserTableSettings()
                 .setTableName(dictionaryName)
                 .setColumnName("modifyOn")
                 .setNum(6)
                 .setVisible(false));
-        result.add(new UserColumnsSettings()
+        result.add(new UserTableSettings()
                 .setTableName(dictionaryName)
                 .setColumnName("modifyBy")
                 .setNum(7)
@@ -196,4 +201,5 @@ public class DictionaryController {
 
         return result;
     }
+    */
 }

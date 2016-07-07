@@ -5,19 +5,19 @@
 <%@ taglib prefix="ajax" tagdir="/WEB-INF/tags/ajax" %>
 
 <s:url value="/dictionaries/data.json?table={tableName}" var="data_url">
-    <s:param name="tableName" value="${tableName}" />
+    <s:param name="tableName" value="${tableDef.name}" />
 </s:url>
 <s:url value="/dictionaries/check?table={tableName}" var="check_url">
-    <s:param name="tableName" value="${tableName}" />
+    <s:param name="tableName" value="${tableDef.name}" />
 </s:url>
 <s:url value="/dictionaries/{tableName}" var="page_url">
-    <s:param name="tableName" value="${tableName}" />
+    <s:param name="tableName" value="${tableDef.name}" />
 </s:url>
 
 <div class="col-lg-12">
     <div class="panel panel-default">
         <div class="panel-heading">
-            <c:out value="${dictionaryName}" />
+            <c:out value="${tableDef.caption}" />
         </div>
         <div class="panel-body">
 
@@ -29,12 +29,29 @@
                 </div>
             </div>
 
-            <table data-toggle="table" data-toolbar="#toolbar" data-url="${data_url}"  data-show-refresh="true" data-show-toggle="false" data-show-columns="true" data-search="true" data-select-item-name="toolbar1" data-pagination="true" data-side-pagination="server" data-sort-name="name" data-sort-order="desc" data-reorderable-columns="true">
+            <table data-toggle="table"
+                   data-toolbar="#toolbar"
+                   data-url="${data_url}"
+                   data-show-refresh="true"
+                   data-show-toggle="false"
+                   data-show-columns="true"
+                   data-search="true"
+                   data-select-item-name="toolbar1"
+                   data-pagination="true"
+                   data-side-pagination="server"
+                   data-sort-name="${tableDef.sortColumn}"
+                   data-sort-order="${tableDef.sortOrder}"
+                   data-reorderable-columns="true"
+                   data-show-export="true"
+            >
+
                 <thead>
                     <tr>
-                    <th data-field="state" data-checkbox="true" >Item ID</th>
+                    <th data-field="action" data-formatter="operateFormatter" data-events="operateEvents" width="30px" >Action</th>
                     <c:forEach var="column" items="${columns}">
-                            <th data-field="${column.columnName}" data-sortable="true" data-visible = ${column.visible}><c:out value="${column.columnName}" /></th>
+                        <c:if test="${column.shown == 'true'}">
+                            <th data-field="${column.name}" data-sortable="true" data-visible = ${column.visible}><c:out value="${column.caption}" /> </th>
+                        </c:if>
                     </c:forEach>
                     </tr>
                 </thead>
@@ -44,9 +61,11 @@
 </div>
 
 <script>
-    $('.menu').find('[name = <c:out value="${tableName}" />]').addClass("active");
+    $('.menu').find('[name = <c:out value="${tableDef.name}" />]').addClass("active");
 </script>
 
-<html:editForm caption="Adding new ${dictionaryName}" table="${tableName}" useShortName="false" />
+<ajax:actionsInRow editUrl="/dictionaries/save" deleteUrl="${page_url}" />
 
-<ajax:formValidate formName="#edit" formJsonUrl="/dictionaries/save" pageUrl="${page_url}" />
+<html:editForm caption="Adding new ${tableDef.caption}" table="${tableDef.name}" columns="${columns}" />
+
+<ajax:formValidate formName="#editForm" formJsonUrl="/dictionaries/save" pageUrl="${page_url}" />

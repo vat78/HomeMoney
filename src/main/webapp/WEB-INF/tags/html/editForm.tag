@@ -1,8 +1,8 @@
-<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ attribute name="caption" required="true" rtexprvalue="true" %>
 <%@ attribute name="table" required="true" rtexprvalue="true" %>
-<%@ attribute name="useShortName" required="true" rtexprvalue="true" %>
+<%@ attribute name="columns" required="true" type="java.util.Collection" %>
 
 <!-- Modal -->
 <div class="modal fade" id="formModal" tabindex="-1" role="dialog" aria-labelledby="formModalLabel">
@@ -13,34 +13,30 @@
                 <h4 class="modal-title" id="myModalLabel"> ${caption} </h4>
             </div>
             <div class="modal-body">
-                <form role="form" name="edit" id="edit" action="">
+                <form role="form" name="editForm" id="editForm" action="">
                     <fieldset>
                         <input class="form-control" type="hidden" id="table" name="table" value="${table}" />
                         <input class="form-control" type="hidden" id="id" name="id" value="0" />
 
-                        <div class="form-group" id="nameControlGroup">
-                            <label class="control-label"> Name </label>
-                            <div class="controls">
-                                <input class="form-control" id="name" name="name" autofocus /><br>
-                                <span class="help-block" name="name"></span>
-                            </div>
-                        </div>
+                        <c:forEach var="column" items="${columns}">
 
-                        <c:if test="${useShortName}">
-                            <div class="form-group" id="symbolControlGroup">
-                                <label class="control-label"> Short name </label>
-                                <div class="controls">
-                                    <input class="form-control" id="symbol" name="symbol"/><br>
-                                    <span class="help-block"><form:errors path="symbol"/></span>
+                            <c:if test="${column.editable == 'true' && column.name != 'id'}">
+                                <div class="form-group" id="nameControlGroup">
+                                    <label class="control-label"> <c:out value="${column.caption}" /> </label>
+                                    <div class="controls">
+                                        <input class="form-control" id="${column.name}" name="${column.name}" /><br>
+                                        <span class="help-block" name="${column.name}"></span>
+                                    </div>
                                 </div>
-                            </div>
-                        </c:if>
+                            </c:if>
+                        </c:forEach>
+
                     </fieldset>
                 </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button form="edit" type="submit" class="btn btn-primary">Save</button>
+                <button form="editForm" type="submit" class="btn btn-primary">Save</button>
             </div>
         </div>
     </div>

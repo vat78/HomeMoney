@@ -31,6 +31,8 @@ public final class Defenitions {
         public static final String TRANSFERS = "transfers";
         public static final String USERS = "users";
 
+        public static final String COLUMNS = "columns";
+        public static final String TABLE_SETTINGS = "tables";
     }
 
     public final static class FIELDS{
@@ -74,6 +76,15 @@ public final class Defenitions {
         public static final String QUANTITY = "quantity";
         public static final String COMMENTS = "comments";
 
+        public static final String TABLE = "table";
+        public static final String USER = "user";
+        public static final String VISIBLE = "visible";
+        public static final String CAPTION = "caption";
+        public static final String NUM = "num";
+
+        public static final String SORT_COLUMN = "sortColumn";
+        public static final String SORT_ORDER = "sortOrder";
+        public static final String PAGE_SIZE = "pageSize";
     }
 
     public final static class ACCOUNTS_TYPE {
