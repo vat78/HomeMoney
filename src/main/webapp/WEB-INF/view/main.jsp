@@ -13,6 +13,7 @@
     <link href="/resources/lumino/css/bootstrap.min.css" rel="stylesheet">
     <link href="/resources/lumino/css/datepicker3.css" rel="stylesheet">
     <link href="/resources/lumino/css/styles.css" rel="stylesheet">
+    <link href="/resources/css/hm.css" rel="stylesheet">
 
     <!--Icons-->
     <script src="/resources/lumino/js/lumino.glyphs.js"></script>

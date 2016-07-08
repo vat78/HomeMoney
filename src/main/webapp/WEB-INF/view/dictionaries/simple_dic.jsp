@@ -44,7 +44,7 @@
 
                 <thead>
                     <tr>
-                    <th data-field="action" data-formatter="operateFormatter" data-events="operateEvents" width="30px" >Action</th>
+                    <th data-field="action" data-formatter="operateFormatter" data-events="operateEvents" class="td2icon">&nbsp;</th>
                     <c:forEach var="column" items="${columns}">
                         <c:if test="${column.shown == 'true'}">
                             <th data-field="${column.name}" data-sortable="true" data-visible = ${column.visible}><c:out value="${column.caption}" /> </th>

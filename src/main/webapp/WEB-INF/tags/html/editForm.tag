@@ -41,3 +41,30 @@
         </div>
     </div>
 </div>
+
+<script>
+    $('#formModal').on('shown.bs.modal', function () {
+        var $form = $('#editForm');
+        var $inputs = $form.find('input');
+
+        for (var i = 0; i < $inputs.length; i++){
+           if ($inputs[i].name != 'table'){
+               if ($inputs[i].name != 'id') {
+                   $inputs[i].focus();
+                   break;
+               }
+           }
+        }
+    });
+
+    $('#formModal').on('hide.bs.modal', function () {
+        var $form = $('#editForm');
+        var $inputs = $form.find('input');
+        for (var i = 0; i < $inputs.length; i++) {
+            if ($inputs[i].name != 'table') {
+                $inputs[i].value = '';
+            }
+        }
+    });
+
+</script>

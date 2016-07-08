@@ -7,14 +7,13 @@
         'click .edit': function (e, value, row) {
             var $form = $('#editForm');
             var $inputs = $form.find('input');
-            var $columns = row.originalProperties;
             for (var i = 0; i < $inputs.length; i++) {
                 var $item = $inputs[i];
-                if ($columns == $item.attr('name')){
-                    $item.attr('name').value(row.attr('name').value());
+                if (row[$item.name] != null){
+                    $item.value = row[$item.name];
                 }
             }
-            alert('You click like action, row: ' + JSON.stringify(row));
+            $("#formModal").modal('show');
         },
         'click .remove': function (e, value, row) {
             var $conf = 'Are you want to delete "' + row['name'] + '"?';
@@ -39,7 +38,7 @@
             '<a class="edit" href="javascript:void(0)" title="Edit">',
             '<i class="glyphicon glyphicon-edit"></i>',
             '</a>  ',
-            '<a class="remove" href="javascript:void(0)" title="Remove">',
+            '<a class="remove" href="javascript:void(0)" title="Delete">',
             '<i class="glyphicon glyphicon-remove"></i>',
             '</a>',
             '</div>'
