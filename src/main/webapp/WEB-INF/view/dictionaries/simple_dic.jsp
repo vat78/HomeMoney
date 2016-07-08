@@ -7,10 +7,7 @@
 <s:url value="/dictionaries/data.json?table={tableName}" var="data_url">
     <s:param name="tableName" value="${tableDef.name}" />
 </s:url>
-<s:url value="/dictionaries/check?table={tableName}" var="check_url">
-    <s:param name="tableName" value="${tableDef.name}" />
-</s:url>
-<s:url value="/dictionaries/{tableName}" var="page_url">
+<s:url value="/dictionaries/view/{tableName}" var="page_url">
     <s:param name="tableName" value="${tableDef.name}" />
 </s:url>
 
@@ -64,7 +61,7 @@
     $('.menu').find('[name = <c:out value="${tableDef.name}" />]').addClass("active");
 </script>
 
-<ajax:actionsInRow editUrl="/dictionaries/save" deleteUrl="${page_url}" />
+<ajax:actionsInRow table = "${tableDef.name}" editUrl="/dictionaries/save" deleteUrl="/dictionaries/delete" />
 
 <html:editForm caption="Adding new ${tableDef.caption}" table="${tableDef.name}" columns="${columns}" />
 

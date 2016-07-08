@@ -21,7 +21,7 @@
                         <c:forEach var="column" items="${columns}">
 
                             <c:if test="${column.editable == 'true' && column.name != 'id'}">
-                                <div class="form-group" id="nameControlGroup">
+                                <div class="form-group" id="${column.name}ControlGroup">
                                     <label class="control-label"> <c:out value="${column.caption}" /> </label>
                                     <div class="controls">
                                         <input class="form-control" id="${column.name}" name="${column.name}" /><br>

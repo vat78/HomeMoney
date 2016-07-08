@@ -58,6 +58,11 @@ public abstract class CommonEntryDao<T extends CommonEntry> {
         getSession().delete(entity);
     }
 
+    @Transactional
+    public void deleteById(long id){
+        getSession().delete(findById(id));
+    }
+
     @Transactional(readOnly = true)
     public long getCount() {
         Criteria criteria = getCriteria();

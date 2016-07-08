@@ -1,3 +1,4 @@
+<%@ attribute name="table" required="true" rtexprvalue="true" %>
 <%@ attribute name="editUrl" required="true" rtexprvalue="true" %>
 <%@ attribute name="deleteUrl" required="true" rtexprvalue="true" %>
 
@@ -16,7 +17,19 @@
             alert('You click like action, row: ' + JSON.stringify(row));
         },
         'click .remove': function (e, value, row) {
-            alert('You click remove action, row: ' + JSON.stringify(row));
+            var $conf = 'Are you want to delete "' + row['name'] + '"?';
+            var $data = {table: '${table}', id: row['id']};
+            if (confirm($conf))
+            {
+                $.post('${deleteUrl}', $data, function(response) {
+
+                    if (response.status == 'FAIL') {
+                        alert('Couldn\'t delete this record.\n' + response.result);
+                    } else {
+                        document.location = "${pageUrl}";
+                    }
+                }, 'json');
+            }
         }
     };
 

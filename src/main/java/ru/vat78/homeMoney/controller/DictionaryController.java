@@ -39,7 +39,7 @@ public class DictionaryController {
         return new ModelAndView("dictionaries");
     }
 
-    @RequestMapping(value = "/{name}", method = RequestMethod.GET)
+    @RequestMapping(value = "view/{name}", method = RequestMethod.GET)
     public ModelAndView showDictionaryPage(@PathVariable String name){
 
         if (!simpleDictionaryService.checkDictionaryName(name)){
@@ -53,10 +53,6 @@ public class DictionaryController {
         TreeSet<ColumnDefinition> columns = new TreeSet<ColumnDefinition>();
         columns.addAll(settings.getColumns().values());
         mv.addObject("columns", columns);
-        //mv.addObject("tableName", name);
-        //mv.addObject("dictionaryName", name);
-        //mv.addObject("columns", defaultDictionaryColumns(name));
-        //mv.addObject("form", getEditingColumns(name));
         return mv;
     }
 
@@ -82,7 +78,6 @@ public class DictionaryController {
                 .registerTypeAdapter(User.class, GsonSerializerBuilder.getSerializer(User.class))
                 .setDateFormat("dd.MM.yyyy")
                 .create();
-        String res = gson.toJson(table);
         return gson.toJson(table);
     }
 
@@ -113,6 +108,24 @@ public class DictionaryController {
 
         Gson gson = new GsonBuilder().create();
         return gson.toJson(res);
+    }
+
+    @RequestMapping(value = "/delete", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public String deleteEntry(@RequestParam Map<String,String> allRequestParams){
+        Response result = new Response();
+        result.setStatus("FAIL");
+
+        String table = allRequestParams.get("table");
+        String id = allRequestParams.get("id");
+        if (table != null & id != null) {
+            if (simpleDictionaryService.deleteRecordById(table, Long.valueOf(id)))
+                result.setStatus("SUCCESS");
+        } else {
+            result.setResult("There are no params 'id' and 'table'");
+        }
+
+        return new GsonBuilder().create().toJson(result);
     }
 
     private Dictionary loadEntryFromParams(Map<String,String> params){
@@ -152,54 +165,4 @@ public class DictionaryController {
         }
     }
 
-    /*
-    private List<UserTableSettings> defaultDictionaryColumns(String dictionaryName){
-
-        List<UserTableSettings> result = new ArrayList<UserTableSettings>(7);
-        result.add(new UserTableSettings()
-                .setTableName(dictionaryName)
-                .setColumnName("id")
-                .setNum(1)
-                .setVisible(false));
-        result.add(new UserTableSettings()
-                .setTableName(dictionaryName)
-                .setColumnName("name")
-                .setNum(2)
-                .setVisible(true));
-
-        result.add(new UserTableSettings()
-                .setTableName(dictionaryName)
-                .setColumnName("createOn")
-                .setNum(4)
-                .setVisible(false));
-        result.add(new UserTableSettings()
-                .setTableName(dictionaryName)
-                .setColumnName("createBy")
-                .setNum(5)
-                .setVisible(false));
-        result.add(new UserTableSettings()
-                .setTableName(dictionaryName)
-                .setColumnName("modifyOn")
-                .setNum(6)
-                .setVisible(false));
-        result.add(new UserTableSettings()
-                .setTableName(dictionaryName)
-                .setColumnName("modifyBy")
-                .setNum(7)
-                .setVisible(false));
-
-        return result;
-    }
-
-    private List<ColumnDefinition> getEditingColumns(String dictionary){
-        List<ColumnDefinition> result = new ArrayList<ColumnDefinition>();
-        result.add(new ColumnDefinition()
-                .setName("name")
-                .setCaption("Name")
-                .setRequired(true)
-        );
-
-        return result;
-    }
-    */
 }

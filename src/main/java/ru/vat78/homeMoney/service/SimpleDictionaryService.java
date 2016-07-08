@@ -73,6 +73,15 @@ public class SimpleDictionaryService {
         return true;
     }
 
+    public boolean deleteRecordById(String dictionary, Long id){
+
+        if (!checkDictionaryName(dictionary)) return false;
+        try {
+            daoFactory.getDao(dictionary).deleteById(id);
+        } catch (Exception ignored) {return false;}
+
+        return true;
+    }
 
     public Dictionary getNewEntry(String dictionary){
         if (!checkDictionaryName(dictionary)) return null;
