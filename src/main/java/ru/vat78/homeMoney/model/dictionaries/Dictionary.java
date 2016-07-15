@@ -17,11 +17,11 @@ public abstract class Dictionary extends CommonEntry {
     @NotNull
     @Size(min=Defenitions.DICTIONARY_NAME_MIN, max=Defenitions.DICTIONARY_NAME_MAX,
             message="Name must be at least 2 characters long.")
-    private String name;
+    protected String name;
 
     @Expose(serialize = false, deserialize = false)
     @Column(name = Defenitions.FIELDS.SEARCH_NAME)
-    private String searchingName;
+    protected String searchingName;
 
     public String getName() {
         return name;
@@ -36,7 +36,7 @@ public abstract class Dictionary extends CommonEntry {
         this.searchingName = makeSearchingName(name);
     }
 
-    private String makeSearchingName(String name) {
+    protected String makeSearchingName(String name) {
         return name.toLowerCase();
     }
 

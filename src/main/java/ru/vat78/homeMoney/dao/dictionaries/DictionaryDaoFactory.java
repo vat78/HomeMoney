@@ -33,6 +33,12 @@ public class DictionaryDaoFactory {
         return dbEngines.get(dictionary);
     }
 
+    public TreeDictionaryDao getTreeDao(String dictionary){
+        if (dbEngines == null) fillMap();
+        if (dictionary.equals(Defenitions.TABLES.CATEGORIES)) return (TreeDictionaryDao) dbEngines.get(dictionary);
+        return null;
+    }
+
     private void fillMap(){
         dbEngines = new HashMap<String, DictionaryDao>();
         dbEngines.put(Defenitions.TABLES.CONTRACTORS, contractorsDao);

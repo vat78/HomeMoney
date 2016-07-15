@@ -23,7 +23,7 @@
                 $.post('${deleteUrl}', $data, function(response) {
 
                     if (response.status == 'FAIL') {
-                        alert('Couldn\'t delete this record.\n' + response.result);
+                        alert('Couldn\'t delete this record.\n' + response.result[0].message);
                     } else {
                         document.location = "${pageUrl}";
                     }

@@ -47,10 +47,10 @@ public class CommonEntryDaoTest extends AbstractTransactionalTestNGSpringContext
         child.setParent(parent);
         child = (TreeDictionary) addingAndSearchingTest(dao, child);
 
-        StringBuilder sb = new StringBuilder(parent.getFullName())
+        StringBuilder sb = new StringBuilder(parent.getFullName(false))
                 .append("/")
                 .append(child.getName());
-        assertEquals(child.getFullName(),sb.toString());
+        assertEquals(child.getFullName(false),sb.toString());
 
         assertEquals(parent, child.getParent());
 

@@ -1,11 +1,10 @@
 package ru.vat78.homeMoney.controller;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonPrimitive;
-import com.google.gson.JsonSerializationContext;
-import com.google.gson.JsonSerializer;
+import com.google.gson.*;
+import ru.vat78.homeMoney.model.Defenitions;
 import ru.vat78.homeMoney.model.User;
 import ru.vat78.homeMoney.model.dictionaries.Dictionary;
+import ru.vat78.homeMoney.model.dictionaries.TreeDictionary;
 
 import java.lang.reflect.Type;
 import java.util.Arrays;
@@ -17,6 +16,8 @@ class GsonSerializerBuilder {
         if (clazz.equals(User.class)) return new UserSerializer();
 
         if (Arrays.asList(clazz.getClasses()).contains(Dictionary.class)) return new DictionarySerializer();
+
+        if (clazz.equals(TreeDictionary.class) || Arrays.asList(clazz.getClasses()).contains(TreeDictionary.class)) return new TreeSerializer();
 
         return null;
     }
@@ -36,5 +37,18 @@ class GsonSerializerBuilder {
             return new JsonPrimitive(src.getName());
         }
 
+    }
+
+    static class TreeSerializer implements JsonSerializer<TreeDictionary>{
+
+        public JsonElement serialize(TreeDictionary src, Type typeOfSrc, JsonSerializationContext context){
+            JsonObject result = new JsonObject();
+            result.addProperty(Defenitions.FIELDS.ID, src.getId());
+            result.addProperty(Defenitions.FIELDS.NAME, src.getName());
+            result.addProperty("level", src.getLevel());
+            result.addProperty("node", 0);
+
+            return result;
+        }
     }
 }

@@ -7,8 +7,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.DataBinder;
 import ru.vat78.homeMoney.dao.UsersDao;
 import ru.vat78.homeMoney.dao.dictionaries.*;
+import ru.vat78.homeMoney.model.CommonEntry;
 import ru.vat78.homeMoney.model.Defenitions;
 import ru.vat78.homeMoney.model.dictionaries.Dictionary;
+import ru.vat78.homeMoney.model.dictionaries.TreeDictionary;
 
 import javax.validation.Validation;
 import javax.validation.Validator;
@@ -19,26 +21,7 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-public class SimpleDictionaryService {
-
-    /*
-    @Autowired
-    UsersDao usersDao;
-
-    @Autowired
-    ContractorsDao contractorsDao;
-
-    @Autowired
-    CurrencyDao currencyDao;
-
-    @Autowired
-    PersonsDao personsDao;
-
-    @Autowired
-    TagsDao tagsDao;
-
-    private Map<String, DictionaryDao> dbEngines;
-    */
+public class DictionaryService {
 
     @Autowired
     DictionaryDaoFactory daoFactory;
@@ -67,7 +50,7 @@ public class SimpleDictionaryService {
         if (!checkDictionaryName(dictionary)) return false;
 
         try {
-            daoFactory.getDao(dictionary).save(entity);
+            entity = (Dictionary) daoFactory.getDao(dictionary).save(entity);
         } catch (Exception ignored) {return false;}
 
         return true;
@@ -88,4 +71,18 @@ public class SimpleDictionaryService {
         return (Dictionary) daoFactory.getDao(dictionary).getNewEntity();
     }
 
+    public List<Dictionary> getTreeRecords(String dictionary, Long id) {
+        if (!checkDictionaryName(dictionary)) return Collections.emptyList();
+        return daoFactory.getTreeDao(dictionary).getAllChildrenById(id);
+    }
+
+    public Class getEntityClass(String dictionary){
+        if (!checkDictionaryName(dictionary)) return null;
+        return getNewEntry(dictionary).getClass();
+    }
+
+    public Dictionary getRecordById(String dictionary, long id) {
+        if (!checkDictionaryName(dictionary)) return null;
+        return (Dictionary) daoFactory.getTreeDao(dictionary).findById(id);
+    }
 }

@@ -23,7 +23,16 @@ public abstract class TreeDictionaryDao<T extends TreeDictionary> extends Dictio
         }
 
         criteria.addOrder(Order.asc(Defenitions.FIELDS.NAME));
-        return (List<T>) criteria.list();
+
+        List<T> result =(List<T>) criteria.list();
+        if (parent == null && result.size() == 0) result.add(getDummy());
+        return result;
+    }
+
+    @Transactional(readOnly = true)
+    public List<T> getAllChildrenById(long id) {
+
+        return getAllChildren((T) findById(id));
     }
 
     @Transactional(readOnly = false)
@@ -33,5 +42,11 @@ public abstract class TreeDictionaryDao<T extends TreeDictionary> extends Dictio
         for (TreeDictionary child: children){
             delete(child);
         }
+    }
+
+    private T getDummy(){
+        T result = (T) getNewEntity();
+        result.setName("Empty...");
+        return result;
     }
 }

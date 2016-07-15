@@ -14,19 +14,24 @@ public class Category extends TreeDictionary {
     @JoinColumn(name=Defenitions.FIELDS.PARENT_ID)
     private Category parent;
 
+    @OneToMany(mappedBy = Defenitions.FIELDS.PARENT_ID, fetch = FetchType.LAZY, orphanRemoval=true, cascade = CascadeType.ALL)
+    private Set<Category> children = new HashSet<Category>();
     public Category getParent() {
         return parent;
     }
 
     public void setParent(TreeDictionary parent) {
-        if (parent instanceof Category) this.parent = (Category) parent;
+        if (parent instanceof Category) {
+            this.parent = (Category) parent;
+            this.searchingName = makeSearchingName(getFullName(true));
+            setLevel();
+        }
     }
-
-    @OneToMany(mappedBy = Defenitions.FIELDS.PARENT_ID, fetch = FetchType.LAZY, orphanRemoval=true, cascade = CascadeType.ALL)
-    private Set<Category> children = new HashSet<Category>();
 
     public Set<Category> getChildren(){
         return children;
     }
+
+
 
 }
