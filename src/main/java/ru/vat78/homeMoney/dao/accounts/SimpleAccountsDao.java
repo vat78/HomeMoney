@@ -8,7 +8,7 @@ import ru.vat78.homeMoney.model.accounts.SimpleAccount;
 
 @Repository("accountsDao")
 @Transactional
-public class SimpleAccountsDao extends DictionaryDao<SimpleAccount> {
+public class SimpleAccountsDao extends AccountsDao {
 
     @Override
     protected Class<? extends SimpleAccount> getEntityClass() { return SimpleAccount.class;}

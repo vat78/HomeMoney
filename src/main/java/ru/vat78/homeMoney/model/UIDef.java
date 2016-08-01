@@ -9,4 +9,6 @@ public @interface UIDef {
     boolean shown() default false;
     boolean editable() default false;
     int num() default 0;
+    String type() default "text";
+
 }

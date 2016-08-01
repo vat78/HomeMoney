@@ -151,7 +151,7 @@ public class DictionaryController {
             if (dictionaryService.deleteRecordById(table, Long.valueOf(id)))
                 result.setStatus("SUCCESS");
         } else {
-            result.setResult(getError("","There are no params 'id' and 'table'"));
+            result.setError("","There are no params 'id' and 'table'");
         }
 
         return new GsonBuilder().create().toJson(result);
@@ -183,7 +183,7 @@ public class DictionaryController {
             if (dictionaryService.deleteRecordById(table, Long.valueOf(id)))
                 result.setStatus("SUCCESS");
         } else {
-            result.setResult(getError("","There are no params 'id' and 'table'"));
+            result.setError("","There are no params 'id' and 'table'");
         }
 
         return new GsonBuilder().create().toJson(result);
@@ -204,8 +204,7 @@ public class DictionaryController {
         if (response.getResult() == null) {
             Dictionary inDB = dictionaryService.getRecordByName(dictionary, entity.getName());
             if (inDB != null && inDB.getId() != entity.getId()){
-                response.setStatus("FAIL");
-                response.setResult(getError("name", "Such name already exists"));
+                response.setError("name", "Such name already exists");
             }
         }
     }
@@ -217,8 +216,7 @@ public class DictionaryController {
                 response.setStatus("SUCCESS");
                 response.setResult(entity);
             } else {
-                response.setStatus("FAIL");
-                response.setResult(getError("name", "Can't save to database."));
+                response.setError("name", "Can't save to database.");
             }
         }
     }
@@ -231,8 +229,7 @@ public class DictionaryController {
             if (parentId != 0) {
                 TreeDictionary parent = (TreeDictionary) dictionaryService.getRecordById(params.get("table"), parentId);
                 if (parent == null) {
-                    response.setStatus("FAIL");
-                    response.setResult(getError("","Wrong parent"));
+                    response.setError("","Wrong parent");
                 } else {
                     entity.setParent(parent);
                 }
@@ -251,8 +248,7 @@ public class DictionaryController {
         }
 
         if (entry == null) {
-            response.setStatus("FAIL");
-            response.setResult(getError("","Wrong table"));
+            response.setError("","Wrong table");
         } else {
             entry.setName(params.get("name"));
             entry.setModifyBy(securityService.getCurrentUser());
@@ -271,12 +267,6 @@ public class DictionaryController {
         mv.addObject("columns", columns);
 
         return mv;
-    }
-
-    private List<ErrorMessage> getError(String field, String message){
-        List<ErrorMessage> errorMesages = new ArrayList<ErrorMessage>();
-        errorMesages.add(new ErrorMessage(field, message));
-        return errorMesages;
     }
 
 }

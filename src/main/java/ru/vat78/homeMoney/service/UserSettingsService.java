@@ -6,6 +6,8 @@ import ru.vat78.homeMoney.dao.UserTablesSettingsDao;
 import ru.vat78.homeMoney.model.Defenitions;
 import ru.vat78.homeMoney.model.UIDef;
 import ru.vat78.homeMoney.model.User;
+import ru.vat78.homeMoney.model.accounts.CreditAccount;
+import ru.vat78.homeMoney.model.accounts.SimpleAccount;
 import ru.vat78.homeMoney.model.dictionaries.*;
 import ru.vat78.homeMoney.model.dictionaries.Currency;
 import ru.vat78.homeMoney.model.tools.ColumnDefinition;
@@ -64,6 +66,9 @@ public class UserSettingsService {
         if (tableName.equals(Defenitions.TABLES.PERSONS)) return Person.class;
         if (tableName.equals(Defenitions.TABLES.TAGS)) return Tag.class;
 
+        if (tableName.equals(Defenitions.TABLES.ACCOUNTS) || tableName.equals("closed")) return SimpleAccount.class;
+        if (tableName.equals(Defenitions.TABLES.CREDIT_ACCOUNTS)) return CreditAccount.class;
+
         /*
         String path = "ru.vat78.homeMoney.model";
         String[] packages = {"",".accounts",".dictionaries",".transactions"};
@@ -96,6 +101,7 @@ public class UserSettingsService {
                 newCol.setEditable(a[0].editable());
                 newCol.setShown(a[0].shown());
                 newCol.setNum(a[0].num());
+                newCol.setType(a[0].type());
                 newCol.setVisible(field.getName().equals(Defenitions.FIELDS.NAME));
                 currentClassFields.put(field.getName(),newCol);
             }

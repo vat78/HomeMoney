@@ -1,6 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
-
+<a href="/accounts">
 <div class="col-xs-12 col-md-6 col-lg-3">
     <div class="panel panel-blue panel-widget ">
         <div class="row no-padding">
@@ -14,6 +14,7 @@
         </div>
     </div>
 </div>
+</a>
 
 <div class="col-xs-12 col-md-6 col-lg-3">
     <div class="panel panel-orange panel-widget">

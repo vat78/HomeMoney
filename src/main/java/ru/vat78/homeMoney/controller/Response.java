@@ -1,5 +1,6 @@
 package ru.vat78.homeMoney.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 class Response {
@@ -22,5 +23,12 @@ class Response {
 
     public void setResult(Object result) {
         this.result = result;
+    }
+
+    public void setError(String field, String message){
+        setStatus("FAIL");
+        List<ErrorMessage> errorMesages = new ArrayList<ErrorMessage>();
+        errorMesages.add(new ErrorMessage(field, message));
+        setResult(errorMesages);
     }
 }

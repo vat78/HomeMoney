@@ -24,6 +24,9 @@ public class ColumnDefinition implements Comparable<ColumnDefinition> {
     @Column(name = Defenitions.FIELDS.NUM)
     private int num;
 
+    @Column()
+    private String type;
+
     private boolean editable;
 
     private boolean shown;
@@ -61,6 +64,10 @@ public class ColumnDefinition implements Comparable<ColumnDefinition> {
         this.visible = visible;
     }
 
+    public void setType(String type) {
+        this.type = type;
+    }
+
     public String getName() {
         return name;
     }
@@ -87,5 +94,9 @@ public class ColumnDefinition implements Comparable<ColumnDefinition> {
 
     public int getNum() {
         return num;
+    }
+
+    public String getType() {
+        return type;
     }
 }

@@ -3,6 +3,7 @@ package ru.vat78.homeMoney.controller;
 import com.google.gson.*;
 import ru.vat78.homeMoney.model.Defenitions;
 import ru.vat78.homeMoney.model.User;
+import ru.vat78.homeMoney.model.accounts.SimpleAccount;
 import ru.vat78.homeMoney.model.dictionaries.Dictionary;
 import ru.vat78.homeMoney.model.dictionaries.TreeDictionary;
 
@@ -47,6 +48,20 @@ class GsonSerializerBuilder {
             result.addProperty(Defenitions.FIELDS.NAME, src.getName());
             result.addProperty("level", src.getLevel());
             result.addProperty("node", 0);
+
+            return result;
+        }
+    }
+
+    static class SimpleAccountSerializer implements JsonSerializer<SimpleAccount>{
+
+        public JsonElement serialize(SimpleAccount src, Type typeOfSrc, JsonSerializationContext context){
+
+            JsonObject result = new JsonObject();
+            result.addProperty(Defenitions.FIELDS.ID, src.getId());
+            result.addProperty(Defenitions.FIELDS.NAME, src.getName());
+            result.addProperty(Defenitions.FIELDS.OPENING_DATE, src.getOpeningDate().getTime());
+            result.addProperty(Defenitions.FIELDS.CURRENCY, src.getCurrency().getName());
 
             return result;
         }

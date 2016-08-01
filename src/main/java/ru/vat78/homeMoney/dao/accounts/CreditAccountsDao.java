@@ -7,7 +7,7 @@ import ru.vat78.homeMoney.model.accounts.CreditAccount;
 
 @Repository("creditAccountsDao")
 @Transactional
-public class CreditAccountsDao extends SimpleAccountsDao {
+public class CreditAccountsDao extends AccountsDao {
 
     @Override
     protected Class<CreditAccount> getEntityClass() { return CreditAccount.class;}

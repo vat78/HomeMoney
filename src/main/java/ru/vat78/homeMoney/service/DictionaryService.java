@@ -53,7 +53,7 @@ public class DictionaryService {
             entity = (Dictionary) daoFactory.getDao(dictionary).save(entity);
         } catch (Exception ignored) {return false;}
 
-        return true;
+        return entity != null;
     }
 
     public boolean deleteRecordById(String dictionary, Long id){

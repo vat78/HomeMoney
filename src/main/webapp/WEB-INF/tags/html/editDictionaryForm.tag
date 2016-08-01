@@ -24,7 +24,7 @@
                                 <div class="form-group" id="${column.name}ControlGroup">
                                     <label class="control-label"> <c:out value="${column.caption}" /> </label>
                                     <div class="controls">
-                                        <input class="form-control" id="${column.name}" name="${column.name}" /><br>
+                                        <input class="form-control" id="${column.name}" name="${column.name}" type="${column.type}" /><br>
                                         <span class="help-block" name="${column.name}"></span>
                                     </div>
                                 </div>
