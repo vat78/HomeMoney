@@ -61,4 +61,14 @@ public class AccountsService {
     public boolean checkAccountType(String accountType) {
         return (daoFactory.getDao(accountType) != null);
     }
+
+    public boolean deleteRecordById(String accountType, Long id) {
+
+        if (!checkAccountType(accountType)) return false;
+        try {
+            daoFactory.getDao(accountType).deleteById(id);
+        } catch (Exception ignored) {return false;}
+
+        return true;
+    }
 }

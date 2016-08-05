@@ -111,6 +111,24 @@ public class AccountsController {
         return gson.toJson(res);
     }
 
+    @RequestMapping(value = "/delete", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public String deleteEntry(@RequestParam Map<String,String> allRequestParams){
+        Response result = new Response();
+        result.setStatus("FAIL");
+
+        String table = allRequestParams.get("table");
+        String id = allRequestParams.get("id");
+        if (table != null & id != null) {
+            if (accountsService.deleteRecordById(table, Long.valueOf(id)))
+                result.setStatus("SUCCESS");
+        } else {
+            result.setError("","There are no params 'id' and 'table'");
+        }
+
+        return new GsonBuilder().create().toJson(result);
+    }
+
     private SimpleAccount loadEntryFromParams(Map<String, String> params) {
 
         SimpleAccount result = accountsService.getNewEntry(params.get("table"));
