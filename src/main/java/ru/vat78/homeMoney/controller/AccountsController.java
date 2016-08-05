@@ -15,6 +15,8 @@ import org.springframework.web.servlet.ModelAndView;
 import ru.vat78.homeMoney.model.Defenitions;
 import ru.vat78.homeMoney.model.User;
 import ru.vat78.homeMoney.model.accounts.SimpleAccount;
+import ru.vat78.homeMoney.model.dictionaries.*;
+import ru.vat78.homeMoney.model.dictionaries.Currency;
 import ru.vat78.homeMoney.model.tools.ColumnDefinition;
 import ru.vat78.homeMoney.model.tools.UserTableSettings;
 import ru.vat78.homeMoney.service.AccountsService;
@@ -50,6 +52,7 @@ public class AccountsController {
         ModelAndView result = new ModelAndView("accounts");
         result.addObject("accountTypes", accountsService.getAccountsTypes());
         result.addObject("currencies", dictionaryService.getRecords(Defenitions.TABLES.CURRENCY,0,100, Defenitions.FIELDS.NAME,"asc",""));
+        result.addObject("dateFormat", "dd.mm.yyyy");
         return prepareAccountPage(type,result);
     }
 
@@ -73,7 +76,8 @@ public class AccountsController {
                 .disableInnerClassSerialization()
                 .serializeNulls()
                 .registerTypeAdapter(User.class, GsonSerializerBuilder.getSerializer(User.class))
-                .setDateFormat("dd.MM.yyyy")
+                .registerTypeAdapter(Currency.class, GsonSerializerBuilder.getSerializer(Currency.class))
+                .setDateFormat(Defenitions.DATE_FORMAT)
                 .create();
         return gson.toJson(list);
     }
@@ -108,9 +112,13 @@ public class AccountsController {
     }
 
     private SimpleAccount loadEntryFromParams(Map<String, String> params) {
+
         SimpleAccount result = accountsService.getNewEntry(params.get("table"));
         WebDataBinder binder = new WebDataBinder(result);
         binder.bind(new MutablePropertyValues(params));
+
+        result.setOpeningDate(params.get(Defenitions.FIELDS.OPENING_DATE),Defenitions.DATE_FORMAT);
+        result.setCurrency((Currency) dictionaryService.getRecordById(Defenitions.TABLES.CURRENCY, params.get(Defenitions.FIELDS.CURRENCY)));
         result.setModifyBy(securityService.getCurrentUser());
 
         return result;
@@ -149,4 +157,6 @@ public class AccountsController {
             }
         }
     }
+
+
 }

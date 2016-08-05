@@ -79,7 +79,7 @@ public class DictionaryController {
                 .disableInnerClassSerialization()
                 .serializeNulls()
                 .registerTypeAdapter(User.class, GsonSerializerBuilder.getSerializer(User.class))
-                .setDateFormat("dd.MM.yyyy")
+                .setDateFormat(Defenitions.DATE_FORMAT)
                 .create();
         return gson.toJson(table);
     }
@@ -101,7 +101,7 @@ public class DictionaryController {
                 .disableInnerClassSerialization()
                 .serializeNulls()
                 .registerTypeAdapter(entryType, GsonSerializerBuilder.getSerializer(TreeDictionary.class))
-                .setDateFormat("dd.MM.yyyy")
+                .setDateFormat(Defenitions.DATE_FORMAT)
                 .create();
         Response answer = new Response();
         answer.setStatus("SUCCESS");

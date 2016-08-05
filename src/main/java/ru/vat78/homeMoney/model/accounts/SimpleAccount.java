@@ -1,6 +1,5 @@
 package ru.vat78.homeMoney.model.accounts;
 
-import com.sun.istack.internal.NotNull;
 import org.springframework.format.annotation.DateTimeFormat;
 import ru.vat78.homeMoney.model.Defenitions;
 import ru.vat78.homeMoney.model.UIDef;
@@ -8,7 +7,12 @@ import ru.vat78.homeMoney.model.dictionaries.Currency;
 import ru.vat78.homeMoney.model.dictionaries.Dictionary;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 //ToDo: I could't make storing all type of accounts in one table.
 @Entity
@@ -27,7 +31,7 @@ public class SimpleAccount extends Dictionary {
     Date openingDate;
 
     @UIDef(caption = "Currency", shown = true, editable = true, num = 30)
-    @NotNull
+    @NotNull(message = "Please, select currency")
     @ManyToOne(cascade = {CascadeType.REFRESH})
     @JoinColumn(name=Defenitions.FIELDS.CURRENCY, referencedColumnName = Defenitions.FIELDS.ID)
     private Currency currency;
@@ -50,6 +54,13 @@ public class SimpleAccount extends Dictionary {
 
     public void setOpeningDate(Date openingDate) {
         this.openingDate = openingDate;
+    }
+
+    public void setOpeningDate(String openingDate, String dateFormat) {
+        DateFormat format = new SimpleDateFormat(dateFormat);
+        try {
+            this.openingDate = format.parse(openingDate);
+        } catch (ParseException ex) {}
     }
 
     public void setCurrency(Currency currency) {

@@ -31,7 +31,7 @@
                         <div class="form-group" id="openingDateControlGroup" >
                             <label class="control-label"> Open date </label>
                             <div class="controls">
-                                <input class="form-control" data-provide="datepicker" id="openingDate" name="openingDate" type="text" data-date-format="dd.mm.yyyy" data-date-autoclose="true" /><br>
+                                <input class="form-control" data-provide="datepicker" id="openingDate" name="openingDate" type="text" data-date-format="${dateFormat}" data-date-autoclose="true" /><br>
                                 <span class="help-block" name="openingDate"></span>
                             </div>
                         </div>
@@ -39,7 +39,7 @@
                         <div class="form-group" id="currencyControlGroup">
                             <label class="control-label"> Currency </label>
                             <div class="controls">
-                                <select class="custom-select" id="currency" name="currency" >
+                                <select class="form-control" data-width="auto" id="currency" name="currency" >
                                     <option selected>Select currency</option>
                                     <c:forEach var="cur" items="${currencies}">
                                         <option value="${cur.id}">${cur.name}</option>

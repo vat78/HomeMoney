@@ -2,7 +2,7 @@ package ru.vat78.homeMoney.model;
 
 public final class Defenitions {
 
-    public static final String DATE_FORMAT = "dd/mm/yyyy";
+    public static final String DATE_FORMAT = "dd.MM.yyyy";
     public static final int USER_NAME_MIN = 3;
     public static final int USER_NAME_MAX = 50;
     public static final String USER_NAME_TEMPLATE = "^[a-zA-Z0-9]+$";

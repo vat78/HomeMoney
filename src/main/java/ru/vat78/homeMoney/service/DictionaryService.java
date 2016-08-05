@@ -83,6 +83,18 @@ public class DictionaryService {
 
     public Dictionary getRecordById(String dictionary, long id) {
         if (!checkDictionaryName(dictionary)) return null;
-        return (Dictionary) daoFactory.getTreeDao(dictionary).findById(id);
+        return (Dictionary) daoFactory.getDao(dictionary).findById(id);
+    }
+
+    public Dictionary getRecordById(String dictionary, String id) {
+
+        Long resId;
+        try {
+            resId = Long.valueOf(id);
+        } catch (NumberFormatException ex){
+            return null;
+        }
+
+        return getRecordById(dictionary, resId);
     }
 }

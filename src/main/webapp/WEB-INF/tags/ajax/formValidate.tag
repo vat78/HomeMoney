@@ -8,7 +8,11 @@
         var data = {};
         for (var i = 0; i < fields.length; i++) {
             var $item = $(fields[i]);
-            data[$item.attr('name')] = $item.val();
+            if ($item.attr('type') == 'checkbox') {
+                data[$item.attr('name')] = $item.is(':checked');
+            } else {
+                data[$item.attr('name')] = $item.val();
+            }
         }
         return data;
     }
@@ -17,7 +21,7 @@
         var $form = $('${formName}');
         $form.bind('submit', function(e) {
             // Ajax validation
-            var $inputs = $form.find('input');
+            var $inputs = $form.find('input, select');
             var data = collectFormData($inputs);
 
             $.post('${formJsonUrl}', data, function(response) {

@@ -16,9 +16,9 @@ class GsonSerializerBuilder {
 
         if (clazz.equals(User.class)) return new UserSerializer();
 
-        if (Arrays.asList(clazz.getClasses()).contains(Dictionary.class)) return new DictionarySerializer();
+        if (clazz.getSuperclass().equals(Dictionary.class)) return new DictionarySerializer();
 
-        if (clazz.equals(TreeDictionary.class) || Arrays.asList(clazz.getClasses()).contains(TreeDictionary.class)) return new TreeSerializer();
+        if (clazz.equals(TreeDictionary.class) || clazz.getSuperclass().equals(TreeDictionary.class)) return new TreeSerializer();
 
         return null;
     }
