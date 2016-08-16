@@ -6,10 +6,7 @@ import ru.vat78.homeMoney.dao.accounts.AccountsDao;
 import ru.vat78.homeMoney.dao.accounts.AccountsDaoFactory;
 import ru.vat78.homeMoney.model.accounts.SimpleAccount;
 
-import java.util.Collections;
-import java.util.Dictionary;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class AccountsService {
@@ -19,19 +16,19 @@ public class AccountsService {
 
     public List<SimpleAccount> getClosedAccounts(){
 
-        List<SimpleAccount> result = Collections.emptyList();
+        List<SimpleAccount> result = new ArrayList<SimpleAccount>();
 
         for (AccountsDao source: daoFactory.getAllDao()){
-            List<SimpleAccount> list = source.getClosedAccounts();
+            List<SimpleAccount> list = source.getAccountsByStatus(false);
             result.addAll(list);
         }
         return result;
 
     }
 
-    public List<SimpleAccount> getAccountsByType(String accountType){
+    public List<SimpleAccount> getActiveAccountsByType(String accountType){
         if (!checkAccountType(accountType)) return Collections.EMPTY_LIST;
-        return daoFactory.getDao(accountType).getAll();
+        return daoFactory.getDao(accountType).getAccountsByStatus(true);
     }
 
     public Set<String> getAccountsTypes(){

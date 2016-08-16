@@ -69,7 +69,7 @@ public class AccountsController {
         if (table.equals("closed")){
             list = accountsService.getClosedAccounts();
         } else {
-            list = accountsService.getAccountsByType(table);
+            list = accountsService.getActiveAccountsByType(table);
         }
 
         Gson gson = new GsonBuilder()
