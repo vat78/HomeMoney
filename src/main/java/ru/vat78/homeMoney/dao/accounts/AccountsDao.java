@@ -18,4 +18,11 @@ public abstract class AccountsDao extends DictionaryDao<SimpleAccount> {
         criteria.addOrder(Order.asc(Defenitions.FIELDS.NAME));
         return criteria.list();
     }
+
+    public List<SimpleAccount> getAccountsByType(String accountType){
+        Criteria criteria = getCriteria();
+        criteria.add(Restrictions.eq(Defenitions.FIELDS.ACCOUNT_TYPE, accountType));
+        criteria.addOrder(Order.asc(Defenitions.FIELDS.NAME));
+        return criteria.list();
+    }
 }

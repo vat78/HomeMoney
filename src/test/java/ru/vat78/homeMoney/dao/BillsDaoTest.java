@@ -3,7 +3,7 @@ package ru.vat78.homeMoney.dao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import ru.vat78.homeMoney.dao.accounts.SimpleAccountsDao;
+import ru.vat78.homeMoney.dao.accounts.CashAccountsDao;
 import ru.vat78.homeMoney.dao.dictionaries.DictionaryDaoFactory;
 import ru.vat78.homeMoney.dao.transactions.BillsDao;
 import ru.vat78.homeMoney.model.transactions.Bill;
@@ -24,7 +24,7 @@ public class BillsDaoTest extends CommonEntryDaoTest{
     PaymentsDao paymentsDao;
 
     @Autowired
-    SimpleAccountsDao accountsDao;
+    CashAccountsDao accountsDao;
 
     SimpleAccount account;
 

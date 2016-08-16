@@ -12,7 +12,6 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Locale;
 
 //ToDo: I could't make storing all type of accounts in one table.
 @Entity
@@ -36,6 +35,10 @@ public class SimpleAccount extends Dictionary {
     @JoinColumn(name=Defenitions.FIELDS.CURRENCY, referencedColumnName = Defenitions.FIELDS.ID)
     private Currency currency;
 
+    @UIDef(caption = "Type", shown = false, editable = true, num = 50, type = "text")
+    @Column(name = Defenitions.FIELDS.ACCOUNT_TYPE)
+    private String accountType;
+
     public boolean isActive() {
         return active;
     }
@@ -46,6 +49,10 @@ public class SimpleAccount extends Dictionary {
 
     public Currency getCurrency() {
         return currency;
+    }
+
+    public String getAccountType() {
+        return accountType;
     }
 
     public void setActive(boolean active) {
@@ -65,5 +72,9 @@ public class SimpleAccount extends Dictionary {
 
     public void setCurrency(Currency currency) {
         this.currency = currency;
+    }
+
+    public void setAccountType(String accountType) {
+        this.accountType = accountType;
     }
 }

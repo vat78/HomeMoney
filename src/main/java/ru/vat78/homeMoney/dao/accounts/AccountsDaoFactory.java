@@ -15,7 +15,7 @@ public class AccountsDaoFactory {
     CreditAccountsDao creditDao;
 
     @Autowired
-    SimpleAccountsDao simpleAccountsDao;
+    CashAccountsDao simpleAccountsDao;
 
     public AccountsDao getDao(String accountType){
         if (dbEngines == null) fillMap();

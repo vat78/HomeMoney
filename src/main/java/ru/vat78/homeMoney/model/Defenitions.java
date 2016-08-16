@@ -90,6 +90,7 @@ public final class Defenitions {
     public final static class ACCOUNTS_TYPE {
 
         public static final String CREDIT = "credit";
+        public static final String CASH = "cash";
     }
 
     public final static class TRANSACTION_TYPE {
