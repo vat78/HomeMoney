@@ -15,7 +15,7 @@ public class AccountsDaoFactory {
     CreditAccountsDao creditDao;
 
     @Autowired
-    CashAccountsDao simpleAccountsDao;
+    CashAccountsDao cashAccountsDao;
 
     public AccountsDao getDao(String accountType){
         if (dbEngines == null) fillMap();
@@ -34,7 +34,7 @@ public class AccountsDaoFactory {
 
     private void fillMap() {
         dbEngines = new HashMap<String, AccountsDao>();
-        dbEngines.put(Defenitions.TABLES.ACCOUNTS,simpleAccountsDao);
+        dbEngines.put(Defenitions.TABLES.ACCOUNTS, cashAccountsDao);
         dbEngines.put(Defenitions.TABLES.CREDIT_ACCOUNTS,creditDao);
     }
 }
