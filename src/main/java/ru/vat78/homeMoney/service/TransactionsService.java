@@ -10,7 +10,7 @@ import java.util.List;
 @Service
 public class TransactionsService {
 
-    public List<Transaction> getTransactionsByAccount(SimpleAccount account){
+    public List<Transaction> getTransactionsByAccount(SimpleAccount account, int offset, int size, String sortColumn, String sortOrder, String searchString){
         return Collections.emptyList();
     }
 }

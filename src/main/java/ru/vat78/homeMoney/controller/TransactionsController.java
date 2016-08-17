@@ -45,6 +45,7 @@ public class TransactionsController {
     @RequestMapping(method = RequestMethod.GET)
     public ModelAndView showTransactionsPage(@RequestParam long account){
         ModelAndView result = new ModelAndView("transactions");
+        result.addObject("accountTypes", accountsService.getAccountsTypes());
         result.addObject("account", account);
         result.addObject("dateFormat", "dd.mm.yyyy");
         return prepareTransactionsPage(account,result);
@@ -58,7 +59,13 @@ public class TransactionsController {
         long accountId = Long.valueOf(allRequestParams.get("account"));
 
         SimpleAccount account = accountsService.getAccountById(accountId);
-        list = transactionsService.getTransactionsByAccount(account);
+        list = transactionsService.getTransactionsByAccount(
+                account,
+                Integer.valueOf(allRequestParams.get("offset")),
+                Integer.valueOf(allRequestParams.get("limit")),
+                allRequestParams.get("sort"),allRequestParams.get("order"),
+                allRequestParams.get("search")
+        );
 
         Gson gson = new GsonBuilder()
                 .disableInnerClassSerialization()

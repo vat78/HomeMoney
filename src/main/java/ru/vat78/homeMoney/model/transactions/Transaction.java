@@ -6,6 +6,7 @@ import ru.vat78.homeMoney.model.UIDef;
 import ru.vat78.homeMoney.model.accounts.SimpleAccount;
 import ru.vat78.homeMoney.model.CommonEntry;
 import ru.vat78.homeMoney.model.Defenitions;
+import ru.vat78.homeMoney.model.dictionaries.Contractor;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -35,6 +36,11 @@ public abstract class Transaction extends CommonEntry {
     @Column(name = Defenitions.FIELDS.OPERATION_TYPE)
     int operation;
 
+    @UIDef(caption = "Operation", shown = true, editable = true, num = 30)
+    @ManyToOne(cascade = {CascadeType.REFRESH})
+    @JoinColumn(name= Defenitions.FIELDS.CONTRACTOR_ID, referencedColumnName = Defenitions.FIELDS.ID)
+    private Contractor contractor;
+
     public Date getDate() {
         return date;
     }
@@ -45,6 +51,10 @@ public abstract class Transaction extends CommonEntry {
 
     public float getSum() {
         return sum;
+    }
+
+    public Contractor getContractor() {
+        return contractor;
     }
 
     public void setDate(Date date) {
@@ -59,4 +69,7 @@ public abstract class Transaction extends CommonEntry {
         this.sum = sum;
     }
 
+    public void setContractor(Contractor contractor) {
+        this.contractor = contractor;
+    }
 }
