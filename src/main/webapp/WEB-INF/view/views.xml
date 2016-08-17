@@ -39,4 +39,9 @@
         <put-attribute name="content" value="/WEB-INF/view/accounts/accounts.jsp" />
     </definition>
 
+    <definition name="transactions" extends="main-template">
+        <put-attribute name="sidebar" value="/WEB-INF/view/transactions/transactions_sidebar.jsp" />
+        <put-attribute name="content" value="/WEB-INF/view/transactions/transactions.jsp" />
+    </definition>
+
 </tiles-definitions>

@@ -6,12 +6,14 @@ import ru.vat78.homeMoney.dao.UserTablesSettingsDao;
 import ru.vat78.homeMoney.model.Defenitions;
 import ru.vat78.homeMoney.model.UIDef;
 import ru.vat78.homeMoney.model.User;
+import ru.vat78.homeMoney.model.accounts.CashAccount;
 import ru.vat78.homeMoney.model.accounts.CreditAccount;
 import ru.vat78.homeMoney.model.accounts.SimpleAccount;
 import ru.vat78.homeMoney.model.dictionaries.*;
 import ru.vat78.homeMoney.model.dictionaries.Currency;
 import ru.vat78.homeMoney.model.tools.ColumnDefinition;
 import ru.vat78.homeMoney.model.tools.UserTableSettings;
+import ru.vat78.homeMoney.model.transactions.Transaction;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
@@ -35,14 +37,16 @@ public class UserSettingsService {
 
     private UserTableSettings getDefaultSettings(String tableName) {
 
+        String t = tableName;
+        if (t.contains(Defenitions.TABLES.TRANSACTIONS)) t= Defenitions.TABLES.TRANSACTIONS;
         UserTableSettings result = new UserTableSettings();
         result.setName(tableName);
-        result.setCaption(tableName);
+        result.setCaption(t);
         result.setPageSize(10);
         result.setSortColumn(Defenitions.FIELDS.ID);
         result.setSortOrder("asc");
 
-        result.setColumns(getTableColumns(tableName));
+        result.setColumns(getTableColumns(t));
 
         return result;
     }
@@ -67,7 +71,10 @@ public class UserSettingsService {
         if (tableName.equals(Defenitions.TABLES.TAGS)) return Tag.class;
 
         if (tableName.equals(Defenitions.TABLES.ACCOUNTS) || tableName.equals("closed")) return SimpleAccount.class;
+        if (tableName.equals(Defenitions.TABLES.CASH_ACCOUNTS)) return CashAccount.class;
         if (tableName.equals(Defenitions.TABLES.CREDIT_ACCOUNTS)) return CreditAccount.class;
+
+        if (tableName.equals(Defenitions.TABLES.TRANSACTIONS)) return Transaction.class;
 
         /*
         String path = "ru.vat78.homeMoney.model";

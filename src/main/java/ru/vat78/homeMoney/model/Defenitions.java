@@ -23,6 +23,7 @@ public final class Defenitions {
         public static final String CATEGORIES = "categories";
         public static final String CONTRACTORS = "contractors";
         public static final String CREDIT_ACCOUNTS = "credit_accounts";
+        public static final String CASH_ACCOUNTS = "cash_accounts";
         public static final String CURRENCY = "currency";
         public static final String PAYMENTS = "payments";
         public static final String PERSONS = "persons";

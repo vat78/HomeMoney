@@ -4,26 +4,25 @@
 <%@ taglib prefix="html" tagdir="/WEB-INF/tags/html" %>
 <%@ taglib prefix="ajax" tagdir="/WEB-INF/tags/ajax" %>
 
-<s:url value="/accounts/data.json?type={tableName}" var="data_url">
-    <s:param name="tableName" value="${tableDef.name}" />
+<s:url value="/transactions/data.json?account={accountId}" var="data_url">
+    <s:param name="accountId" value="${account}" />
 </s:url>
 
 <div class="col-lg-12">
     <div class="panel panel-default">
         <div class="panel-heading">
-            <c:out value="${tableDef.caption}" />
+            Operations
         </div>
         <div class="panel-body">
 
-            <c:if test="${tableDef.name != 'closed'}">
-                <div id="toolbar">
-                    <div class="btn-group">
+
+            <div id="toolbar">
+                <div class="btn-group">
                         <button class="btn btn-default" type="button" name="add" title="Add" data-toggle="modal" data-target="#formModal">
                             <i class="glyphicon glyphicon-plus icon-plus"></i>
                         </button>
-                    </div>
                 </div>
-            </c:if>
+            </div>
 
             <table data-toggle="table"
                    data-toolbar="#toolbar"
@@ -37,13 +36,12 @@
                    data-sort-name="name"
                    data-sort-order="asc"
                    data-reorderable-columns="false"
-                   data-show-export="false"
+                   data-show-export="true"
             >
 
                 <thead>
                 <tr>
                     <th data-field="action" data-formatter="operateFormatter" data-events="operateEvents" class="td2icon">&nbsp;</th>
-                    <th data-field="name" data-formatter="nameFormatter" data-sortable="true" data-visible = "true"> Name </th>
                     <c:forEach var="column" items="${columns}">
                         <c:if test="${column.shown == 'true' && column.name != 'name'}">
                             <th data-field="${column.name}" data-sortable="true" data-visible = ${column.visible}><c:out value="${column.caption}" /> </th>
@@ -58,24 +56,3 @@
 </div>
 
 <ajax:actionsInRow table = "${tableDef.name}" editUrl="/accounts/save" deleteUrl="/accounts/delete" />
-
-<script>
-    function nameFormatter(value, row, index) {
-        return [
-            '<a href="transactions?account=',
-            row.id,
-            '">',
-            value,
-            '</a>'
-        ].join('');
-    }
-</script>
-
-<c:if test="${tableDef.name != 'closed'}">
-
-    <html:editAccountForm caption="Adding new ${tableDef.caption}" table="${tableDef.name}" columns="${columns}" currencies="${currencies}" />
-
-    <ajax:formValidate formName="#editForm" formJsonUrl="/accounts/save" pageUrl="${page_url}" />
-
-</c:if>
-

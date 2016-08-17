@@ -40,6 +40,15 @@ public class AccountsService {
         return (SimpleAccount) daoFactory.getDao(accountType).getNewEntity();
     }
 
+    public SimpleAccount getAccountById(long id){
+        SimpleAccount result = null;
+        for (AccountsDao source: daoFactory.getAllDao()){
+            result = (SimpleAccount) source.findById(id);
+            if (result != null) break;
+        }
+        return result;
+    }
+
     public SimpleAccount getRecordByName(String accountType, String accountName) {
         if (!checkAccountType(accountType)) return null;
         return daoFactory.getDao(accountType).findByName(accountName);
