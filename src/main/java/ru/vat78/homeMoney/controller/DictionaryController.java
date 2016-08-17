@@ -143,7 +143,7 @@ public class DictionaryController {
     @ResponseBody
     public String deleteEntry(@RequestParam Map<String,String> allRequestParams){
         Response result = new Response();
-        result.setStatus("FAIL");
+        result.setError("","May be it is used by other objects");
 
         String table = allRequestParams.get("table");
         String id = allRequestParams.get("id");
