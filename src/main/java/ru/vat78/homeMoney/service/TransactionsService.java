@@ -18,4 +18,12 @@ public class TransactionsService {
     public List<Transaction> getTransactionsByAccount(SimpleAccount account, int offset, int size, String sortColumn, String sortOrder, String searchString){
         return daoFactory.getDao(null).getPart(offset,size,sortColumn,sortOrder,searchString);
     }
+
+    public Transaction getTransactionById(long id){
+        return null;
+    }
+
+    public Transaction getNewEntry(String transactionType) {
+        return (Transaction) daoFactory.getDao(transactionType).getNewEntity();
+    }
 }

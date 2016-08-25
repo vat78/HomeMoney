@@ -14,16 +14,16 @@ public class AccountsService {
     @Autowired
     AccountsDaoFactory daoFactory;
 
-    public List<SimpleAccount> getClosedAccounts(){
+    public List<SimpleAccount> getAllAccounts(boolean active){
 
         List<SimpleAccount> result = new ArrayList<SimpleAccount>();
 
         for (AccountsDao source: daoFactory.getAllDao()){
-            List<SimpleAccount> list = source.getAccountsByStatus(false);
+            List<SimpleAccount> list = source.getAccountsByStatus(active);
             result.addAll(list);
         }
+        result.sort(null);
         return result;
-
     }
 
     public List<SimpleAccount> getActiveAccountsByType(String accountType){

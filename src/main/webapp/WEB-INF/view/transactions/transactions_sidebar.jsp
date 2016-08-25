@@ -3,9 +3,9 @@
 
 <ul class="nav menu" onload="">
 
+    <li name = "add_transfer"><a href="/transactions/transfer?account=${account}">Add transfer</a></li>
 
     <li role="presentation" class="divider"></li>
-
 
     <c:forEach var="type" items="${accountTypes}">
         <li name = "${type}"><a href="/accounts?type=${type}"><svg class="glyph stroked tag"><use xlink:href="#stroked-tag"/></svg></use></svg> ${type}</a></li>

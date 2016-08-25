@@ -36,7 +36,7 @@ public class Transaction extends CommonEntry {
     @Column(name = Defenitions.FIELDS.OPERATION_TYPE)
     int operation;
 
-    @UIDef(caption = "Operation", shown = true, editable = true, num = 30)
+    @UIDef(caption = "Contractor", shown = false, editable = true, num = 30)
     @ManyToOne(cascade = {CascadeType.REFRESH})
     @JoinColumn(name= Defenitions.FIELDS.CONTRACTOR_ID, referencedColumnName = Defenitions.FIELDS.ID)
     private Contractor contractor;

@@ -10,7 +10,7 @@ import javax.persistence.*;
 import javax.validation.constraints.Size;
 
 @MappedSuperclass
-public abstract class Dictionary extends CommonEntry {
+public abstract class Dictionary extends CommonEntry implements Comparable<Dictionary> {
 
     @UIDef(caption = "Name", shown = true, editable = true, num = 10)
     @Column (name = Defenitions.FIELDS.NAME)
@@ -54,5 +54,11 @@ public abstract class Dictionary extends CommonEntry {
         if (searchingName == null) return 0;
         return searchingName.hashCode();
 
+    }
+
+    @Override
+    public int compareTo(Dictionary o) {
+        if (equals(o)) return 0;
+        return name.compareTo(o.getName());
     }
 }

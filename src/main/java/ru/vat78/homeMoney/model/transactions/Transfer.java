@@ -5,6 +5,7 @@ import ru.vat78.homeMoney.model.accounts.SimpleAccount;
 import ru.vat78.homeMoney.model.Defenitions;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Entity
 @Table(name = Defenitions.TABLES.TRANSFERS)
@@ -33,5 +34,12 @@ public class Transfer extends Transaction {
 
     public void setConversion(float conversion) {
         this.conversion = conversion;
+    }
+
+    public Transfer setDefaultValues(SimpleAccount account){
+        setDate(new Date(System.currentTimeMillis()));
+        setAccount(account);
+        setConversion(1);
+        return this;
     }
 }

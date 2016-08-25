@@ -16,11 +16,13 @@ import ru.vat78.homeMoney.model.accounts.SimpleAccount;
 import ru.vat78.homeMoney.model.tools.ColumnDefinition;
 import ru.vat78.homeMoney.model.tools.UserTableSettings;
 import ru.vat78.homeMoney.model.transactions.Transaction;
+import ru.vat78.homeMoney.model.transactions.Transfer;
 import ru.vat78.homeMoney.service.AccountsService;
 import ru.vat78.homeMoney.service.SecurityService;
 import ru.vat78.homeMoney.service.TransactionsService;
 import ru.vat78.homeMoney.service.UserSettingsService;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeSet;
@@ -55,10 +57,10 @@ public class TransactionsController {
     @ResponseBody
     public String getTable(@RequestParam Map<String,String> allRequestParams){
 
-        List<Transaction> list;
-        long accountId = Long.valueOf(allRequestParams.get("account"));
-
+        long accountId = strToLong(allRequestParams.get("account"));
         SimpleAccount account = accountsService.getAccountById(accountId);
+
+        List<Transaction> list;
         list = transactionsService.getTransactionsByAccount(
                 account,
                 Integer.valueOf(allRequestParams.get("offset")),
@@ -76,6 +78,26 @@ public class TransactionsController {
         return gson.toJson(list);
     }
 
+    @RequestMapping(value = "/transfer", method = RequestMethod.GET)
+    public ModelAndView showEditForm(@RequestParam Map<String,String> allRequestParams){
+
+        long accountId = strToLong(allRequestParams.get("account"));
+        SimpleAccount account = accountsService.getAccountById(accountId);
+        if (account == null) return showTransactionsPage(accountId);
+
+        long entryId = strToLong(allRequestParams.get("id"));
+
+        ModelAndView result;
+        result = new ModelAndView("transfer");
+        result.addObject("dateFormat", "dd.mm.yyyy");
+        result.addObject("account", accountId);
+        insertTransferToModel(result, entryId, account);
+        result.addObject("accounts", accountsService.getAllAccounts(true));
+        result.addObject("accountTypes", accountsService.getAccountsTypes());
+
+        return result;
+    }
+
 
     private ModelAndView prepareTransactionsPage(long account, ModelAndView view) {
 
@@ -87,6 +109,29 @@ public class TransactionsController {
         view.addObject("columns", columns);
 
         return view;
+    }
+
+    private long strToLong(String value){
+        if (value == null) return 0;
+        long result = 0;
+        try {
+            result = Long.valueOf(value);
+        } catch (Exception e) {}
+        return result;
+    }
+
+    private void insertTransferToModel(ModelAndView mv, long transferId, SimpleAccount account){
+
+        Transfer entry = null;
+        if (transferId != 0 ) {
+            mv.addObject("edit", 1);
+            entry = (Transfer) transactionsService.getTransactionById(transferId);
+        } else {
+            mv.addObject("edit", 0);
+            entry = (Transfer) transactionsService.getNewEntry(Defenitions.TABLES.TRANSFERS);
+            entry.setDefaultValues(account);
+        }
+        mv.addObject("entry",entry);
     }
 }
 

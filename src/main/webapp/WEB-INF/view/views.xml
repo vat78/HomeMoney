@@ -44,4 +44,8 @@
         <put-attribute name="content" value="/WEB-INF/view/transactions/transactions.jsp" />
     </definition>
 
+    <definition name="transfer" extends="transactions">
+        <put-attribute name="content" value="/WEB-INF/view/transactions/transfer_form.jsp" />
+    </definition>
+
 </tiles-definitions>

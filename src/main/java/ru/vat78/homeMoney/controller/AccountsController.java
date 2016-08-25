@@ -15,7 +15,6 @@ import org.springframework.web.servlet.ModelAndView;
 import ru.vat78.homeMoney.model.Defenitions;
 import ru.vat78.homeMoney.model.User;
 import ru.vat78.homeMoney.model.accounts.SimpleAccount;
-import ru.vat78.homeMoney.model.dictionaries.*;
 import ru.vat78.homeMoney.model.dictionaries.Currency;
 import ru.vat78.homeMoney.model.tools.ColumnDefinition;
 import ru.vat78.homeMoney.model.tools.UserTableSettings;
@@ -67,7 +66,7 @@ public class AccountsController {
         }
 
         if (table.equals("closed")){
-            list = accountsService.getClosedAccounts();
+            list = accountsService.getAllAccounts(false);
         } else {
             list = accountsService.getActiveAccountsByType(table);
         }
