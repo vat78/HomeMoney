@@ -67,7 +67,7 @@ public final class Defenitions {
         public static final String SUM = "sum";
         public static final String OPERATION_TYPE = "operation_type";
         public static final String OPERATION = "operation";
-        public static final String CORRESPONDING_ACCOUNT = "corresponding";
+        public static final String CORRESPONDING_ACCOUNT = "corrAccount";
         public static final String CONVERSION = "conversion";
 
         public static final String CATEGORY_ID = "category";

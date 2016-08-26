@@ -9,6 +9,9 @@ import ru.vat78.homeMoney.model.Defenitions;
 import ru.vat78.homeMoney.model.dictionaries.Contractor;
 
 import javax.persistence.*;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @Entity
@@ -59,6 +62,14 @@ public class Transaction extends CommonEntry {
 
     public void setDate(Date date) {
         this.date = date;
+    }
+
+    public boolean setDate(String date, String dateFormat) {
+        DateFormat format = new SimpleDateFormat(dateFormat);
+        try {
+            this.date = format.parse(date);
+        } catch (ParseException ex) {return false;}
+        return true;
     }
 
     public void setAccount(SimpleAccount account) {

@@ -65,4 +65,4 @@
 
 <html:editDictionaryForm caption="Adding new ${tableDef.caption}" table="${tableDef.name}" columns="${columns}" />
 
-<ajax:formValidate formName="#editForm" formJsonUrl="/dictionaries/save" pageUrl="${page_url}" />
+<ajax:formValidate formName="#editForm" urlJsonValidate="/dictionaries/save" pageUrl="${page_url}" />

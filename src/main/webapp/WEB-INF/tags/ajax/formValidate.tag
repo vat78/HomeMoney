@@ -1,6 +1,6 @@
 
 <%@ attribute name="formName" required="true" rtexprvalue="true" %>
-<%@ attribute name="formJsonUrl" required="true" rtexprvalue="true" %>
+<%@ attribute name="urlJsonValidate" required="true" rtexprvalue="true" %>
 <%@ attribute name="pageUrl" required="true" rtexprvalue="true" %>
 
 <script type="text/javascript">
@@ -24,7 +24,7 @@
             var $inputs = $form.find('input, select');
             var data = collectFormData($inputs);
 
-            $.post('${formJsonUrl}', data, function(response) {
+            $.post('${urlJsonValidate}', data, function(response) {
                 $form.find('.form-group').removeClass('has-error');
                 $form.find('.help-block').empty();
                 $form.find('.alert').remove();

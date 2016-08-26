@@ -6,7 +6,6 @@ import ru.vat78.homeMoney.dao.transactions.TransactionsDaoFactory;
 import ru.vat78.homeMoney.model.accounts.SimpleAccount;
 import ru.vat78.homeMoney.model.transactions.Transaction;
 
-import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -25,5 +24,18 @@ public class TransactionsService {
 
     public Transaction getNewEntry(String transactionType) {
         return (Transaction) daoFactory.getDao(transactionType).getNewEntity();
+    }
+
+    public boolean saveRecord(String transactionType, Transaction entity) {
+        if (!checkTransactionType(transactionType)) return false;
+        try {
+            entity = (Transaction) daoFactory.getDao(transactionType).save(entity);
+        } catch (Exception ignored) {return false;}
+
+        return entity != null;
+    }
+
+    public boolean checkTransactionType(String transactionType) {
+        return (daoFactory.getDao(transactionType) != null);
     }
 }

@@ -2,9 +2,11 @@ package ru.vat78.homeMoney.controller;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import org.springframework.beans.MutablePropertyValues;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -89,7 +91,7 @@ public class TransactionsController {
 
         ModelAndView result;
         result = new ModelAndView("transfer");
-        result.addObject("dateFormat", "dd.mm.yyyy");
+        result.addObject("dateFormat", "dd.MM.yyyy");
         result.addObject("account", accountId);
         insertTransferToModel(result, entryId, account);
         result.addObject("accounts", accountsService.getAllAccounts(true));
@@ -98,6 +100,59 @@ public class TransactionsController {
         return result;
     }
 
+    @RequestMapping(value = "/save", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public String saveEntry(@RequestParam Map<String,String> allRequestParams){
+
+        Response res = new Response();
+
+        Transaction entity = loadEntryFromParams(allRequestParams, res);
+
+        if (res.getResult() == null) {
+            if (transactionsService.saveRecord(allRequestParams.get(Defenitions.FIELDS.OPERATION_TYPE),entity)) {
+                res.setStatus("SUCCESS");
+                res.setResult(entity);
+            } else {
+                res.setError("name", "Can't save to database.");
+            }
+        }
+
+        Gson gson = new GsonBuilder().create();
+        return gson.toJson(res);
+    }
+
+    private Transaction loadEntryFromParams(Map<String, String> data, Response response) {
+
+        Transaction result = transactionsService.getNewEntry(data.get(Defenitions.FIELDS.OPERATION_TYPE));
+        if (result == null){
+            response.setError(Defenitions.FIELDS.ACCOUNT_ID, "Wrong operation type");
+            return null;
+        }
+
+        WebDataBinder binder = new WebDataBinder(result);
+        binder.bind(new MutablePropertyValues(data));
+        if (result.getSum() == 0) {
+            response.setError(Defenitions.FIELDS.SUM, "Please, enter the sum of transaction");
+        }
+
+        if (!result.setDate(data.get(Defenitions.FIELDS.DATE),Defenitions.DATE_FORMAT)){
+            response.setError(Defenitions.FIELDS.DATE, "Wrong date of transaction");
+        }
+
+        result.setAccount(accountsService.getAccountById(strToLong(data.get(Defenitions.FIELDS.ACCOUNT_ID))));
+        if (result.getAccount() == null) {
+            response.setError(Defenitions.FIELDS.ACCOUNT_ID, "Please, select account");
+        }
+
+        if (data.get(Defenitions.FIELDS.OPERATION_TYPE).equals(Defenitions.TABLES.TRANSFERS)){
+            Transfer transfer = (Transfer) result;
+            transfer.setCorrAccount(accountsService.getAccountById(strToLong(data.get(Defenitions.FIELDS.CORRESPONDING_ACCOUNT))));
+            if (transfer.getCorrAccount() == null || transfer.getCorrAccount().getId() == transfer.getAccount().getId()) {
+                response.setError(Defenitions.FIELDS.CORRESPONDING_ACCOUNT, "Wrong corresponding account");
+            }
+        }
+        return result;
+    }
 
     private ModelAndView prepareTransactionsPage(long account, ModelAndView view) {
 
