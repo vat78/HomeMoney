@@ -14,6 +14,7 @@
     <link href="/resources/lumino/css/datepicker3.css" rel="stylesheet">
     <link href="/resources/lumino/css/styles.css" rel="stylesheet">
     <link href="/resources/css/hm.css" rel="stylesheet">
+    <link href="/resources/css/additional.css" rel="stylesheet">
 
     <!--Icons-->
     <script src="/resources/lumino/js/lumino.glyphs.js"></script>
@@ -23,6 +24,7 @@
     <script src="/resources/lumino/js/respond.min.js"></script>
     <![endif]-->
     <script src="/resources/lumino/js/jquery-1.11.1.min.js"></script>
+    <script src="/resources/lumino/js/jquery-ui.js"></script>
 
 </head>
 

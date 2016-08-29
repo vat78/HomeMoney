@@ -36,7 +36,8 @@ public class Transfer extends Transaction {
         this.conversion = conversion;
     }
 
-    public Transfer setDefaultValues(SimpleAccount account){
+    @Override
+    public Transaction setDefaultValues(SimpleAccount account){
         setDate(new Date(System.currentTimeMillis()));
         setAccount(account);
         setConversion(1);

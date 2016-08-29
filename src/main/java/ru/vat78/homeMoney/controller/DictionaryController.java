@@ -110,6 +110,35 @@ public class DictionaryController {
         return gson.toJson(answer);
     }
 
+    @RequestMapping(value = "/typeahead.json", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public String getValuesForFields(@RequestParam Map<String,String> allRequestParams){
+
+        if (allRequestParams.get("table") == null || allRequestParams.get("term") == null || allRequestParams.get("term").length() == 1)
+            return "";
+
+        List<Dictionary> result = dictionaryService.getRecords(
+                allRequestParams.get("table"),
+                0,
+                15,
+                Defenitions.FIELDS.NAME,"asc",
+                allRequestParams.get("term"));
+        if (result == null) result = Collections.emptyList();
+
+        String arr[] = new String[result.size()];
+        int i = 0;
+        for (Dictionary element :  result) {
+            arr[i] = element.getName();
+            i++;
+        }
+        Gson gson = new GsonBuilder()
+                .disableInnerClassSerialization()
+                .serializeNulls()
+                .create();
+        String test = gson.toJson(arr);
+        return gson.toJson(arr);
+    }
+
     @RequestMapping(value = "/save", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public String saveEntry(@RequestParam Map<String,String> allRequestParams){

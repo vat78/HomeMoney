@@ -17,6 +17,7 @@ import ru.vat78.homeMoney.model.User;
 import ru.vat78.homeMoney.model.accounts.SimpleAccount;
 import ru.vat78.homeMoney.model.tools.ColumnDefinition;
 import ru.vat78.homeMoney.model.tools.UserTableSettings;
+import ru.vat78.homeMoney.model.transactions.Bill;
 import ru.vat78.homeMoney.model.transactions.Transaction;
 import ru.vat78.homeMoney.model.transactions.Transfer;
 import ru.vat78.homeMoney.service.AccountsService;
@@ -81,21 +82,24 @@ public class TransactionsController {
     }
 
     @RequestMapping(value = "/transfer", method = RequestMethod.GET)
-    public ModelAndView showEditForm(@RequestParam Map<String,String> allRequestParams){
-
-        long accountId = strToLong(allRequestParams.get("account"));
-        SimpleAccount account = accountsService.getAccountById(accountId);
-        if (account == null) return showTransactionsPage(accountId);
-
-        long entryId = strToLong(allRequestParams.get("id"));
+    public ModelAndView showTransferEditForm(@RequestParam Map<String,String> allRequestParams){
 
         ModelAndView result;
         result = new ModelAndView("transfer");
-        result.addObject("dateFormat", "dd.MM.yyyy");
-        result.addObject("account", accountId);
-        insertTransferToModel(result, entryId, account);
-        result.addObject("accounts", accountsService.getAllAccounts(true));
-        result.addObject("accountTypes", accountsService.getAccountsTypes());
+
+        prepareEditForm(allRequestParams, result, getTransferForModel(allRequestParams.get("id")));
+
+        return result;
+    }
+
+    @RequestMapping(value = "/bill", method = RequestMethod.GET)
+    public ModelAndView showBillEditForm(@RequestParam Map<String,String> allRequestParams){
+
+        ModelAndView result;
+        result = new ModelAndView("bill");
+
+        prepareEditForm(allRequestParams, result, getBillForModel(allRequestParams.get("id")));
+        result.addObject("contractorTable", Defenitions.TABLES.CONTRACTORS);
 
         return result;
     }
@@ -175,18 +179,51 @@ public class TransactionsController {
         return result;
     }
 
-    private void insertTransferToModel(ModelAndView mv, long transferId, SimpleAccount account){
+    private Transaction getTransferForModel(String transferId){
 
+        long entryId = strToLong(transferId);
         Transfer entry = null;
-        if (transferId != 0 ) {
-            mv.addObject("edit", 1);
-            entry = (Transfer) transactionsService.getTransactionById(transferId);
+        if (entryId != 0 ) {
+            entry = (Transfer) transactionsService.getTransactionById(entryId);
         } else {
-            mv.addObject("edit", 0);
             entry = (Transfer) transactionsService.getNewEntry(Defenitions.TABLES.TRANSFERS);
-            entry.setDefaultValues(account);
         }
-        mv.addObject("entry",entry);
+        return entry;
+    }
+
+    private Transaction getBillForModel(String billId){
+
+        long entryId = strToLong(billId);
+        Bill entry = null;
+        if (entryId != 0 ) {
+            entry = (Bill) transactionsService.getTransactionById(entryId);
+        } else {
+            entry = (Bill) transactionsService.getNewEntry(Defenitions.TABLES.BILLS);
+        }
+        return entry;
+    }
+
+    private void prepareEditForm(Map<String,String> params, ModelAndView mv, Transaction entry){
+
+        long accountId = strToLong(params.get("account"));
+        SimpleAccount account = accountsService.getAccountById(accountId);
+        if (account == null) {
+            mv = showTransactionsPage(accountId);
+            return;
+        }
+
+        if (entry.getId() == null || entry.getId() == 0) {
+            mv.addObject("edit", 0);
+        } else {
+            mv.addObject("edit", 1);
+        }
+        entry.setDefaultValues(account);
+        mv.addObject("entry", entry);
+
+        mv.addObject("dateFormat", "dd.MM.yyyy");
+        mv.addObject("account", accountId);
+        mv.addObject("accounts", accountsService.getAllAccounts(true));
+        mv.addObject("accountTypes", accountsService.getAccountsTypes());
     }
 }
 

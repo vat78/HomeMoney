@@ -6,6 +6,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import ru.vat78.homeMoney.model.CommonEntry;
@@ -84,7 +85,9 @@ public abstract class CommonEntryDao<T extends CommonEntry> {
     }
 
     protected Criteria getCriteriaWithSearching(String searchString){
-        return getCriteria();
+        Criteria res = getCriteria();
+        res.add(Restrictions.like(Defenitions.FIELDS.SEARCH_NAME, searchString.toLowerCase()));
+        return res;
     }
 
     private T fillProtocolFields(T entity){

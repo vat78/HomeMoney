@@ -83,4 +83,10 @@ public class Transaction extends CommonEntry {
     public void setContractor(Contractor contractor) {
         this.contractor = contractor;
     }
+
+    public Transaction setDefaultValues(SimpleAccount account){
+        setDate(new Date(System.currentTimeMillis()));
+        setAccount(account);
+        return this;
+    }
 }

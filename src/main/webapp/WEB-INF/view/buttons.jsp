@@ -1,10 +1,10 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <a href="/accounts">
-<div class="col-xs-12 col-md-6 col-lg-3">
+<div class="col-xs-12 col-md-6 col-lg-3 visible-lg visible-md">
     <div class="panel panel-blue panel-widget ">
         <div class="row no-padding">
-            <div class="col-sm-3 col-lg-5 widget-left">
+            <div class="col-sm-3 col-lg-5 widget-left visible-lg visible-md">
                 <svg class="glyph stroked bag"><use xlink:href="#stroked-bag"></use></svg>
             </div>
             <div class="col-sm-9 col-lg-7 widget-right">
@@ -16,10 +16,10 @@
 </div>
 </a>
 
-<div class="col-xs-12 col-md-6 col-lg-3">
+<div class="col-xs-12 col-md-6 col-lg-3 visible-lg visible-md">
     <div class="panel panel-orange panel-widget">
         <div class="row no-padding">
-            <div class="col-sm-3 col-lg-5 widget-left">
+            <div class="col-sm-3 col-lg-5 widget-left visible-lg visible-md">
                 <svg class="glyph stroked clipboard with paper"><use xlink:href="#stroked-clipboard-with-paper"/></svg>
             </div>
             <div class="col-sm-9 col-lg-7 widget-right">
@@ -31,10 +31,10 @@
 </div>
 
 <a href="/dictionaries">
-<div class="col-xs-12 col-md-6 col-lg-3">
+<div class="col-xs-12 col-md-6 col-lg-3 visible-lg visible-md" >
     <div class="panel panel-teal panel-widget">
         <div class="row no-padding">
-            <div class="col-sm-3 col-lg-5 widget-left">
+            <div class="col-sm-3 col-lg-5 widget-left visible-lg visible-md">
                 <svg class="glyph stroked tag"><use xlink:href="#stroked-tag"/></svg>
             </div>
             <div class="col-sm-9 col-lg-7 widget-right">
@@ -46,10 +46,10 @@
 </div>
 </a>
 
-<div class="col-xs-12 col-md-6 col-lg-3">
+<div class="col-xs-12 col-md-6 col-lg-3 visible-lg visible-md">
     <div class="panel panel-red panel-widget">
         <div class="row no-padding">
-            <div class="col-sm-3 col-lg-5 widget-left">
+            <div class="col-sm-3 col-lg-5 widget-left visible-lg visible-md">
                 <svg class="glyph stroked line-graph"><use xlink:href="#stroked-line-graph"></use></svg>
             </div>
             <div class="col-sm-9 col-lg-7 widget-right">
