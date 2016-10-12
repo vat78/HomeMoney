@@ -90,6 +90,7 @@ public class DictionaryController {
 
         Class entryType = dictionaryService.getEntityClass(allRequestParams.get("table"));
         if (entryType==null) return "";
+        if (allRequestParams.get("id") == null) allRequestParams.put("id", "0");
 
         List<Dictionary> result = dictionaryService.getTreeRecords(
                 allRequestParams.get("table"),

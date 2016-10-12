@@ -73,7 +73,9 @@ public class DictionaryService {
 
     public List<Dictionary> getTreeRecords(String dictionary, Long id) {
         if (!checkDictionaryName(dictionary)) return Collections.emptyList();
-        return daoFactory.getTreeDao(dictionary).getAllChildrenById(id);
+        List<Dictionary>  result = daoFactory.getTreeDao(dictionary).getAllChildrenById(id);
+        if (id == 0 && result.size() < 1) return insertFirstElement(dictionary);
+        return result;
     }
 
     public Class getEntityClass(String dictionary){
@@ -96,5 +98,13 @@ public class DictionaryService {
         }
 
         return getRecordById(dictionary, resId);
+    }
+
+    private List<Dictionary> insertFirstElement(String dictionary) {
+        if (!checkDictionaryName(dictionary)) return Collections.emptyList();
+        Dictionary element = (Dictionary) daoFactory.getTreeDao(dictionary).getNewEntity();
+        element.setName("Sample value");
+        daoFactory.getTreeDao(dictionary).save(element);
+        return daoFactory.getTreeDao(dictionary).getAllChildrenById(0);
     }
 }

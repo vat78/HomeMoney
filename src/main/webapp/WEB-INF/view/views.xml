@@ -34,6 +34,11 @@
         <put-attribute name="content" value="/WEB-INF/view/dictionaries/simple_dic.jsp" />
     </definition>
 
+    <definition name="tree_dictionary" extends="main-template">
+        <put-attribute name="sidebar" value="/WEB-INF/view/dictionaries/dictionary_sidebar.jsp" />
+        <put-attribute name="content" value="/WEB-INF/view/dictionaries/tree_dic.jsp" />
+    </definition>
+
     <definition name="accounts" extends="main-template">
         <put-attribute name="sidebar" value="/WEB-INF/view/accounts/accounts_sidebar.jsp" />
         <put-attribute name="content" value="/WEB-INF/view/accounts/accounts.jsp" />

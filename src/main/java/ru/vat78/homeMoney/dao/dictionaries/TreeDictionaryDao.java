@@ -25,7 +25,6 @@ public abstract class TreeDictionaryDao<T extends TreeDictionary> extends Dictio
         criteria.addOrder(Order.asc(Defenitions.FIELDS.NAME));
 
         List<T> result =(List<T>) criteria.list();
-        if (parent == null && result.size() == 0) result.add(getDummy());
         return result;
     }
 
@@ -44,9 +43,4 @@ public abstract class TreeDictionaryDao<T extends TreeDictionary> extends Dictio
         }
     }
 
-    private T getDummy(){
-        T result = (T) getNewEntity();
-        result.setName("Empty...");
-        return result;
-    }
 }
