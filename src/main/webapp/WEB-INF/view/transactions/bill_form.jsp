@@ -78,12 +78,6 @@
 
                 </fieldset>
             </form>
-        </div>
-        <div class="modal-footer">
-            <a class="btn" href="/transactions?account=${account}">
-                <button type="submit" class="btn btn-default">Close</button></a>
-            <button form="editForm" type="submit" class="btn btn-primary">Save</button>
-        </div>
 
     </div>
 </div>
@@ -102,3 +96,5 @@
 </script>
 
 <ajax:formValidate formName="#editForm" urlJsonValidate="/bills/save" pageUrl="/transactions?account=${account}" />
+
+<html:paimentsForm />
