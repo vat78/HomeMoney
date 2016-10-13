@@ -10,7 +10,7 @@ import java.util.List;
 
 @Entity
 @Table(name = Defenitions.TABLES.BILLS)
-@DiscriminatorValue(value = Defenitions.TRANSACTION_TYPE.BILL)
+@PrimaryKeyJoinColumn(name = Defenitions.FIELDS.ID)
 public class Bill extends Transaction {
 
     @OneToMany(mappedBy = Defenitions.FIELDS.BILL_ID, fetch = FetchType.EAGER, orphanRemoval=true, cascade = {CascadeType.ALL})

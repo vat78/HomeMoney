@@ -8,7 +8,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 @MappedSuperclass
-@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+@Inheritance(strategy = InheritanceType.JOINED)
 public abstract class CommonEntry implements Serializable {
 
     @UIDef(caption = "ID", shown = true)

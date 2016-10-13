@@ -9,7 +9,7 @@ import java.util.Date;
 
 @Entity
 @Table(name = Defenitions.TABLES.TRANSFERS)
-@DiscriminatorValue(value = Defenitions.TRANSACTION_TYPE.TRANSFER)
+@PrimaryKeyJoinColumn(name = Defenitions.FIELDS.ID)
 public class Transfer extends Transaction {
 
     @NotNull

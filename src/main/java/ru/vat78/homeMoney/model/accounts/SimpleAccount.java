@@ -13,11 +13,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-//ToDo: I could't make storing all type of accounts in one table.
 @Entity
 @Table(name = Defenitions.TABLES.ACCOUNTS)
-@Inheritance(strategy = InheritanceType.JOINED)
-@DiscriminatorColumn(name = Defenitions.FIELDS.ACCOUNT_TYPE, discriminatorType = DiscriminatorType.STRING, length=Defenitions.DISCRIMINATOR_LENGTH)
 public class SimpleAccount extends Dictionary {
 
     @UIDef(caption = "Active", shown = true, editable = true, num = 40, type = "checkbox")

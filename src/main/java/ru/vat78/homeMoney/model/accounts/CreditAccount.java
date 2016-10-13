@@ -7,7 +7,7 @@ import ru.vat78.homeMoney.model.dictionaries.Contractor;
 import javax.persistence.*;
 
 @Entity
-@DiscriminatorValue(value = Defenitions.ACCOUNTS_TYPE.CREDIT)
+@PrimaryKeyJoinColumn(name = Defenitions.FIELDS.ID)
 public class CreditAccount extends SimpleAccount {
 
     @UIDef(caption = "Bank", shown = true, editable = true, num = 33)

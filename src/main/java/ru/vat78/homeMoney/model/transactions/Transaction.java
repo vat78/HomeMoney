@@ -16,8 +16,6 @@ import java.util.Date;
 
 @Entity
 @Table(name = Defenitions.TABLES.TRANSACTIONS)
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name = Defenitions.FIELDS.OPERATION, discriminatorType = DiscriminatorType.STRING, length= Defenitions.DISCRIMINATOR_LENGTH)
 public class Transaction extends CommonEntry {
 
     @UIDef(caption = "Date", shown = true, editable = true, num = 20)

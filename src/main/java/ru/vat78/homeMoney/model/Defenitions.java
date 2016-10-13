@@ -18,6 +18,7 @@ public final class Defenitions {
 
     public final static class TABLES{
 
+        public static final String OBJECTS = "objects";
         public static final String ACCOUNTS = "accounts";
         public static final String BILLS = "bills";
         public static final String CATEGORIES = "categories";
