@@ -13,9 +13,6 @@ public class TransactionsDaoFactory {
 
     private Map<String, TransactionDao> dbEngines;
 
-    //@Autowired
-    //TransactionDao transactionDao;
-
     @Autowired
     BillsDao billsDao;
 
@@ -24,13 +21,12 @@ public class TransactionsDaoFactory {
 
     public TransactionDao getDao(@Nullable String type){
         if (dbEngines == null) fillMap();
-        if (type == null) type = Defenitions.TABLES.TRANSACTIONS;
+        if (type == null) type = Defenitions.TABLES.BILLS;
         return dbEngines.get(type);
     }
 
     private void fillMap() {
         dbEngines = new HashMap<String, TransactionDao>();
-        //dbEngines.put(Defenitions.TABLES.TRANSACTIONS, transactionDao);
         dbEngines.put(Defenitions.TABLES.BILLS, billsDao);
         dbEngines.put(Defenitions.TABLES.TRANSFERS, transferDao);
     }

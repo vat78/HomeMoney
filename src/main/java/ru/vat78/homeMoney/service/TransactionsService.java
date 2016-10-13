@@ -15,7 +15,7 @@ public class TransactionsService {
     TransactionsDaoFactory daoFactory;
 
     public List<Transaction> getTransactionsByAccount(Account account, int offset, int size, String sortColumn, String sortOrder, String searchString){
-        return daoFactory.getDao(null).getPart(offset,size,sortColumn,sortOrder,searchString);
+        return daoFactory.getDao(null).getPartForAccount(account, offset,size,sortColumn,sortOrder,searchString);
     }
 
     public Transaction getTransactionById(long id){

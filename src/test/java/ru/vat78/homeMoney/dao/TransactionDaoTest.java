@@ -19,8 +19,8 @@ import static org.testng.Assert.*;
 
 public class TransactionDaoTest extends CommonEntryDaoTest {
 
-    @Autowired
-    TransactionDao transactionsDao;
+    //@Autowired
+    //TransactionDao transactionsDao;
 
     @Autowired
     BillsDao billsDao;
@@ -44,20 +44,20 @@ public class TransactionDaoTest extends CommonEntryDaoTest {
     @Test(groups = {"dao"})
     public void transactionsTests(){
 
-        long cnt = transactionsDao.getCount();
+        long cnt = billsDao.getCount();
 
         Bill bill = (Bill) addTransaction(billsDao, BillsDaoTest.generateTestBill(account));
-        Transfer tr = (Transfer) addTransaction(transferDao, generateTestTransfer());
+        //Transfer tr = (Transfer) addTransaction(transferDao, generateTestTransfer());
 
-        assertEquals(transactionsDao.getCount(), cnt + 2);
+        assertEquals(billsDao.getCount(), cnt + 1);
 
-        List<Transaction> transactions = transactionsDao.findAllForAccount(account);
-        assertEquals(transactions.size(), 2);
+        List<Transaction> transactions = billsDao.getAllForAccount(account);
+        assertEquals(transactions.size(), 1);
 
-        transactionsDao.delete(bill);
-        transactionsDao.delete(tr);
+        billsDao.delete(bill);
+        //billsDao.delete(tr);
 
-        assertEquals(transactionsDao.getCount(), cnt);
+        assertEquals(billsDao.getCount(), cnt);
     }
 
     private Transfer generateTestTransfer() {
