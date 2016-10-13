@@ -1,7 +1,7 @@
 package ru.vat78.homeMoney.model.transactions;
 
 import com.sun.istack.internal.NotNull;
-import ru.vat78.homeMoney.model.accounts.SimpleAccount;
+import ru.vat78.homeMoney.model.accounts.Account;
 import ru.vat78.homeMoney.model.Defenitions;
 
 import javax.persistence.*;
@@ -15,12 +15,12 @@ public class Transfer extends Transaction {
     @NotNull
     @ManyToOne(cascade = {CascadeType.REFRESH})
     @JoinColumn(name= Defenitions.FIELDS.CORRESPONDING_ACCOUNT, referencedColumnName = Defenitions.FIELDS.ID)
-    private SimpleAccount corrAccount;
+    private Account corrAccount;
 
     @Column(name = Defenitions.FIELDS.CONVERSION)
     private float conversion;
 
-    public SimpleAccount getCorrAccount() {
+    public Account getCorrAccount() {
         return corrAccount;
     }
 
@@ -28,7 +28,7 @@ public class Transfer extends Transaction {
         return conversion;
     }
 
-    public void setCorrAccount(SimpleAccount corrAccount) {
+    public void setCorrAccount(Account corrAccount) {
         this.corrAccount = corrAccount;
     }
 
@@ -37,7 +37,7 @@ public class Transfer extends Transaction {
     }
 
     @Override
-    public Transaction setDefaultValues(SimpleAccount account){
+    public Transaction setDefaultValues(Account account){
         setDate(new Date(System.currentTimeMillis()));
         setAccount(account);
         setConversion(1);

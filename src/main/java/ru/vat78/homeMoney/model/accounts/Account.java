@@ -15,7 +15,7 @@ import java.util.Date;
 
 @Entity
 @Table(name = Defenitions.TABLES.ACCOUNTS)
-public class SimpleAccount extends Dictionary {
+public class Account extends Dictionary {
 
     @UIDef(caption = "Active", shown = true, editable = true, num = 40, type = "checkbox")
     @Column(name = Defenitions.FIELDS.ACTIVE)

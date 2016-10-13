@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import ru.vat78.homeMoney.dao.CommonEntryDao;
 import ru.vat78.homeMoney.model.Defenitions;
-import ru.vat78.homeMoney.model.accounts.SimpleAccount;
+import ru.vat78.homeMoney.model.accounts.Account;
 import ru.vat78.homeMoney.model.transactions.Transaction;
 
 import java.util.Collections;
@@ -19,7 +19,7 @@ public abstract class TransactionDao extends CommonEntryDao {
     @Override
     protected Class<? extends Transaction> getEntityClass() { return Transaction.class;}
 
-    public List<Transaction> findAllForAccount(SimpleAccount account) {
+    public List<Transaction> findAllForAccount(Account account) {
 
         if (account == null) return Collections.emptyList();
 

@@ -3,12 +3,11 @@ package ru.vat78.homeMoney.controller;
 import com.google.gson.*;
 import ru.vat78.homeMoney.model.Defenitions;
 import ru.vat78.homeMoney.model.User;
-import ru.vat78.homeMoney.model.accounts.SimpleAccount;
+import ru.vat78.homeMoney.model.accounts.Account;
 import ru.vat78.homeMoney.model.dictionaries.Dictionary;
 import ru.vat78.homeMoney.model.dictionaries.TreeDictionary;
 
 import java.lang.reflect.Type;
-import java.util.Arrays;
 
 class GsonSerializerBuilder {
 
@@ -53,9 +52,9 @@ class GsonSerializerBuilder {
         }
     }
 
-    static class SimpleAccountSerializer implements JsonSerializer<SimpleAccount>{
+    static class SimpleAccountSerializer implements JsonSerializer<Account>{
 
-        public JsonElement serialize(SimpleAccount src, Type typeOfSrc, JsonSerializationContext context){
+        public JsonElement serialize(Account src, Type typeOfSrc, JsonSerializationContext context){
 
             JsonObject result = new JsonObject();
             result.addProperty(Defenitions.FIELDS.ID, src.getId());

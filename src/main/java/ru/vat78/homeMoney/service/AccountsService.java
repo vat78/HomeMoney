@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.vat78.homeMoney.dao.accounts.AccountsDao;
 import ru.vat78.homeMoney.dao.accounts.AccountsDaoFactory;
-import ru.vat78.homeMoney.model.accounts.SimpleAccount;
+import ru.vat78.homeMoney.model.accounts.Account;
 
 import java.util.*;
 
@@ -14,19 +14,19 @@ public class AccountsService {
     @Autowired
     AccountsDaoFactory daoFactory;
 
-    public List<SimpleAccount> getAllAccounts(boolean active){
+    public List<Account> getAllAccounts(boolean active){
 
-        List<SimpleAccount> result = new ArrayList<SimpleAccount>();
+        List<Account> result = new ArrayList<Account>();
 
         for (AccountsDao source: daoFactory.getAllDao()){
-            List<SimpleAccount> list = source.getAccountsByStatus(active);
+            List<Account> list = source.getAccountsByStatus(active);
             result.addAll(list);
         }
         result.sort(null);
         return result;
     }
 
-    public List<SimpleAccount> getActiveAccountsByType(String accountType){
+    public List<Account> getActiveAccountsByType(String accountType){
         if (!checkAccountType(accountType)) return Collections.EMPTY_LIST;
         return daoFactory.getDao(accountType).getAccountsByStatus(true);
     }
@@ -35,30 +35,30 @@ public class AccountsService {
         return daoFactory.getAllTypes();
     }
 
-    public SimpleAccount getNewEntry(String accountType){
+    public Account getNewEntry(String accountType){
         if (!checkAccountType(accountType)) return null;
-        return (SimpleAccount) daoFactory.getDao(accountType).getNewEntity();
+        return (Account) daoFactory.getDao(accountType).getNewEntity();
     }
 
-    public SimpleAccount getAccountById(long id){
-        SimpleAccount result = null;
+    public Account getAccountById(long id){
+        Account result = null;
         for (AccountsDao source: daoFactory.getAllDao()){
-            result = (SimpleAccount) source.findById(id);
+            result = (Account) source.findById(id);
             if (result != null) break;
         }
         return result;
     }
 
-    public SimpleAccount getRecordByName(String accountType, String accountName) {
+    public Account getRecordByName(String accountType, String accountName) {
         if (!checkAccountType(accountType)) return null;
         return daoFactory.getDao(accountType).findByName(accountName);
     }
 
-    public boolean saveRecord(String accountType, SimpleAccount entity) {
+    public boolean saveRecord(String accountType, Account entity) {
 
         if (!checkAccountType(accountType)) return false;
         try {
-            entity = (SimpleAccount) daoFactory.getDao(accountType).save(entity);
+            entity = (Account) daoFactory.getDao(accountType).save(entity);
         } catch (Exception ignored) {return false;}
 
         return entity != null;

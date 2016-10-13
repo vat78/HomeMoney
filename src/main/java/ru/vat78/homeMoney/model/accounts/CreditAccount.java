@@ -8,7 +8,7 @@ import javax.persistence.*;
 
 @Entity
 @PrimaryKeyJoinColumn(name = Defenitions.FIELDS.ID)
-public class CreditAccount extends SimpleAccount {
+public class CreditAccount extends Account {
 
     @UIDef(caption = "Bank", shown = true, editable = true, num = 33)
     @ManyToOne(cascade = {CascadeType.REFRESH})

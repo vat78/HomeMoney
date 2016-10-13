@@ -9,7 +9,7 @@ import ru.vat78.homeMoney.dao.transactions.BillsDao;
 import ru.vat78.homeMoney.model.transactions.Bill;
 import ru.vat78.homeMoney.model.dictionaries.Category;
 import ru.vat78.homeMoney.model.Payment;
-import ru.vat78.homeMoney.model.accounts.SimpleAccount;
+import ru.vat78.homeMoney.model.accounts.Account;
 
 import java.util.Date;
 
@@ -26,7 +26,7 @@ public class BillsDaoTest extends CommonEntryDaoTest{
     @Autowired
     CashAccountsDao accountsDao;
 
-    SimpleAccount account;
+    Account account;
 
     @Autowired
     DictionaryDaoFactory daoFactory;
@@ -34,7 +34,7 @@ public class BillsDaoTest extends CommonEntryDaoTest{
 
     Category category;
 
-    public static Bill generateTestBill(SimpleAccount testAccount) {
+    public static Bill generateTestBill(Account testAccount) {
 
         Bill test = new Bill();
         test.setAccount(testAccount);
@@ -46,7 +46,7 @@ public class BillsDaoTest extends CommonEntryDaoTest{
     @BeforeClass()
     public void prepareData(){
 
-        account = (SimpleAccount) addingAndSearchingTest(accountsDao, SimpleAccountsDaoTest.generateTestSimpleAccount());
+        account = (Account) addingAndSearchingTest(accountsDao, SimpleAccountsDaoTest.generateTestSimpleAccount());
 
         category = (Category) addingAndSearchingTest(daoFactory.getDao("categories"), CategoriesDaoTest.generateTestCategories().get(0));
 

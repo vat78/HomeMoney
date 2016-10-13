@@ -5,7 +5,7 @@ import org.testng.annotations.Test;
 import ru.vat78.homeMoney.dao.accounts.CreditAccountsDao;
 import ru.vat78.homeMoney.dao.accounts.CashAccountsDao;
 import ru.vat78.homeMoney.model.accounts.CreditAccount;
-import ru.vat78.homeMoney.model.accounts.SimpleAccount;
+import ru.vat78.homeMoney.model.accounts.Account;
 
 import java.util.List;
 
@@ -20,9 +20,9 @@ public class SimpleAccountsDaoTest extends CommonEntryDaoTest {
     @Autowired
     CreditAccountsDao creditDao;
 
-    public static SimpleAccount generateTestSimpleAccount() {
+    public static Account generateTestSimpleAccount() {
 
-        SimpleAccount test = new SimpleAccount();
+        Account test = new Account();
         test.setName("Test simple account " + Math.random());
         test.setActive(true);
         return test;
@@ -42,10 +42,10 @@ public class SimpleAccountsDaoTest extends CommonEntryDaoTest {
 
         long cnt = accountsDao.getCount();
 
-        SimpleAccount a1 = (SimpleAccount) addingAndSearchingTest(accountsDao, generateTestSimpleAccount());
+        Account a1 = (Account) addingAndSearchingTest(accountsDao, generateTestSimpleAccount());
         CreditAccount a2 = (CreditAccount) addingAndSearchingTest(creditDao, generateTestCreditAccount());
 
-        List<SimpleAccount> all = accountsDao.getAll();
+        List<Account> all = accountsDao.getAll();
         assertEquals(accountsDao.getCount(), cnt + 2);
 
         accountsDao.delete(a1);

@@ -3,7 +3,7 @@ package ru.vat78.homeMoney.model.transactions;
 import com.sun.istack.internal.NotNull;
 import org.springframework.format.annotation.DateTimeFormat;
 import ru.vat78.homeMoney.model.UIDef;
-import ru.vat78.homeMoney.model.accounts.SimpleAccount;
+import ru.vat78.homeMoney.model.accounts.Account;
 import ru.vat78.homeMoney.model.CommonEntry;
 import ru.vat78.homeMoney.model.Defenitions;
 import ru.vat78.homeMoney.model.dictionaries.Contractor;
@@ -27,7 +27,7 @@ public class Transaction extends CommonEntry {
     @UIDef(caption = "Account", shown = false, num = 10)
     @ManyToOne(cascade = {CascadeType.REFRESH})
     @JoinColumn(name= Defenitions.FIELDS.ACCOUNT_ID, referencedColumnName = Defenitions.FIELDS.ID)
-    private SimpleAccount account;
+    private Account account;
 
     @UIDef(caption = "Summ", shown = true, editable = true, num = 50)
     @Column(name = Defenitions.FIELDS.SUM)
@@ -46,7 +46,7 @@ public class Transaction extends CommonEntry {
         return date;
     }
 
-    public SimpleAccount getAccount() {
+    public Account getAccount() {
         return account;
     }
 
@@ -70,7 +70,7 @@ public class Transaction extends CommonEntry {
         return true;
     }
 
-    public void setAccount(SimpleAccount account) {
+    public void setAccount(Account account) {
         this.account = account;
     }
 
@@ -82,7 +82,7 @@ public class Transaction extends CommonEntry {
         this.contractor = contractor;
     }
 
-    public Transaction setDefaultValues(SimpleAccount account){
+    public Transaction setDefaultValues(Account account){
         setDate(new Date(System.currentTimeMillis()));
         setAccount(account);
         return this;

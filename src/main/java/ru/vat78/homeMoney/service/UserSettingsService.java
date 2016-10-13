@@ -8,14 +8,13 @@ import ru.vat78.homeMoney.model.UIDef;
 import ru.vat78.homeMoney.model.User;
 import ru.vat78.homeMoney.model.accounts.CashAccount;
 import ru.vat78.homeMoney.model.accounts.CreditAccount;
-import ru.vat78.homeMoney.model.accounts.SimpleAccount;
+import ru.vat78.homeMoney.model.accounts.Account;
 import ru.vat78.homeMoney.model.dictionaries.*;
 import ru.vat78.homeMoney.model.dictionaries.Currency;
 import ru.vat78.homeMoney.model.tools.ColumnDefinition;
 import ru.vat78.homeMoney.model.tools.UserTableSettings;
 import ru.vat78.homeMoney.model.transactions.Transaction;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.util.*;
 
@@ -70,7 +69,7 @@ public class UserSettingsService {
         if (tableName.equals(Defenitions.TABLES.PERSONS)) return Person.class;
         if (tableName.equals(Defenitions.TABLES.TAGS)) return Tag.class;
 
-        if (tableName.equals(Defenitions.TABLES.ACCOUNTS) || tableName.equals("closed")) return SimpleAccount.class;
+        if (tableName.equals(Defenitions.TABLES.ACCOUNTS) || tableName.equals("closed")) return Account.class;
         if (tableName.equals(Defenitions.TABLES.CASH_ACCOUNTS)) return CashAccount.class;
         if (tableName.equals(Defenitions.TABLES.CREDIT_ACCOUNTS)) return CreditAccount.class;
 

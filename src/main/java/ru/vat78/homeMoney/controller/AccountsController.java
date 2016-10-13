@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import ru.vat78.homeMoney.model.Defenitions;
 import ru.vat78.homeMoney.model.User;
-import ru.vat78.homeMoney.model.accounts.SimpleAccount;
+import ru.vat78.homeMoney.model.accounts.Account;
 import ru.vat78.homeMoney.model.dictionaries.Currency;
 import ru.vat78.homeMoney.model.tools.ColumnDefinition;
 import ru.vat78.homeMoney.model.tools.UserTableSettings;
@@ -59,7 +59,7 @@ public class AccountsController {
     @ResponseBody
     public String getTable(@RequestParam Map<String,String> allRequestParams){
 
-        List<SimpleAccount> list;
+        List<Account> list;
         String table = allRequestParams.get("type");
         if (table == null || table.length() == 0){
             table = Defenitions.TABLES.ACCOUNTS;
@@ -87,7 +87,7 @@ public class AccountsController {
 
         Response res = new Response();
 
-        SimpleAccount entity = loadEntryFromParams(allRequestParams);
+        Account entity = loadEntryFromParams(allRequestParams);
 
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         Validator validator = factory.getValidator();
@@ -128,9 +128,9 @@ public class AccountsController {
         return new GsonBuilder().create().toJson(result);
     }
 
-    private SimpleAccount loadEntryFromParams(Map<String, String> params) {
+    private Account loadEntryFromParams(Map<String, String> params) {
 
-        SimpleAccount result = accountsService.getNewEntry(params.get("table"));
+        Account result = accountsService.getNewEntry(params.get("table"));
         WebDataBinder binder = new WebDataBinder(result);
         binder.bind(new MutablePropertyValues(params));
 
@@ -153,17 +153,17 @@ public class AccountsController {
         return mv;
     }
 
-    private void checkUniqueName(String accountType, SimpleAccount entity, Response response){
+    private void checkUniqueName(String accountType, Account entity, Response response){
 
         if (response.getResult() == null) {
-            SimpleAccount inDB = accountsService.getRecordByName(accountType, entity.getName());
+            Account inDB = accountsService.getRecordByName(accountType, entity.getName());
             if (inDB != null && inDB.getId() != entity.getId()){
                 response.setError("name", "Such name already exists");
             }
         }
     }
 
-    private void saveEntityToDb(String accountType, SimpleAccount entity, Response response) {
+    private void saveEntityToDb(String accountType, Account entity, Response response) {
 
         if (response.getResult() == null) {
             if (accountsService.saveRecord(accountType,entity)) {

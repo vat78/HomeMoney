@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import ru.vat78.homeMoney.model.Defenitions;
 import ru.vat78.homeMoney.model.User;
-import ru.vat78.homeMoney.model.accounts.SimpleAccount;
+import ru.vat78.homeMoney.model.accounts.Account;
 import ru.vat78.homeMoney.model.tools.ColumnDefinition;
 import ru.vat78.homeMoney.model.tools.UserTableSettings;
 import ru.vat78.homeMoney.model.transactions.Bill;
@@ -25,7 +25,6 @@ import ru.vat78.homeMoney.service.SecurityService;
 import ru.vat78.homeMoney.service.TransactionsService;
 import ru.vat78.homeMoney.service.UserSettingsService;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeSet;
@@ -61,7 +60,7 @@ public class TransactionsController {
     public String getTable(@RequestParam Map<String,String> allRequestParams){
 
         long accountId = strToLong(allRequestParams.get("account"));
-        SimpleAccount account = accountsService.getAccountById(accountId);
+        Account account = accountsService.getAccountById(accountId);
 
         List<Transaction> list;
         list = transactionsService.getTransactionsByAccount(
@@ -206,7 +205,7 @@ public class TransactionsController {
     private void prepareEditForm(Map<String,String> params, ModelAndView mv, Transaction entry){
 
         long accountId = strToLong(params.get("account"));
-        SimpleAccount account = accountsService.getAccountById(accountId);
+        Account account = accountsService.getAccountById(accountId);
         if (account == null) {
             mv = showTransactionsPage(accountId);
             return;

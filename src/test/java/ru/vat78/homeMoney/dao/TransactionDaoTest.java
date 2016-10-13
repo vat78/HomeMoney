@@ -8,7 +8,7 @@ import ru.vat78.homeMoney.dao.transactions.BillsDao;
 import ru.vat78.homeMoney.dao.transactions.TransactionDao;
 import ru.vat78.homeMoney.dao.transactions.TransferDao;
 import ru.vat78.homeMoney.model.transactions.Bill;
-import ru.vat78.homeMoney.model.accounts.SimpleAccount;
+import ru.vat78.homeMoney.model.accounts.Account;
 import ru.vat78.homeMoney.model.transactions.Transaction;
 import ru.vat78.homeMoney.model.transactions.Transfer;
 
@@ -31,13 +31,13 @@ public class TransactionDaoTest extends CommonEntryDaoTest {
     @Autowired
     CashAccountsDao accountsDao;
 
-    SimpleAccount account;
+    Account account;
 
 
     @BeforeClass()
     public void prepareData(){
 
-        account = (SimpleAccount) addingAndSearchingTest(accountsDao, SimpleAccountsDaoTest.generateTestSimpleAccount());
+        account = (Account) addingAndSearchingTest(accountsDao, SimpleAccountsDaoTest.generateTestSimpleAccount());
 
     }
 
