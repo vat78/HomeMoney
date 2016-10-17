@@ -71,11 +71,11 @@
     }
 </script>
 
-<c:if test="${tableDef.name != 'closed'}">
+
 
     <html:editAccountForm caption="Adding new ${tableDef.caption}" table="${tableDef.name}" columns="${columns}" currencies="${currencies}" />
 
     <ajax:formValidate formName="#editForm" urlJsonValidate="/accounts/save" pageUrl="${page_url}" />
 
-</c:if>
+
 

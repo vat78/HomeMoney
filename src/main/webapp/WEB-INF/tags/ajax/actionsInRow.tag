@@ -6,13 +6,18 @@
     window.operateEvents = {
         'click .edit': function (e, value, row) {
             var $form = $('#editForm');
-            var $inputs = $form.find('input');
+            var $inputs = $form.find('input, select');
             for (var i = 0; i < $inputs.length; i++) {
                 var $item = $inputs[i];
                 if (row[$item.name] != null){
-                    $item.value = row[$item.name];
+                    if ($item.type == 'checkbox') {
+                        $item.checked = row[$item.name];
+                    } else {
+                        $item.value = row[$item.name];
+                    }
                 }
             }
+
             $("#formModal").modal('show');
         },
         'click .remove': function (e, value, row) {

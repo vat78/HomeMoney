@@ -42,7 +42,7 @@
                                 <select class="form-control" data-width="auto" id="currency" name="currency" >
                                     <option selected>Select currency</option>
                                     <c:forEach var="cur" items="${currencies}">
-                                        <option value="${cur.id}">${cur.name}</option>
+                                        <option value="${cur.name}">${cur.name}</option>
                                     </c:forEach>
                                 </select><br>
                                 <span class="help-block" name="currency"></span>
