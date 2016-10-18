@@ -90,6 +90,7 @@ public final class Defenitions {
         public static final String SORT_COLUMN = "sortColumn";
         public static final String SORT_ORDER = "sortOrder";
         public static final String PAGE_SIZE = "pageSize";
+        public static final String ADD_BTN = "add_btn";
     }
 
     public final static class ACCOUNTS_TYPE {

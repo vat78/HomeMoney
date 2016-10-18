@@ -39,6 +39,9 @@ public class UserTableSettings {
     @Column(name = Defenitions.FIELDS.PAGE_SIZE)
     private int pageSize;
 
+    @Column(name = Defenitions.FIELDS.ADD_BTN)
+    private boolean addBtn;
+
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     @MapKey(name = Defenitions.FIELDS.NAME)
     private Map<String, ColumnDefinition> columns;
@@ -105,5 +108,13 @@ public class UserTableSettings {
 
     public Map<String, ColumnDefinition> getColumns() {
         return columns;
+    }
+
+    public boolean isAddBtn() {
+        return addBtn;
+    }
+
+    public void setAddBtn(boolean addBtn) {
+        this.addBtn = addBtn;
     }
 }

@@ -15,7 +15,7 @@
         </div>
         <div class="panel-body">
 
-            <c:if test="${tableDef.name != 'closed'}">
+            <c:if test="${tableDef.addBtn}">
                 <div id="toolbar">
                     <div class="btn-group">
                         <button class="btn btn-default" type="button" name="add" title="Add" data-toggle="modal" data-target="#formModal">

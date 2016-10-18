@@ -65,8 +65,8 @@ public class AccountsController {
             table = Defenitions.TABLES.ACCOUNTS;
         }
 
-        if (table.equals("closed")){
-            list = accountsService.getAllAccounts(false);
+        if (table.equals(Defenitions.TABLES.ACCOUNTS) || table.equals("closed")){
+            list = accountsService.getAllAccounts(table.equals(Defenitions.TABLES.ACCOUNTS));
         } else {
             list = accountsService.getActiveAccountsByType(table);
         }
@@ -150,6 +150,7 @@ public class AccountsController {
     private ModelAndView prepareAccountPage(String tableName, ModelAndView mv){
 
         UserTableSettings settings = userSettingsService.getTableSettings(securityService.getCurrentUser(),tableName);
+        settings.setAddBtn(!(tableName.equals(Defenitions.TABLES.ACCOUNTS) || tableName.equals("closed")));
         mv.addObject("tableDef", settings);
 
         TreeSet<ColumnDefinition> columns = new TreeSet<ColumnDefinition>();
