@@ -16,6 +16,11 @@ public class Bill extends Transaction {
     @OneToMany(mappedBy = Defenitions.FIELDS.BILL_ID, fetch = FetchType.EAGER, orphanRemoval=true, cascade = {CascadeType.ALL})
     List<Payment> positions = new ArrayList<Payment>();
 
+    public Bill() {
+        this.setGroup(Defenitions.TABLES.TRANSACTIONS);
+        this.setType(Defenitions.TABLES.BILLS);
+    }
+
     public List<Payment> getPositions() {
         return positions;
     }

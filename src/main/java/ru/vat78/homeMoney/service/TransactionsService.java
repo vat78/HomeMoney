@@ -26,10 +26,10 @@ public class TransactionsService {
         return (Transaction) daoFactory.getDao(transactionType).getNewEntity();
     }
 
-    public boolean saveRecord(String transactionType, Transaction entity) {
-        if (!checkTransactionType(transactionType)) return false;
+    public boolean saveRecord(Transaction entity) {
+        if (!checkTransactionType(entity.getType())) return false;
         try {
-            entity = (Transaction) daoFactory.getDao(transactionType).save(entity);
+            entity = (Transaction) daoFactory.getDao(entity.getType()).save(entity);
         } catch (Exception ignored) {return false;}
 
         return entity != null;

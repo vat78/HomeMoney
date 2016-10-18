@@ -10,4 +10,8 @@ import javax.persistence.UniqueConstraint;
 @Table(name = Defenitions.TABLES.TAGS, uniqueConstraints = {@UniqueConstraint(columnNames = Defenitions.FIELDS.SEARCH_NAME)})
 public class Tag extends Dictionary{
 
+    public Tag() {
+        this.setGroup(Defenitions.TABLES.DICTIONARIES);
+        this.setType(Defenitions.TABLES.TAGS);
+    }
 }

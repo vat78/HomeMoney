@@ -7,6 +7,7 @@ import ru.vat78.homeMoney.model.dictionaries.Contractor;
 import javax.persistence.*;
 
 @Entity
+@Table(name = Defenitions.TABLES.CREDIT_ACCOUNTS)
 @PrimaryKeyJoinColumn(name = Defenitions.FIELDS.ID)
 public class CreditAccount extends Account {
 
@@ -18,6 +19,11 @@ public class CreditAccount extends Account {
     @UIDef(caption = "Credit rate", shown = true, editable = true, num = 37, type = "number")
     @Column(name = Defenitions.FIELDS.CREDIT_RATE)
     private float rate;
+
+    public CreditAccount() {
+        this.setGroup(Defenitions.TABLES.ACCOUNTS);
+        this.setType(Defenitions.TABLES.CREDIT_ACCOUNTS);
+    }
 
     public Contractor getCreditOrganization() {
         return creditOrganization;

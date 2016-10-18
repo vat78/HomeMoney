@@ -32,9 +32,9 @@ public class Account extends Dictionary {
     @JoinColumn(name=Defenitions.FIELDS.CURRENCY, referencedColumnName = Defenitions.FIELDS.ID)
     private Currency currency;
 
-    @UIDef(caption = "Type", shown = false, editable = true, num = 50, type = "text")
-    @Column(name = Defenitions.FIELDS.ACCOUNT_TYPE)
-    private String accountType;
+    //@UIDef(caption = "Type", shown = false, editable = true, num = 50, type = "text")
+    //@Column(name = Defenitions.FIELDS.ACCOUNT_TYPE)
+    //private String accountType;
 
     public boolean isActive() {
         return active;
@@ -48,9 +48,9 @@ public class Account extends Dictionary {
         return currency;
     }
 
-    public String getAccountType() {
-        return accountType;
-    }
+    //public String getAccountType() {
+    //    return accountType;
+    //}
 
     public void setActive(boolean active) {
         this.active = active;
@@ -71,7 +71,7 @@ public class Account extends Dictionary {
         this.currency = currency;
     }
 
-    public void setAccountType(String accountType) {
-        this.accountType = accountType;
-    }
+    //public void setAccountType(String accountType) {
+    //    this.accountType = accountType;
+    //}
 }

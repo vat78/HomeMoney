@@ -16,7 +16,6 @@ public class CreditAccountsDao extends AccountsDao {
     @Override
     public CreditAccount getNewEntity() {
         CreditAccount res = new CreditAccount();
-        res.setAccountType(Defenitions.ACCOUNTS_TYPE.CREDIT);
         return res;
     }
 }

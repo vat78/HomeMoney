@@ -19,6 +19,11 @@ public class Currency extends Dictionary {
     @Column(name = Defenitions.FIELDS.SYMBOL)
     String symbol;
 
+    public Currency() {
+        this.setGroup(Defenitions.TABLES.DICTIONARIES);
+        this.setType(Defenitions.TABLES.CURRENCY);
+    }
+
     public String getSymbol() {
         return symbol;
     }

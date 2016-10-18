@@ -112,7 +112,7 @@ public class TransactionsController {
         Transaction entity = loadEntryFromParams(allRequestParams, res);
 
         if (res.getResult() == null) {
-            if (transactionsService.saveRecord(allRequestParams.get(Defenitions.FIELDS.OPERATION_TYPE),entity)) {
+            if (transactionsService.saveRecord(entity)) {
                 res.setStatus("SUCCESS");
                 res.setResult(entity);
             } else {

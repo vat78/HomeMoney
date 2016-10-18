@@ -20,6 +20,11 @@ public class Transfer extends Transaction {
     @Column(name = Defenitions.FIELDS.CONVERSION)
     private float conversion;
 
+    public Transfer() {
+        this.setGroup(Defenitions.TABLES.TRANSACTIONS);
+        this.setType(Defenitions.TABLES.TRANSFERS);
+    }
+
     public Account getCorrAccount() {
         return corrAccount;
     }

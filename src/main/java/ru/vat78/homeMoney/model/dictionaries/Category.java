@@ -16,6 +16,12 @@ public class Category extends TreeDictionary {
 
     @OneToMany(mappedBy = Defenitions.FIELDS.PARENT_ID, fetch = FetchType.LAZY, orphanRemoval=true, cascade = CascadeType.ALL)
     private Set<Category> children = new HashSet<Category>();
+
+    public Category() {
+        this.setGroup(Defenitions.TABLES.DICTIONARIES);
+        this.setType(Defenitions.TABLES.CATEGORIES);
+    }
+
     public Category getParent() {
         return parent;
     }

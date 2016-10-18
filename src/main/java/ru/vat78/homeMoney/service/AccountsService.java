@@ -54,11 +54,11 @@ public class AccountsService {
         return daoFactory.getDao(accountType).findByName(accountName);
     }
 
-    public boolean saveRecord(String accountType, Account entity) {
+    public boolean saveRecord(Account entity) {
 
-        if (!checkAccountType(accountType)) return false;
+        if (!checkAccountType(entity.getType())) return false;
         try {
-            entity = (Account) daoFactory.getDao(accountType).save(entity);
+            entity = (Account) daoFactory.getDao(entity.getType()).save(entity);
         } catch (Exception ignored) {return false;}
 
         return entity != null;

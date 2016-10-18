@@ -17,6 +17,12 @@ public abstract class CommonEntry implements Serializable {
     @GeneratedValue(strategy = GenerationType.TABLE)
     private Long id;
 
+    @Column(name = Defenitions.FIELDS.GROUP)
+    private String group;
+
+    @Column(name = Defenitions.FIELDS.TYPE)
+    private String type;
+
     @UIDef(caption = "Create on", shown = true, editable = false, num = 101)
     @DateTimeFormat(pattern=Defenitions.DATE_FORMAT)
     @Column(name = Defenitions.FIELDS.CREATE_ON, nullable = false)
@@ -79,4 +85,19 @@ public abstract class CommonEntry implements Serializable {
         this.modifyBy = modifyBy;
     }
 
+    public String getGroup() {
+        return group;
+    }
+
+    protected void setGroup(String group) {
+        this.group = group;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    protected void setType(String type) {
+        this.type = type;
+    }
 }

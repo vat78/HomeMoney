@@ -16,7 +16,6 @@ public class CashAccountsDao extends AccountsDao {
     @Override
     public CashAccount getNewEntity() {
         CashAccount res = new CashAccount();
-        res.setAccountType(Defenitions.ACCOUNTS_TYPE.CASH);
         return res;
     }
 }

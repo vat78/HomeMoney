@@ -45,12 +45,12 @@ public class DictionaryService {
         return (daoFactory.getDao(dictionary) != null);
     }
 
-    public boolean saveRecord(String dictionary, Dictionary entity){
+    public boolean saveRecord(Dictionary entity){
 
-        if (!checkDictionaryName(dictionary)) return false;
+        if (!checkDictionaryName(entity.getType())) return false;
 
         try {
-            entity = (Dictionary) daoFactory.getDao(dictionary).save(entity);
+            entity = (Dictionary) daoFactory.getDao(entity.getType()).save(entity);
         } catch (Exception ignored) {return false;}
 
         return entity != null;

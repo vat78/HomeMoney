@@ -9,4 +9,9 @@ import javax.persistence.UniqueConstraint;
 @Entity
 @Table(name = Defenitions.TABLES.PERSONS, uniqueConstraints = {@UniqueConstraint(columnNames = Defenitions.FIELDS.SEARCH_NAME)})
 public class Person extends Dictionary {
+
+    public Person() {
+        this.setGroup(Defenitions.TABLES.DICTIONARIES);
+        this.setType(Defenitions.TABLES.PERSONS);
+    }
 }

@@ -103,8 +103,8 @@ public class AccountsController {
             res.setResult(errorMesages);
         }
 
-        checkUniqueName(allRequestParams.get("table"), entity, res);
-        saveEntityToDb(allRequestParams.get("table"), entity, res);
+        checkUniqueName(entity, res);
+        saveEntityToDb(entity, res);
 
         Gson gson = new GsonBuilder().create();
         return gson.toJson(res);
@@ -130,12 +130,18 @@ public class AccountsController {
 
     private Account loadEntryFromParams(Map<String, String> params) {
 
-        Account result = accountsService.getNewEntry(params.get("table"));
+        Account result;
+        if (params.get(Defenitions.FIELDS.ID) == null || Long.parseLong(params.get(Defenitions.FIELDS.ID)) == 0) {
+            result = accountsService.getNewEntry(params.get("table"));
+        } else {
+            result = accountsService.getAccountById(Long.parseLong(params.get(Defenitions.FIELDS.ID)));
+        }
+
         WebDataBinder binder = new WebDataBinder(result);
         binder.bind(new MutablePropertyValues(params));
 
         result.setOpeningDate(params.get(Defenitions.FIELDS.OPENING_DATE),Defenitions.DATE_FORMAT);
-        result.setCurrency((Currency) dictionaryService.getRecordById(Defenitions.TABLES.CURRENCY, params.get(Defenitions.FIELDS.CURRENCY)));
+        result.setCurrency((Currency) dictionaryService.getRecordByName(Defenitions.TABLES.CURRENCY, params.get(Defenitions.FIELDS.CURRENCY)));
         result.setModifyBy(securityService.getCurrentUser());
 
         return result;
@@ -153,8 +159,9 @@ public class AccountsController {
         return mv;
     }
 
-    private void checkUniqueName(String accountType, Account entity, Response response){
+    private void checkUniqueName(Account entity, Response response){
 
+        String accountType = entity.getType();
         if (response.getResult() == null) {
             Account inDB = accountsService.getRecordByName(accountType, entity.getName());
             if (inDB != null && inDB.getId() != entity.getId()){
@@ -163,10 +170,11 @@ public class AccountsController {
         }
     }
 
-    private void saveEntityToDb(String accountType, Account entity, Response response) {
+    private void saveEntityToDb(Account entity, Response response) {
 
+        String accountType = entity.getType();
         if (response.getResult() == null) {
-            if (accountsService.saveRecord(accountType,entity)) {
+            if (accountsService.saveRecord(entity)) {
                 response.setStatus("SUCCESS");
                 response.setResult(entity);
             } else {

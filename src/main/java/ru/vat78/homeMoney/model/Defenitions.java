@@ -19,6 +19,7 @@ public final class Defenitions {
     public final static class TABLES{
 
         public static final String OBJECTS = "objects";
+        public static final String DICTIONARIES = "dictionaries";
         public static final String ACCOUNTS = "accounts";
         public static final String BILLS = "bills";
         public static final String CATEGORIES = "categories";
@@ -44,6 +45,8 @@ public final class Defenitions {
         public static final String CREATE_BY = "createdBy";
         public static final String MODIFY_ON = "modifiedOn";
         public static final String MODIFY_BY = "modifiedBy";
+        public static final String GROUP = "ogroup";
+        public static final String TYPE = "otype";
 
         public static final String NAME = "name";
         public static final String SEARCH_NAME = "searchingName";

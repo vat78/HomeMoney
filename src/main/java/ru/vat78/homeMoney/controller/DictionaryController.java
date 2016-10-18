@@ -242,7 +242,7 @@ public class DictionaryController {
     private void saveEntityToDb(String dictionary, Dictionary entity, Response response) {
 
         if (response.getResult() == null) {
-            if (dictionaryService.saveRecord(dictionary,entity)) {
+            if (dictionaryService.saveRecord(entity)) {
                 response.setStatus("SUCCESS");
                 response.setResult(entity);
             } else {
