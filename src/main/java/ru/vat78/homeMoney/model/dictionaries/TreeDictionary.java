@@ -16,7 +16,13 @@ public abstract class TreeDictionary extends Dictionary {
 
     public abstract Set<? extends TreeDictionary> getChildren();
 
-    public String getFullName(boolean rebuild){
+    @Override
+    public String getFullName() {
+        fullName = buildFullName();
+        return fullName;
+    }
+
+    private String getFullName(boolean rebuild){
         if (fullName == null || rebuild) fullName = buildFullName();
         return fullName;
     }

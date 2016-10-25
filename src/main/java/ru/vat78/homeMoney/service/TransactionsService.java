@@ -9,7 +9,7 @@ import ru.vat78.homeMoney.model.transactions.Transaction;
 import java.util.List;
 
 @Service
-public class TransactionsService {
+public class TransactionsService extends CommonService<Transaction> {
 
     @Autowired
     TransactionDao transactionsDao;
@@ -18,7 +18,37 @@ public class TransactionsService {
         return transactionsDao.getPartForAccount(account, offset,size,sortColumn,sortOrder,searchString);
     }
 
-    public Transaction getTransactionById(long id){
+    @Override
+    public List<Transaction> getRecords(String type, int offset, int size, String sortColumn, String sortOrder, String searchString) {
+        return null;
+    }
+
+    @Override
+    public Transaction getRecordByName(String type, String name) {
+        return null;
+    }
+
+    @Override
+    public Transaction getRecordById(String dictionary, Long id) {
+        return null;
+    }
+
+    @Override
+    public boolean isTypeExist(String type) {
+        return false;
+    }
+
+    @Override
+    public boolean deleteRecordById(String Type, Long id) {
+        return false;
+    }
+
+    @Override
+    public boolean deleteRecord(Transaction entry) {
+        return false;
+    }
+
+    public Transaction getRecordById(long id){
         return null;
     }
 
@@ -26,13 +56,13 @@ public class TransactionsService {
 
         Transaction result = null;
         try {
-            result  = (Transaction) transactionsDao.getNewEntity(transactionType);
+            result  = transactionsDao.getNewEntity(transactionType);
         } catch (Exception ignored) {}
         return result;
     }
 
     public boolean saveRecord(Transaction entity) {
-        if (!checkTransactionType(entity.getType())) return false;
+        if (!isTypeExist(entity.getType())) return false;
         try {
             entity = (Transaction) transactionsDao.save(entity);
         } catch (Exception ignored) {return false;}
@@ -40,7 +70,4 @@ public class TransactionsService {
         return entity != null;
     }
 
-    public boolean checkTransactionType(String transactionType) {
-        return (getNewEntry(transactionType) != null);
-    }
 }

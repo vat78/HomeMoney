@@ -1,4 +1,4 @@
-package ru.vat78.homeMoney.controller;
+package ru.vat78.homeMoney.controller.api;
 
 import com.google.gson.*;
 import ru.vat78.homeMoney.model.Defenitions;
@@ -22,7 +22,7 @@ class GsonSerializerBuilder {
         return null;
     }
 
-    static class UserSerializer implements JsonSerializer<User>{
+    private static class UserSerializer implements JsonSerializer<User>{
 
         public JsonElement serialize(User src, Type typeOfSrc, JsonSerializationContext context){
             if (src.getFullName() == null) return new JsonPrimitive(src.getName());
@@ -31,7 +31,7 @@ class GsonSerializerBuilder {
 
     }
 
-    static class DictionarySerializer implements JsonSerializer<Dictionary>{
+    private static class DictionarySerializer implements JsonSerializer<Dictionary>{
 
         public JsonElement serialize(Dictionary src, Type typeOfSrc, JsonSerializationContext context){
             return new JsonPrimitive(src.getName());
@@ -39,7 +39,7 @@ class GsonSerializerBuilder {
 
     }
 
-    static class TreeSerializer implements JsonSerializer<TreeDictionary>{
+    private static class TreeSerializer implements JsonSerializer<TreeDictionary>{
 
         public JsonElement serialize(TreeDictionary src, Type typeOfSrc, JsonSerializationContext context){
             JsonObject result = new JsonObject();
@@ -52,7 +52,7 @@ class GsonSerializerBuilder {
         }
     }
 
-    static class SimpleAccountSerializer implements JsonSerializer<Account>{
+    private static class SimpleAccountSerializer implements JsonSerializer<Account>{
 
         public JsonElement serialize(Account src, Type typeOfSrc, JsonSerializationContext context){
 

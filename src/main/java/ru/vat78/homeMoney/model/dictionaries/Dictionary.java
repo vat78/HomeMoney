@@ -27,6 +27,8 @@ public abstract class Dictionary extends CommonEntry implements Comparable<Dicti
         return name;
     }
 
+    public String getFullName() {return name; }
+
     public String getSearchingName() {
         return searchingName;
     }

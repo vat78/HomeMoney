@@ -4,7 +4,7 @@
 <%@ taglib prefix="html" tagdir="/WEB-INF/tags/html" %>
 <%@ taglib prefix="ajax" tagdir="/WEB-INF/tags/ajax" %>
 
-<s:url value="/accounts/data.json?type={tableName}" var="data_url">
+<s:url value="/api/accounts/data.json?type={tableName}" var="data_url">
     <s:param name="tableName" value="${tableDef.name}" />
 </s:url>
 
@@ -57,7 +57,7 @@
     </div>
 </div>
 
-<ajax:actionsInRow table = "${tableDef.name}" editUrl="/accounts/save" deleteUrl="/accounts/delete" />
+<ajax:actionsInRow table = "${tableDef.name}" editUrl="/api/accounts/save" deleteUrl="/api/accounts/delete" />
 
 <script>
     function nameFormatter(value, row, index) {
@@ -75,7 +75,7 @@
 
     <html:editAccountForm caption="Adding new ${tableDef.caption}" table="${tableDef.name}" columns="${columns}" currencies="${currencies}" />
 
-    <ajax:formValidate formName="#editForm" urlJsonValidate="/accounts/save" pageUrl="${page_url}" />
+    <ajax:formValidate formName="#editForm" urlJsonValidate="/api/accounts/save" pageUrl="${page_url}" />
 
 
 

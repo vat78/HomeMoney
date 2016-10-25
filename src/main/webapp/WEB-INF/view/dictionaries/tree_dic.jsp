@@ -31,7 +31,7 @@
             'source': function (id) {
                 return {
                     type: 'GET',
-                    url: '/dictionaries/tree.json',
+                    url: '/api/dictionaries/tree.json',
                     data: { 'id': id, 'table': "${tableDef.name}" },
                     dataType: 'json',
                     error: function(XMLHttpRequest) {
@@ -42,7 +42,7 @@
             'onSave':function (oNode) {
                 return {
                     type: 'POST',
-                    url: '/dictionaries/tsave',
+                    url: '/api/dictionaries/tsave',
                     data: {
                         table: '${tableDef.name}',
                         id: oNode.getId(),
@@ -58,7 +58,7 @@
             'onDelete':function (oNode) {
                 return {
                     type: 'POST',
-                    url: '/dictionaries/tdelete?table=${tableDef.name}&id=' + oNode.getId(),
+                    url: '/api/dictionaries/tdelete?table=${tableDef.name}&id=' + oNode.getId(),
                     dataType: 'json',
                     error: function(XMLHttpRequest) {
                         alert(XMLHttpRequest.status+': '+XMLHttpRequest.responseText);

@@ -29,7 +29,7 @@ public class Category extends TreeDictionary {
     public void setParent(TreeDictionary parent) {
         if (parent instanceof Category) {
             this.parent = (Category) parent;
-            this.searchingName = makeSearchingName(getFullName(true));
+            this.searchingName = makeSearchingName(getFullName());
             setLevel();
         }
     }

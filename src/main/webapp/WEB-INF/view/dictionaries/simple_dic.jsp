@@ -4,7 +4,7 @@
 <%@ taglib prefix="html" tagdir="/WEB-INF/tags/html" %>
 <%@ taglib prefix="ajax" tagdir="/WEB-INF/tags/ajax" %>
 
-<s:url value="/dictionaries/data.json?table={tableName}" var="data_url">
+<s:url value="/api/dictionaries/data.json?table={tableName}" var="data_url">
     <s:param name="tableName" value="${tableDef.name}" />
 </s:url>
 <s:url value="/dictionaries/view/{tableName}" var="page_url">
@@ -61,8 +61,8 @@
     $('.menu').find('[name = <c:out value="${tableDef.name}" />]').addClass("active");
 </script>
 
-<ajax:actionsInRow table = "${tableDef.name}" editUrl="/dictionaries/save" deleteUrl="/dictionaries/delete" />
+<ajax:actionsInRow table = "${tableDef.name}" editUrl="/api/dictionaries/save" deleteUrl="/api/dictionaries/delete" />
 
 <html:editDictionaryForm caption="Adding new ${tableDef.caption}" table="${tableDef.name}" columns="${columns}" />
 
-<ajax:formValidate formName="#editForm" urlJsonValidate="/dictionaries/save" pageUrl="${page_url}" />
+<ajax:formValidate formName="#editForm" urlJsonValidate="/api/dictionaries/save" pageUrl="${page_url}" />
