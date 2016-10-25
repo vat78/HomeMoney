@@ -11,7 +11,7 @@ import javax.persistence.UniqueConstraint;
 public class Contractor extends Dictionary {
 
     public Contractor() {
-        this.setGroup(Defenitions.TABLES.DICTIONARIES);
+        this.setGroup(Defenitions.GROUPS.DICTIONARIES);
         this.setType(Defenitions.TABLES.CONTRACTORS);
     }
 }

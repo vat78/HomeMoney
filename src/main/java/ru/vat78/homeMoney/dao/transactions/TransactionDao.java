@@ -15,15 +15,22 @@ import java.util.List;
 
 @Repository("transactionsDao")
 @Transactional
-public abstract class TransactionDao extends CommonEntryDao {
+public class TransactionDao extends CommonEntryDao {
+
+
+    public Class getEntityClass(String type) {
+        return getEntityClass(Defenitions.GROUPS.TRANSACTIONS, type);
+    }
 
     @Override
-    protected Class<? extends Transaction> getEntityClass() { return Transaction.class;}
+    public Transaction getNewEntity(String type) throws java.lang.InstantiationException, IllegalAccessException {
+        return (Transaction) getNewEntity(Defenitions.GROUPS.DICTIONARIES, type);
+    }
 
     public List<Transaction> getAllForAccount(Account account) {
 
         if (account == null) return Collections.emptyList();
-        Criteria criteria = getCriteria();
+        Criteria criteria = getCriteria(getEntityClass(Defenitions.TABLES.TRANSACTIONS));
         criteria.add(Restrictions.eq(Defenitions.FIELDS.ACCOUNT_ID,account));
 
         return criteria.list();
@@ -33,7 +40,7 @@ public abstract class TransactionDao extends CommonEntryDao {
 
         if (account == null) return Collections.emptyList();
 
-        Criteria criteria = getCriteria();
+        Criteria criteria = getCriteria(getEntityClass(Defenitions.TABLES.TRANSACTIONS));
         criteria.add(Restrictions.eq(Defenitions.FIELDS.ACCOUNT_ID,account));
 
         if (sortOrder.equals("desc")) {

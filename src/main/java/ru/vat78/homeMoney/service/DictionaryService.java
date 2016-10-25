@@ -15,34 +15,31 @@ import ru.vat78.homeMoney.model.dictionaries.TreeDictionary;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class DictionaryService {
 
     @Autowired
-    DictionaryDaoFactory daoFactory;
+    DictionaryDao dictionaryDao;
 
     public long getCount(String dictionary){
         if (!checkDictionaryName(dictionary)) return 0;
-        return daoFactory.getDao(dictionary).getCount();
+        return dictionaryDao.getCount(dictionary);
     }
 
     public List<Dictionary> getRecords(String dictionary, int offset, int size, String sortColumn, String sortOrder, String searchString){
         if (!checkDictionaryName(dictionary)) return Collections.emptyList();
-        return daoFactory.getDao(dictionary).getPart(offset,size,sortColumn,sortOrder,searchString);
+        return dictionaryDao.getPart(dictionary,offset,size,sortColumn,sortOrder,searchString);
     }
 
     public Dictionary getRecordByName(String dictionary, String name){
         if (!checkDictionaryName(dictionary)) return null;
-        return daoFactory.getDao(dictionary).findByName(name);
+        return dictionaryDao.findByName(dictionary, name);
     }
 
     public boolean checkDictionaryName(String dictionary) {
-        return (daoFactory.getDao(dictionary) != null);
+        return (getDictionaryClass(dictionary) != CommonEntry.class);
     }
 
     public boolean saveRecord(Dictionary entity){
@@ -50,7 +47,7 @@ public class DictionaryService {
         if (!checkDictionaryName(entity.getType())) return false;
 
         try {
-            entity = (Dictionary) daoFactory.getDao(entity.getType()).save(entity);
+            entity = (Dictionary) dictionaryDao.save(entity);
         } catch (Exception ignored) {return false;}
 
         return entity != null;
@@ -60,20 +57,29 @@ public class DictionaryService {
 
         if (!checkDictionaryName(dictionary)) return false;
         try {
-            daoFactory.getDao(dictionary).deleteById(id);
+            dictionaryDao.deleteById(dictionary, id);
         } catch (Exception ignored) {return false;}
 
         return true;
     }
 
-    public Dictionary getNewEntry(String dictionary){
-        if (!checkDictionaryName(dictionary)) return null;
-        return (Dictionary) daoFactory.getDao(dictionary).getNewEntity();
+    public boolean deleteRecord(Dictionary entry){
+        dictionaryDao.delete(entry);
+        return true;
     }
 
-    public List<Dictionary> getTreeRecords(String dictionary, Long id) {
-        if (!checkDictionaryName(dictionary)) return Collections.emptyList();
-        List<Dictionary>  result = daoFactory.getTreeDao(dictionary).getAllChildrenById(id);
+    public Dictionary getNewEntry(String dictionary){
+
+        Dictionary result = null;
+        try {
+            result = (Dictionary) dictionaryDao.getNewEntity(dictionary);
+        } catch (Exception ignored) {}
+        return result;
+    }
+
+    public Set<Dictionary> getTreeRecords(String dictionary, Long id) {
+        if (!checkDictionaryName(dictionary)) return Collections.emptySet();
+        Set<Dictionary>  result = dictionaryDao.getAllChildrenById(dictionary, id);
         if (id == 0 && result.size() < 1) return insertFirstElement(dictionary);
         return result;
     }
@@ -85,7 +91,7 @@ public class DictionaryService {
 
     public Dictionary getRecordById(String dictionary, long id) {
         if (!checkDictionaryName(dictionary)) return null;
-        return (Dictionary) daoFactory.getDao(dictionary).findById(id);
+        return (Dictionary) dictionaryDao.findById(dictionary, id);
     }
 
     public Dictionary getRecordById(String dictionary, String id) {
@@ -100,11 +106,15 @@ public class DictionaryService {
         return getRecordById(dictionary, resId);
     }
 
-    private List<Dictionary> insertFirstElement(String dictionary) {
-        if (!checkDictionaryName(dictionary)) return Collections.emptyList();
-        Dictionary element = (Dictionary) daoFactory.getTreeDao(dictionary).getNewEntity();
+    private Set<Dictionary> insertFirstElement(String dictionary) {
+        if (!checkDictionaryName(dictionary)) return Collections.emptySet();
+        Dictionary element = (Dictionary) getNewEntry(dictionary);
         element.setName("Sample value");
-        daoFactory.getTreeDao(dictionary).save(element);
-        return daoFactory.getTreeDao(dictionary).getAllChildrenById(0);
+        dictionaryDao.save(element);
+        return dictionaryDao.getAllChildrenById(dictionary, 0);
+    }
+
+    private Class getDictionaryClass(String dictionary) {
+        return dictionaryDao.getEntityClass(dictionary);
     }
 }

@@ -92,11 +92,11 @@ public class DictionaryController {
         if (entryType==null) return "";
         if (allRequestParams.get("id") == null) allRequestParams.put("id", "0");
 
-        List<Dictionary> result = dictionaryService.getTreeRecords(
+        Set<Dictionary> result = dictionaryService.getTreeRecords(
                 allRequestParams.get("table"),
                 Long.valueOf(allRequestParams.get("id"))
         );
-        if (result == null) result = Collections.emptyList();
+        if (result == null) result = Collections.emptySet();
 
         Gson gson = new GsonBuilder()
                 .disableInnerClassSerialization()
@@ -198,7 +198,14 @@ public class DictionaryController {
         checkUniqueName(allRequestParams.get("table"), entry, result);
         saveEntityToDb(allRequestParams.get("table"), entry, result);
 
-        return new GsonBuilder().create().toJson(result);
+        Gson gson = new GsonBuilder()
+                .disableInnerClassSerialization()
+                .serializeNulls()
+                .registerTypeAdapter(entry.getClass(), GsonSerializerBuilder.getSerializer(TreeDictionary.class))
+                .setDateFormat(Defenitions.DATE_FORMAT)
+                .create();
+
+        return gson.toJson(result);
     }
 
     @RequestMapping(value = "/tdelete", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
@@ -210,8 +217,14 @@ public class DictionaryController {
         String table = allRequestParams.get("table");
         String id = allRequestParams.get("id");
         if (table != null & id != null) {
-            if (dictionaryService.deleteRecordById(table, Long.valueOf(id)))
+            TreeDictionary entry = (TreeDictionary) dictionaryService.getRecordById(table, id);
+            if (entry.getChildren().size() > 0) {
+                result.setError("", "Please remove child records first");
+            } else if (dictionaryService.deleteRecord(entry)) {
                 result.setStatus("SUCCESS");
+            } else {
+                result.setError("","Can't delete record");
+            }
         } else {
             result.setError("","There are no params 'id' and 'table'");
         }

@@ -11,7 +11,7 @@ import javax.persistence.UniqueConstraint;
 public class Person extends Dictionary {
 
     public Person() {
-        this.setGroup(Defenitions.TABLES.DICTIONARIES);
+        this.setGroup(Defenitions.GROUPS.DICTIONARIES);
         this.setType(Defenitions.TABLES.PERSONS);
     }
 }

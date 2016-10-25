@@ -14,11 +14,11 @@ public class Category extends TreeDictionary {
     @JoinColumn(name=Defenitions.FIELDS.PARENT_ID)
     private Category parent;
 
-    @OneToMany(mappedBy = Defenitions.FIELDS.PARENT_ID, fetch = FetchType.LAZY, orphanRemoval=true, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = Defenitions.FIELDS.PARENT_ID, fetch = FetchType.EAGER, orphanRemoval=true, cascade = CascadeType.ALL)
     private Set<Category> children = new HashSet<Category>();
 
     public Category() {
-        this.setGroup(Defenitions.TABLES.DICTIONARIES);
+        this.setGroup(Defenitions.GROUPS.DICTIONARIES);
         this.setType(Defenitions.TABLES.CATEGORIES);
     }
 

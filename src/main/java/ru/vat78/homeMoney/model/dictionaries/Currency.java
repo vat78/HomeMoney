@@ -20,7 +20,7 @@ public class Currency extends Dictionary {
     String symbol;
 
     public Currency() {
-        this.setGroup(Defenitions.TABLES.DICTIONARIES);
+        this.setGroup(Defenitions.GROUPS.DICTIONARIES);
         this.setType(Defenitions.TABLES.CURRENCY);
     }
 

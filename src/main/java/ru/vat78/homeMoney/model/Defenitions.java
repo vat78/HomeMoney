@@ -16,22 +16,28 @@ public final class Defenitions {
     public static final String TRUE = "true";
     public static final String FALSE = "false";
 
-    public final static class TABLES{
-
+    public final static class GROUPS{
         public static final String OBJECTS = "objects";
         public static final String DICTIONARIES = "dictionaries";
         public static final String ACCOUNTS = "accounts";
-        public static final String BILLS = "bills";
-        public static final String CATEGORIES = "categories";
-        public static final String CONTRACTORS = "contractors";
-        public static final String CREDIT_ACCOUNTS = "credit_accounts";
-        public static final String CASH_ACCOUNTS = "cash_accounts";
-        public static final String CURRENCY = "currency";
-        public static final String PAYMENTS = "payments";
-        public static final String PERSONS = "persons";
-        public static final String TAGS = "tags";
         public static final String TRANSACTIONS = "transactions";
-        public static final String TRANSFERS = "transfers";
+    }
+
+    public final static class TABLES{
+
+
+        public static final String ACCOUNTS = "Account";
+        public static final String BILLS = "Bill";
+        public static final String CATEGORIES = "Category";
+        public static final String CONTRACTORS = "Contractor";
+        public static final String CREDIT_ACCOUNTS = "CreditAccount";
+        public static final String CASH_ACCOUNTS = "CashAccount";
+        public static final String CURRENCY = "Currency";
+        public static final String PAYMENTS = "Payment";
+        public static final String PERSONS = "Person";
+        public static final String TAGS = "Tag";
+        public static final String TRANSACTIONS = "Transaction";
+        public static final String TRANSFERS = "Transfer";
         public static final String USERS = "users";
 
         public static final String COLUMNS = "columns";

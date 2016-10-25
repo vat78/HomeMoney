@@ -21,7 +21,7 @@ public class CreditAccount extends Account {
     private float rate;
 
     public CreditAccount() {
-        this.setGroup(Defenitions.TABLES.ACCOUNTS);
+        this.setGroup(Defenitions.GROUPS.ACCOUNTS);
         this.setType(Defenitions.TABLES.CREDIT_ACCOUNTS);
     }
 

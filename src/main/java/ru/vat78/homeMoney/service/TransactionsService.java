@@ -2,7 +2,7 @@ package ru.vat78.homeMoney.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.vat78.homeMoney.dao.transactions.TransactionsDaoFactory;
+import ru.vat78.homeMoney.dao.transactions.TransactionDao;
 import ru.vat78.homeMoney.model.accounts.Account;
 import ru.vat78.homeMoney.model.transactions.Transaction;
 
@@ -12,10 +12,10 @@ import java.util.List;
 public class TransactionsService {
 
     @Autowired
-    TransactionsDaoFactory daoFactory;
+    TransactionDao transactionsDao;
 
     public List<Transaction> getTransactionsByAccount(Account account, int offset, int size, String sortColumn, String sortOrder, String searchString){
-        return daoFactory.getDao(null).getPartForAccount(account, offset,size,sortColumn,sortOrder,searchString);
+        return transactionsDao.getPartForAccount(account, offset,size,sortColumn,sortOrder,searchString);
     }
 
     public Transaction getTransactionById(long id){
@@ -23,19 +23,24 @@ public class TransactionsService {
     }
 
     public Transaction getNewEntry(String transactionType) {
-        return (Transaction) daoFactory.getDao(transactionType).getNewEntity();
+
+        Transaction result = null;
+        try {
+            result  = (Transaction) transactionsDao.getNewEntity(transactionType);
+        } catch (Exception ignored) {}
+        return result;
     }
 
     public boolean saveRecord(Transaction entity) {
         if (!checkTransactionType(entity.getType())) return false;
         try {
-            entity = (Transaction) daoFactory.getDao(entity.getType()).save(entity);
+            entity = (Transaction) transactionsDao.save(entity);
         } catch (Exception ignored) {return false;}
 
         return entity != null;
     }
 
     public boolean checkTransactionType(String transactionType) {
-        return (daoFactory.getDao(transactionType) != null);
+        return (getNewEntry(transactionType) != null);
     }
 }

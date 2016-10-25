@@ -12,7 +12,7 @@ import javax.persistence.Table;
 public class CashAccount extends Account {
 
     public CashAccount() {
-        this.setGroup(Defenitions.TABLES.ACCOUNTS);
+        this.setGroup(Defenitions.GROUPS.ACCOUNTS);
         this.setType(Defenitions.TABLES.CASH_ACCOUNTS);
     }
 }
