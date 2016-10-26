@@ -69,6 +69,7 @@ public final class Defenitions {
 
         public static final String PASSWORD = "password";
         public static final String IS_ADMIN = "admin";
+        public static final String LOCALE = "locale";
 
         public static final String CONTRACTOR_ID = "contractor";
         public static final String BILL_ID = "bill";

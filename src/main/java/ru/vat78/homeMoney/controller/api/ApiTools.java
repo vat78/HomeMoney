@@ -25,7 +25,7 @@ class ApiTools {
         if (!response.isResultSet()) {
             CommonEntry inDB = service.getRecordByName(objectType, entity.getName());
             if (inDB != null && !inDB.getId().equals(entity.getId())){
-                response.setError(Defenitions.FIELDS.NAME, "Such name already exists");
+                response.setError(Defenitions.FIELDS.NAME, "edit.error.nameExists");
             }
         }
     }
@@ -37,7 +37,7 @@ class ApiTools {
                 response.setStatus(Response.SUCCESS);
                 response.setResult(entity);
             } else {
-                response.setError("", "Can't save to database.");
+                response.setError("", "edit.error.unknown");
             }
         }
     }
@@ -48,14 +48,14 @@ class ApiTools {
 
         if (entry == null) {
 
-            response.setError("", "Can't find object for delete");
+            response.setError("", "edit.error.noObject");
 
         } else {
 
             if (service.deleteRecord(entry)) {
                 response.setStatus(Response.SUCCESS);
             } else {
-                response.setError("", "Can't delete object. May be it is used");
+                response.setError("", "edit.error.objectIsUsed");
             }
         }
     }
@@ -73,7 +73,7 @@ class ApiTools {
                 List<ErrorMessage> errorMesages = new ArrayList<ErrorMessage>();
                 for (Object val : result) {
                     ConstraintViolation error = (ConstraintViolation) val;
-                    errorMesages.add(new ErrorMessage(error.getPropertyPath().toString(), error.getMessage()));
+                    errorMesages.add(new ErrorMessage(error.getPropertyPath().toString(), new LocaleMessage(error.getMessage())));
                 }
                 response.setResult(errorMesages);
             }
@@ -84,15 +84,15 @@ class ApiTools {
 
         CommonEntry result;
 
-        if (params.get("id") != null && parseId(params.get("id")) != 0 ) {
-            result = loadEntryFromDb(service, params.get("table"), params.get("id"));
+        if (params.get(Defenitions.FIELDS.ID) != null && parseId(params.get(Defenitions.FIELDS.ID)) != 0 ) {
+            result = loadEntryFromDb(service, params.get(Defenitions.FIELDS.TABLE), params.get(Defenitions.FIELDS.ID));
         } else {
-            result = service.getNewEntry(params.get("table"));
+            result = service.getNewEntry(params.get(Defenitions.FIELDS.TABLE));
         }
 
         if (result == null) {
 
-            response.setError("", "Wrong object type name");
+            response.setError("", "edit.error.noType");
 
         } else {
 

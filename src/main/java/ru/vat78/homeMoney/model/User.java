@@ -5,6 +5,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import javax.persistence.*;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+import java.util.Locale;
 
 @Entity
 @Table(name = Defenitions.TABLES.USERS, uniqueConstraints = {@UniqueConstraint(columnNames = Defenitions.FIELDS.NAME)})
@@ -32,6 +33,9 @@ public class User {
     @Column(name = Defenitions.FIELDS.IS_ADMIN)
     private boolean admin = false;
 
+    @Column(name = Defenitions.FIELDS.LOCALE)
+    private Locale locale;
+
     public long getId() {
         return id;
     }
@@ -52,6 +56,10 @@ public class User {
         return admin;
     }
 
+    public Locale getLocale() {
+        return locale;
+    }
+
     public void setId(long id) {
         this.id = id;
     }
@@ -70,5 +78,9 @@ public class User {
 
     public void setAdmin(boolean admin) {
         this.admin = admin;
+    }
+
+    public void setLocale(Locale locale) {
+        this.locale = locale;
     }
 }

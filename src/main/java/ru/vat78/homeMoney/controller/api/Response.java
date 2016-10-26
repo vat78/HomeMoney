@@ -33,7 +33,7 @@ class Response implements Serializable {
     void setError(String field, String message){
         setStatus(ERROR);
         List<ErrorMessage> errorMesages = new ArrayList<ErrorMessage>();
-        errorMesages.add(new ErrorMessage(field, message));
+        errorMesages.add(new ErrorMessage(field, new LocaleMessage(message)));
         setResult(errorMesages);
     }
 

@@ -1,7 +1,6 @@
 package ru.vat78.homeMoney.controller.api;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
@@ -32,6 +31,9 @@ public class ApiDictionaryController {
     @Autowired
     SecurityService securityService;
 
+    @Autowired
+    MyGsonBuilder gsonBuilder;
+
     @RequestMapping(value = "/data.json", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public String getTable(@RequestParam Map<String,String> allRequestParams){
@@ -48,7 +50,7 @@ public class ApiDictionaryController {
         table.setTotal(dictionaryService.getCount(allRequestParams.get("table")));
         table.setRows(result);
 
-        Gson gson = new GsonBuilder()
+        Gson gson = gsonBuilder.getGsonBuilder()
                 .disableInnerClassSerialization()
                 .serializeNulls()
                 .registerTypeAdapter(User.class, GsonSerializerBuilder.getSerializer(User.class))
@@ -70,7 +72,7 @@ public class ApiDictionaryController {
         );
         if (result == null) result = Collections.emptySet();
 
-        Gson gson = new GsonBuilder()
+        Gson gson = gsonBuilder.getGsonBuilder()
                 .disableInnerClassSerialization()
                 .serializeNulls()
                 .registerTypeAdapter(entryType, GsonSerializerBuilder.getSerializer(TreeDictionary.class))
@@ -105,7 +107,7 @@ public class ApiDictionaryController {
             i++;
         }
 
-        Gson gson = new GsonBuilder()
+        Gson gson = gsonBuilder.getGsonBuilder()
                 .disableInnerClassSerialization()
                 .serializeNulls()
                 .create();
@@ -124,7 +126,7 @@ public class ApiDictionaryController {
         ApiTools.checkUniqueName(dictionaryService, entity, res);
         ApiTools.saveEntityToDb(dictionaryService, entity, res);
 
-        Gson gson = new GsonBuilder().create();
+        Gson gson = gsonBuilder.getGsonBuilder().create();
         return gson.toJson(res);
     }
 
@@ -135,7 +137,7 @@ public class ApiDictionaryController {
         Response result = new Response();
         ApiTools.deleteEntry(dictionaryService, allRequestParams.get("table"), allRequestParams.get("id"), result);
 
-        return new GsonBuilder().create().toJson(result);
+        return gsonBuilder.getGsonBuilder().create().toJson(result);
     }
 
 
@@ -151,7 +153,7 @@ public class ApiDictionaryController {
         ApiTools.checkUniqueName(dictionaryService, entry, result);
         ApiTools.saveEntityToDb(dictionaryService, entry, result);
 
-        Gson gson = new GsonBuilder()
+        Gson gson = gsonBuilder.getGsonBuilder()
                 .disableInnerClassSerialization()
                 .serializeNulls()
                 .registerTypeAdapter(entry.getClass(), GsonSerializerBuilder.getSerializer(TreeDictionary.class))

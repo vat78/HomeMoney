@@ -13,6 +13,7 @@ import ru.vat78.homeMoney.dao.UsersDao;
 import ru.vat78.homeMoney.model.User;
 
 import java.util.List;
+import java.util.Locale;
 
 @Service
 public class SecurityService implements UserDetailsService {
@@ -52,6 +53,7 @@ public class SecurityService implements UserDetailsService {
             admin.setName("admin");
             admin.setPassword("admin");
             admin.setAdmin(true);
+            admin.setLocale(new Locale("ru"));
             usersDao.save(admin);
         }
     }

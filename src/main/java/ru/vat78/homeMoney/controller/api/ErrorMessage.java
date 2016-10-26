@@ -5,16 +5,16 @@ import java.io.Serializable;
 class ErrorMessage implements Serializable {
 
     private String fieldName;
-    private String message;
+    private LocaleMessage message;
 
-    ErrorMessage(String fieldName, String message) {
+    ErrorMessage(String fieldName, LocaleMessage message) {
         this.fieldName = fieldName;
         this.message = message;
     }
     String getFieldName() {
         return fieldName;
     }
-    String getMessage() {
+    LocaleMessage getMessage() {
         return message;
     }
 }

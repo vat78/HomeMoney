@@ -1,7 +1,6 @@
 package ru.vat78.homeMoney.controller.api;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
@@ -34,6 +33,9 @@ public class ApiAccountsController {
     @Autowired
     SecurityService securityService;
 
+    @Autowired
+    MyGsonBuilder gsonBuilder;
+
     @RequestMapping(value = "/data.json", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public String getTable(@RequestParam Map<String,String> allRequestParams){
@@ -50,7 +52,7 @@ public class ApiAccountsController {
             list = accountsService.getActiveAccountsByType(table);
         }
 
-        Gson gson = new GsonBuilder()
+        Gson gson = gsonBuilder.getGsonBuilder()
                 .disableInnerClassSerialization()
                 .serializeNulls()
                 .registerTypeAdapter(User.class, GsonSerializerBuilder.getSerializer(User.class))
@@ -72,7 +74,7 @@ public class ApiAccountsController {
         ApiTools.checkUniqueName(accountsService, entity, res);
         ApiTools.saveEntityToDb(accountsService, entity, res);
 
-        Gson gson = new GsonBuilder().create();
+        Gson gson = gsonBuilder.getGsonBuilder().create();
         return gson.toJson(res);
     }
 
@@ -83,7 +85,7 @@ public class ApiAccountsController {
         Response result = new Response();
         ApiTools.deleteEntry(accountsService, allRequestParams.get("table"), allRequestParams.get("id"), result);
 
-        return new GsonBuilder().create().toJson(result);
+        return gsonBuilder.getGsonBuilder().create().toJson(result);
     }
 
     private Account loadEntryFromParams(Map<String, String> params, Response response) {

@@ -1,7 +1,6 @@
 package ru.vat78.homeMoney.controller.api;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
@@ -30,6 +29,8 @@ public class ApiTransactionsController {
     @Autowired
     AccountsService accountsService;
 
+    @Autowired
+    MyGsonBuilder gsonBuilder;
 
     @RequestMapping(value = "/data.json", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
     @ResponseBody
@@ -47,7 +48,7 @@ public class ApiTransactionsController {
                 allRequestParams.get("search")
         );
 
-        Gson gson = new GsonBuilder()
+        Gson gson = gsonBuilder.getGsonBuilder()
                 .disableInnerClassSerialization()
                 .serializeNulls()
                 .registerTypeAdapter(User.class, GsonSerializerBuilder.getSerializer(User.class))
@@ -67,7 +68,7 @@ public class ApiTransactionsController {
         ApiTools.validateEntry(entity, res);
         ApiTools.saveEntityToDb(accountsService, entity, res);
 
-        Gson gson = new GsonBuilder().create();
+        Gson gson = gsonBuilder.getGsonBuilder().create();
         return gson.toJson(res);
     }
 
