@@ -21,7 +21,7 @@ public class Transfer extends Transaction {
     private float conversion;
 
     public Transfer() {
-        this.setGroup(Defenitions.TABLES.TRANSACTIONS);
+        this.setComponent(Defenitions.TABLES.TRANSACTIONS);
         this.setType(Defenitions.TABLES.TRANSFERS);
     }
 

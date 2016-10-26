@@ -18,7 +18,7 @@ public class Category extends TreeDictionary {
     private Set<Category> children = new HashSet<Category>();
 
     public Category() {
-        this.setGroup(Defenitions.GROUPS.DICTIONARIES);
+        this.setComponent(Defenitions.GROUPS.DICTIONARIES);
         this.setType(Defenitions.TABLES.CATEGORIES);
     }
 

@@ -6,8 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import ru.vat78.homeMoney.model.Defenitions;
-import ru.vat78.homeMoney.model.tools.ColumnDefinition;
-import ru.vat78.homeMoney.model.tools.UserTableSettings;
+import ru.vat78.homeMoney.model.tools.UIElement;
 import ru.vat78.homeMoney.service.SecurityService;
 import ru.vat78.homeMoney.service.DictionaryService;
 import ru.vat78.homeMoney.service.UserSettingsService;
@@ -52,11 +51,11 @@ public class DictionaryController {
 
     private ModelAndView prepareDictionaryPage(String dictionary, ModelAndView mv){
 
-        UserTableSettings settings = userSettingsService.getTableSettings(securityService.getCurrentUser(),dictionary);
+        UIElement settings = userSettingsService.getTableSettings(securityService.getCurrentUser(),dictionary);
         mv.addObject("tableDef", settings);
 
-        TreeSet<ColumnDefinition> columns = new TreeSet<ColumnDefinition>();
-        columns.addAll(settings.getColumns().values());
+        Set<UIElement> columns = new HashSet<UIElement>();
+        columns.addAll(settings.getChildren());
         mv.addObject("columns", columns);
 
         return mv;

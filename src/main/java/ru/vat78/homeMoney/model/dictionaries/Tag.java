@@ -11,7 +11,7 @@ import javax.persistence.UniqueConstraint;
 public class Tag extends Dictionary{
 
     public Tag() {
-        this.setGroup(Defenitions.GROUPS.DICTIONARIES);
+        this.setComponent(Defenitions.GROUPS.DICTIONARIES);
         this.setType(Defenitions.TABLES.TAGS);
     }
 }

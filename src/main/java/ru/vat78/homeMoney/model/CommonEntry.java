@@ -18,7 +18,7 @@ public abstract class CommonEntry implements Serializable {
     private Long id;
 
     @Column(name = Defenitions.FIELDS.GROUP)
-    private String group;
+    private String component;
 
     @Column(name = Defenitions.FIELDS.TYPE)
     private String type;
@@ -85,12 +85,12 @@ public abstract class CommonEntry implements Serializable {
         this.modifyBy = modifyBy;
     }
 
-    public String getGroup() {
-        return group;
+    public String getComponent() {
+        return component;
     }
 
-    protected void setGroup(String group) {
-        this.group = group;
+    protected void setComponent(String component) {
+        this.component = component;
     }
 
     public String getType() {

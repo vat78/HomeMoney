@@ -1,6 +1,8 @@
 package ru.vat78.homeMoney.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.NoSuchMessageException;
 import org.springframework.stereotype.Service;
 import ru.vat78.homeMoney.dao.UserTablesSettingsDao;
 import ru.vat78.homeMoney.model.Defenitions;
@@ -11,8 +13,7 @@ import ru.vat78.homeMoney.model.accounts.CreditAccount;
 import ru.vat78.homeMoney.model.accounts.Account;
 import ru.vat78.homeMoney.model.dictionaries.*;
 import ru.vat78.homeMoney.model.dictionaries.Currency;
-import ru.vat78.homeMoney.model.tools.ColumnDefinition;
-import ru.vat78.homeMoney.model.tools.UserTableSettings;
+import ru.vat78.homeMoney.model.tools.UIElement;
 import ru.vat78.homeMoney.model.transactions.Transaction;
 
 import java.lang.reflect.Field;
@@ -24,44 +25,62 @@ public class UserSettingsService {
     @Autowired
     UserTablesSettingsDao tablesSettingsDao;
 
-    public UserTableSettings getTableSettings(User user, String tableName){
-        UserTableSettings res= tablesSettingsDao.getTableSettings(user, tableName);
+    @Autowired
+    MessageSource messageSource;
+
+    public UIElement getTableSettings(User user, String tableName){
+        UIElement res= tablesSettingsDao.getTableSettings(user, tableName);
         if (res == null) {
-            res = getDefaultSettings(tableName);
+            res = getDefaultSettings(tableName, user);
             res.setUser(user);
             tablesSettingsDao.save(res);
+        }
+
+        Locale l = user.getLocale();
+
+        String s;
+        try {
+            s = messageSource.getMessage(res.getType() + "." + tableName, null, l);
+        } catch (NoSuchMessageException e) {
+            s = "No lang: " + res.getType() + "." + tableName;
+        }
+        res.getParameters().put("caption",s);
+
+        for (UIElement child : res.getChildren()) {
+            try {
+                s = messageSource.getMessage(child.getType() + "." + child.getName(), null, l);
+            } catch (NoSuchMessageException e) {
+                s = "No lang: " + child.getType() + "." + child.getName();
+            }
+            child.getParameters().put("caption", s);
         }
         return res;
     }
 
-    private UserTableSettings getDefaultSettings(String tableName) {
+    private UIElement getDefaultSettings(String tableName, User user) {
 
-        String t = tableName;
-        if (t.contains(Defenitions.TABLES.TRANSACTIONS)) t= Defenitions.TABLES.TRANSACTIONS;
-        UserTableSettings result = new UserTableSettings();
+        //String t = tableName;
+        //if (t.contains(Defenitions.TABLES.TRANSACTIONS)) t= Defenitions.TABLES.TRANSACTIONS;
+        UIElement result = new UIElement();
         result.setName(tableName);
-        result.setCaption(t);
-        result.setPageSize(10);
-        result.setSortColumn(Defenitions.FIELDS.ID);
-        result.setSortOrder("asc");
+        result.setType("table");
+        result.setUser(user);
+        result.getParameters().put("pageSize","10");
+        result.getParameters().put("sortColumn",Defenitions.FIELDS.ID);
+        result.getParameters().put("sortOrder","asc");
 
-        result.setColumns(getTableColumns(t));
+        getTableColumns(result);
 
         return result;
     }
 
-    private Map<String, ColumnDefinition> getTableColumns(String tableName){
+    private void getTableColumns(UIElement table){
 
-        Map<String, ColumnDefinition> result = new HashMap<String, ColumnDefinition>();
-        Class table = getTableClass(tableName);
-        if (table == null) return result;
-
-        return getFieldsUpTo(table);
+        Class tableClass = getTableClass(table.getName());
+        if (tableClass != null) getFieldsUpTo(table, tableClass);
     }
 
     private Class getTableClass(String tableName){
-
-        Class result = null;
 
         if (tableName.equals(Defenitions.TABLES.CATEGORIES)) return Category.class;
         if (tableName.equals(Defenitions.TABLES.CONTRACTORS)) return Contractor.class;
@@ -90,35 +109,34 @@ public class UserSettingsService {
 
         }*/
 
-        return result;
+        return null;
     }
 
-    private Map<String, ColumnDefinition> getFieldsUpTo(Class<?> startClass) {
+    private void getFieldsUpTo(UIElement table, Class<?> startClass) {
 
-        Map<String, ColumnDefinition> currentClassFields = new HashMap<String, ColumnDefinition>();
         for (Field field : startClass.getDeclaredFields()){
 
             UIDef[] a = field.getAnnotationsByType(UIDef.class);
             if (a.length > 0){
 
-                ColumnDefinition newCol = new ColumnDefinition();
+                UIElement newCol = new UIElement();
+                newCol.setParent(table);
                 newCol.setName(field.getName());
-                newCol.setCaption(field.getName());
-                newCol.setEditable(a[0].editable());
-                newCol.setShown(a[0].shown());
-                newCol.setNum(a[0].num());
-                newCol.setType(a[0].type());
-                newCol.setVisible(field.getName().equals(Defenitions.FIELDS.NAME));
-                currentClassFields.put(field.getName(),newCol);
+                newCol.setUser(table.getUser());
+                newCol.setType("field");
+
+                newCol.getParameters().put("editable", String.valueOf(a[0].editable()));
+                newCol.getParameters().put("shown", String.valueOf(a[0].shown()));
+                newCol.getParameters().put("num", String.valueOf(a[0].num()));
+                newCol.getParameters().put("type",a[0].type());
+                newCol.getParameters().put("visible", String.valueOf(field.getName().equals(Defenitions.FIELDS.NAME)));
+                table.getChildren().add(newCol);
             }
         }
         Class<?> parentClass = startClass.getSuperclass();
 
         if (parentClass != null) {
-            Map<String, ColumnDefinition> parentClassFields = getFieldsUpTo(parentClass);
-            currentClassFields.putAll(parentClassFields);
+            getFieldsUpTo(table, parentClass);
         }
-
-        return currentClassFields;
     }
 }

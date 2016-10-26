@@ -20,11 +20,11 @@
 
                         <c:forEach var="column" items="${columns}">
 
-                            <c:if test="${column.editable == 'true' && column.name != 'id'}">
+                            <c:if test="${column.parameters['editable'] == 'true' && column.name != 'id'}">
                                 <div class="form-group" id="${column.name}ControlGroup">
-                                    <label class="control-label"> <c:out value="${column.caption}" /> </label>
+                                    <label class="control-label"> <c:out value="${column.parameters['caption']}" /> </label>
                                     <div class="controls">
-                                        <input class="form-control" id="${column.name}" name="${column.name}" type="${column.type}" /><br>
+                                        <input class="form-control" id="${column.name}" name="${column.name}" type="${column.parameters['type']}" /><br>
                                         <span class="help-block" name="${column.name}"></span>
                                     </div>
                                 </div>

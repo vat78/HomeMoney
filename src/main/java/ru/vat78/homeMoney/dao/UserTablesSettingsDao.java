@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import ru.vat78.homeMoney.model.Defenitions;
 import ru.vat78.homeMoney.model.User;
-import ru.vat78.homeMoney.model.tools.UserTableSettings;
+import ru.vat78.homeMoney.model.tools.UIElement;
 
 @Repository("tablesSettingsDao")
 @Transactional
@@ -18,17 +18,18 @@ public class UserTablesSettingsDao {
     @Autowired
     private SessionFactory sessionFactory;
 
-    public UserTableSettings getTableSettings(User user, String tableName){
+    public UIElement getTableSettings(User user, String tableName){
 
         Criteria criteria = getCriteria();
         criteria.add(Restrictions.and(
                 Restrictions.eq(Defenitions.FIELDS.USER, user),
-                Restrictions.eq(Defenitions.FIELDS.NAME, tableName)
+                Restrictions.eq(Defenitions.FIELDS.NAME, tableName),
+                Restrictions.eq(Defenitions.FIELDS.TYPE, "table")
         ));
-        return (UserTableSettings) criteria.uniqueResult();
+        return (UIElement) criteria.uniqueResult();
     }
 
-    public void save(UserTableSettings entity){
+    public void save(UIElement entity){
         getSession().merge(entity);
     }
 
@@ -38,6 +39,6 @@ public class UserTablesSettingsDao {
     }
 
     protected Criteria getCriteria(){
-        return getSession().createCriteria(UserTableSettings.class);
+        return getSession().createCriteria(UIElement.class);
     }
 }

@@ -41,7 +41,7 @@ public class ApiAccountsController {
     public String getTable(@RequestParam Map<String,String> allRequestParams){
 
         List<Account> list;
-        String table = allRequestParams.get("type");
+        String table = allRequestParams.get(Defenitions.FIELDS.TABLE);
         if (table == null || table.length() == 0){
             table = Defenitions.TABLES.ACCOUNTS;
         }

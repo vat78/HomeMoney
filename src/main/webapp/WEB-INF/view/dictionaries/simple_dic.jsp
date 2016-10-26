@@ -14,7 +14,7 @@
 <div class="col-lg-12">
     <div class="panel panel-default">
         <div class="panel-heading">
-            <c:out value="${tableDef.caption}" />
+            <c:out value="${tableDef.parameters['caption']}" />
         </div>
         <div class="panel-body">
 
@@ -36,8 +36,8 @@
                    data-select-item-name="toolbar1"
                    data-pagination="true"
                    data-side-pagination="server"
-                   data-sort-name="${tableDef.sortColumn}"
-                   data-sort-order="${tableDef.sortOrder}"
+                   data-sort-name="${tableDef.parameters['sortColumn']}"
+                   data-sort-order="${tableDef.parameters['sortOrder']}"
                    data-reorderable-columns="true"
                    data-show-export="true"
             >
@@ -46,8 +46,8 @@
                     <tr>
                     <th data-field="action" data-formatter="operateFormatter" data-events="operateEvents" class="td2icon">&nbsp;</th>
                     <c:forEach var="column" items="${columns}">
-                        <c:if test="${column.shown == 'true'}">
-                            <th data-field="${column.name}" data-sortable="true" data-visible = ${column.visible}><c:out value="${column.caption}" /> </th>
+                        <c:if test="${column.parameters['shown'] == 'true'}">
+                            <th data-field="${column.name}" data-sortable="true" data-visible = ${column.parameters['visible']}><c:out value="${column.parameters['caption']}" /> </th>
                         </c:if>
                     </c:forEach>
                     </tr>
@@ -63,6 +63,6 @@
 
 <ajax:actionsInRow table = "${tableDef.name}" editUrl="/api/dictionaries/save" deleteUrl="/api/dictionaries/delete" />
 
-<html:editDictionaryForm caption="Adding new ${tableDef.caption}" table="${tableDef.name}" columns="${columns}" />
+<html:editDictionaryForm caption="Adding new ${tableDef.parameters['caption']}" table="${tableDef.name}" columns="${columns}" />
 
 <ajax:formValidate formName="#editForm" urlJsonValidate="/api/dictionaries/save" pageUrl="${page_url}" />

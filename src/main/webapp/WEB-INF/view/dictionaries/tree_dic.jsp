@@ -8,7 +8,7 @@
 <div class="col-lg-12">
     <div class="panel panel-default">
         <div class="panel-heading">
-            <c:out value="${tableDef.caption}" />
+            <c:out value="${tableDef.parameters['caption']}" />
         </div>
         <div class="panel-body">
 

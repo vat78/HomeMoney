@@ -1,7 +1,6 @@
 package ru.vat78.homeMoney.model.transactions;
 
 import ru.vat78.homeMoney.model.Defenitions;
-import ru.vat78.homeMoney.model.dictionaries.Contractor;
 import ru.vat78.homeMoney.model.Payment;
 
 import javax.persistence.*;
@@ -17,7 +16,7 @@ public class Bill extends Transaction {
     List<Payment> positions = new ArrayList<Payment>();
 
     public Bill() {
-        this.setGroup(Defenitions.TABLES.TRANSACTIONS);
+        this.setComponent(Defenitions.TABLES.TRANSACTIONS);
         this.setType(Defenitions.TABLES.BILLS);
     }
 

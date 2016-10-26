@@ -8,8 +8,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import ru.vat78.homeMoney.model.Defenitions;
-import ru.vat78.homeMoney.model.tools.ColumnDefinition;
-import ru.vat78.homeMoney.model.tools.UserTableSettings;
+import ru.vat78.homeMoney.model.tools.UIElement;
 import ru.vat78.homeMoney.service.AccountsService;
 import ru.vat78.homeMoney.service.DictionaryService;
 import ru.vat78.homeMoney.service.SecurityService;
@@ -45,12 +44,12 @@ public class AccountsController {
 
     private ModelAndView prepareAccountPage(String tableName, ModelAndView mv){
 
-        UserTableSettings settings = userSettingsService.getTableSettings(securityService.getCurrentUser(),tableName);
-        settings.setAddBtn(!(tableName.equals(Defenitions.TABLES.ACCOUNTS) || tableName.equals("closed")));
+        UIElement settings = userSettingsService.getTableSettings(securityService.getCurrentUser(),tableName);
+        settings.getParameters().put("setAddBtn", String.valueOf(!(tableName.equals(Defenitions.TABLES.ACCOUNTS) || tableName.equals("closed"))));
         mv.addObject("tableDef", settings);
 
-        TreeSet<ColumnDefinition> columns = new TreeSet<ColumnDefinition>();
-        columns.addAll(settings.getColumns().values());
+        Set<UIElement> columns = new HashSet<UIElement>();
+        columns.addAll(settings.getChildren());
         mv.addObject("columns", columns);
 
         return mv;

@@ -9,8 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import ru.vat78.homeMoney.model.Defenitions;
 import ru.vat78.homeMoney.model.accounts.Account;
-import ru.vat78.homeMoney.model.tools.ColumnDefinition;
-import ru.vat78.homeMoney.model.tools.UserTableSettings;
+import ru.vat78.homeMoney.model.tools.UIElement;
 import ru.vat78.homeMoney.model.transactions.Bill;
 import ru.vat78.homeMoney.model.transactions.Transaction;
 import ru.vat78.homeMoney.model.transactions.Transfer;
@@ -19,8 +18,9 @@ import ru.vat78.homeMoney.service.SecurityService;
 import ru.vat78.homeMoney.service.TransactionsService;
 import ru.vat78.homeMoney.service.UserSettingsService;
 
+import java.util.HashSet;
 import java.util.Map;
-import java.util.TreeSet;
+import java.util.Set;
 
 @Controller
 @Secured({"ROLE_USER","ROLE_ADMIN"})
@@ -74,11 +74,11 @@ public class TransactionsController {
 
     private ModelAndView prepareTransactionsPage(long account, ModelAndView view) {
 
-        UserTableSettings settings = userSettingsService.getTableSettings(securityService.getCurrentUser(),Defenitions.TABLES.TRANSACTIONS + account);
+        UIElement settings = userSettingsService.getTableSettings(securityService.getCurrentUser(),Defenitions.TABLES.TRANSACTIONS + account);
         view.addObject("tableDef", settings);
 
-        TreeSet<ColumnDefinition> columns = new TreeSet<ColumnDefinition>();
-        columns.addAll(settings.getColumns().values());
+        Set<UIElement> columns = new HashSet<UIElement>();
+        columns.addAll(settings.getChildren());
         view.addObject("columns", columns);
 
         return view;

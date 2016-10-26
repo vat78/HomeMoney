@@ -42,6 +42,8 @@ public final class Defenitions {
 
         public static final String COLUMNS = "columns";
         public static final String TABLE_SETTINGS = "tables";
+        public static final String ELEMENTS = "interface";
+
     }
 
     public final static class FIELDS{
@@ -51,8 +53,8 @@ public final class Defenitions {
         public static final String CREATE_BY = "createdBy";
         public static final String MODIFY_ON = "modifiedOn";
         public static final String MODIFY_BY = "modifiedBy";
-        public static final String GROUP = "ogroup";
-        public static final String TYPE = "otype";
+        public static final String GROUP = "component";
+        public static final String TYPE = "type";
 
         public static final String NAME = "name";
         public static final String SEARCH_NAME = "searchingName";

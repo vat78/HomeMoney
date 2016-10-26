@@ -11,11 +11,11 @@
 <div class="col-lg-12">
     <div class="panel panel-default">
         <div class="panel-heading">
-            <c:out value="${tableDef.caption}" />
+            <c:out value="${tableDef.parameters['caption']}" />
         </div>
         <div class="panel-body">
 
-            <c:if test="${tableDef.addBtn}">
+            <c:if test="${tableDef.parameters['addBtn']}">
                 <div id="toolbar">
                     <div class="btn-group">
                         <button class="btn btn-default" type="button" name="add" title="Add" data-toggle="modal" data-target="#formModal">
@@ -45,8 +45,8 @@
                     <th data-field="action" data-formatter="operateFormatter" data-events="operateEvents" class="td2icon">&nbsp;</th>
                     <th data-field="name" data-formatter="nameFormatter" data-sortable="true" data-visible = "true"> Name </th>
                     <c:forEach var="column" items="${columns}">
-                        <c:if test="${column.shown == 'true' && column.name != 'name'}">
-                            <th data-field="${column.name}" data-sortable="true" data-visible = ${column.visible}><c:out value="${column.caption}" /> </th>
+                        <c:if test="${column.parameters['shown'] == 'true' && column.name != 'name'}">
+                            <th data-field="${column.name}" data-sortable="true" data-visible = ${column.parameters['visible']}><c:out value="${column.parameters['caption']}" /> </th>
                         </c:if>
                     </c:forEach>
                 </tr>
@@ -73,7 +73,7 @@
 
 
 
-    <html:editAccountForm caption="Adding new ${tableDef.caption}" table="${tableDef.name}" columns="${columns}" currencies="${currencies}" />
+    <html:editAccountForm caption="Adding new ${tableDef.parameters['caption']}" table="${tableDef.name}" columns="${columns}" currencies="${currencies}" />
 
     <ajax:formValidate formName="#editForm" urlJsonValidate="/api/accounts/save" pageUrl="${page_url}" />
 
