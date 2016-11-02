@@ -1,28 +1,19 @@
+<%@ tag import="ru.vat78.homeMoney.model.Defenitions" %>
 <%@ attribute name="table" required="true" rtexprvalue="true" %>
-<%@ attribute name="editUrl" required="true" rtexprvalue="true" %>
+<%@ attribute name="getUrl" required="true" rtexprvalue="true" %>
 <%@ attribute name="deleteUrl" required="true" rtexprvalue="true" %>
+<%@ attribute name="fieldId" required="true" rtexprvalue="true" %>
 
 <script type="text/javascript">
     window.operateEvents = {
         'click .edit': function (e, value, row) {
-            var $form = $('#editForm');
-            var $inputs = $form.find('input, select');
-            for (var i = 0; i < $inputs.length; i++) {
-                var $item = $inputs[i];
-                if (row[$item.name] != null){
-                    if ($item.type == 'checkbox') {
-                        $item.checked = row[$item.name];
-                    } else {
-                        $item.value = row[$item.name];
-                    }
-                }
-            }
 
-            $("#formModal").modal('show');
+            var full_url = '${getUrl}' + row['${fieldId}'];
+            prepareAndOpenForm(full_url);
         },
         'click .remove': function (e, value, row) {
             var $conf = 'Are you want to delete "' + row['name'] + '"?';
-            var $data = {table: '${table}', id: row['id']};
+            var $data = {<%= Defenitions.FIELDS.TYPE %>: '${table}', <%= Defenitions.FIELDS.ID %>: row['id']};
             if (confirm($conf))
             {
                 $.post('${deleteUrl}', $data, function(response) {
@@ -48,5 +39,25 @@
             '</a>',
             '</div>'
         ].join('');
+    }
+
+
+    function prepareAndOpenForm(url) {
+        $.get(url, function(data) {
+            var $form = $('#editForm');
+            var $inputs = $form.find('input, select');
+            for (var i = 0; i < $inputs.length; i++) {
+                var $item = $inputs[i];
+                if (data[$item.name] != null){
+                    if ($item.type == 'checkbox') {
+                        $item.checked = data[$item.name];
+                    } else {
+                        $item.value = data[$item.name];
+                    }
+                }
+            }
+
+            $("#formModal").modal('show');
+        });
     }
 </script>

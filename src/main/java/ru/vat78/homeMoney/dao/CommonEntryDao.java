@@ -56,7 +56,8 @@ public abstract class CommonEntryDao<T extends CommonEntry> {
             criteria.addOrder(Order.asc(sortColumn));
         }
         criteria.setFirstResult(offset);
-        criteria.setMaxResults(size);
+        if (size > 0) criteria.setMaxResults(size);
+
         return criteria.list();
     }
 

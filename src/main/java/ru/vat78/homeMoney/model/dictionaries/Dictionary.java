@@ -12,7 +12,7 @@ import javax.validation.constraints.Size;
 @MappedSuperclass
 public abstract class Dictionary extends CommonEntry implements Comparable<Dictionary> {
 
-    @UIDef(caption = "Name", shown = true, editable = true, num = 10)
+    @UIDef(caption = "Name", shown = true, editable = true, order = 10)
     @Column (name = Defenitions.FIELDS.NAME)
     @NotNull
     @Size(min=Defenitions.DICTIONARY_NAME_MIN, max=Defenitions.DICTIONARY_NAME_MAX,

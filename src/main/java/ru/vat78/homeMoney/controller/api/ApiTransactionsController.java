@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import ru.vat78.homeMoney.controller.ControlTerms;
 import ru.vat78.homeMoney.model.Defenitions;
 import ru.vat78.homeMoney.model.User;
 import ru.vat78.homeMoney.model.accounts.Account;
@@ -20,7 +21,7 @@ import java.util.Map;
 
 @Controller
 @Secured({"ROLE_USER","ROLE_ADMIN"})
-@RequestMapping("/api/transactions")
+@RequestMapping(ControlTerms.API_TRANSACTIONS)
 public class ApiTransactionsController {
 
     @Autowired
@@ -32,7 +33,7 @@ public class ApiTransactionsController {
     @Autowired
     MyGsonBuilder gsonBuilder;
 
-    @RequestMapping(value = "/data.json", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
+    @RequestMapping(value = ControlTerms.API_TABLE_DATA, method = RequestMethod.GET, produces = ControlTerms.API_FORMAT)
     @ResponseBody
     public String getTable(@RequestParam Map<String,String> allRequestParams){
 
@@ -42,10 +43,10 @@ public class ApiTransactionsController {
         List<Transaction> list;
         list = transactionsService.getTransactionsByAccount(
                 account,
-                Integer.valueOf(allRequestParams.get("offset")),
-                Integer.valueOf(allRequestParams.get("limit")),
-                allRequestParams.get("sort"),allRequestParams.get("order"),
-                allRequestParams.get("search")
+                Integer.valueOf(allRequestParams.get(ControlTerms.DATA_OFFSET)),
+                Integer.valueOf(allRequestParams.get(ControlTerms.DATA_LIMIT)),
+                allRequestParams.get(ControlTerms.SORT_COLUMN),allRequestParams.get(ControlTerms.SORT_ORDER),
+                allRequestParams.get(ControlTerms.SEARCH_STRING)
         );
 
         Gson gson = gsonBuilder.getGsonBuilder()
@@ -57,7 +58,7 @@ public class ApiTransactionsController {
         return gson.toJson(list);
     }
 
-    @RequestMapping(value = "/save", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    @RequestMapping(value = ControlTerms.SAVE, method = RequestMethod.POST, produces = ControlTerms.API_FORMAT)
     @ResponseBody
     public String saveEntry(@RequestParam Map<String,String> allRequestParams){
 
@@ -74,7 +75,7 @@ public class ApiTransactionsController {
 
     private Transaction loadEntryFromParams(Map<String, String> data, Response response) {
 
-        Transaction result = (Transaction) ApiTools.loadEntryFromDb(transactionsService, data.get(Defenitions.FIELDS.OPERATION_TYPE), data.get("id"));
+        Transaction result = (Transaction) ApiTools.loadEntryFromDb(transactionsService, data.get(Defenitions.FIELDS.OPERATION_TYPE), data.get(Defenitions.FIELDS.ID));
 
         /*
         if (result.getSum() == 0) {

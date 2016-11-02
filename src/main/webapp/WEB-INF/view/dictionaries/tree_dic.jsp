@@ -1,8 +1,29 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="s" uri="http://www.springframework.org/tags"%>
+<%@ page import = "ru.vat78.homeMoney.controller.ControlTerms" %>
+<%@ page import="ru.vat78.homeMoney.model.Defenitions" %>
 
 <link rel="stylesheet" type="text/css" href="/resources/lumino/css/bootstrap-gtreetable.min.css" />
+
+<c:set var="fieldId" value="<%= Defenitions.FIELDS.ID %>" />
+<c:set var="fieldType" value="<%= Defenitions.FIELDS.TYPE %>" />
+
+<s:url value="{api}{operation}?{param}={type}" var="data_url">
+    <s:param name="type" value="${tableDef.name}" />
+    <s:param name="api" value="<%= ControlTerms.API_DICTIONARIES %>" />
+    <s:param name="operation" value="<%= ControlTerms.API_TREE_DATA %>" />
+    <s:param name="param" value="<%= ControlTerms.OBJECT_TYPE %>" />
+</s:url>
+<s:url value="{api}{operation}" var="save_url">
+    <s:param name="api" value="<%= ControlTerms.API_DICTIONARIES %>" />
+    <s:param name="operation" value="<%= ControlTerms.SAVE_TREE_NODE %>" />
+</s:url>
+
+<s:url value="{api}{operation}" var="delete_url">
+    <s:param name="api" value="<%= ControlTerms.API_DICTIONARIES %>" />
+    <s:param name="operation" value="<%= ControlTerms.DELETE %>" />
+</s:url>
 
 
 <div class="col-lg-12">
@@ -31,8 +52,8 @@
             'source': function (id) {
                 return {
                     type: 'GET',
-                    url: '/api/dictionaries/tree.json',
-                    data: { 'id': id, 'table': "${tableDef.name}" },
+                    url: '${data_url}',
+                    data: { '${fieldId}': id, '${fieldType}': "${tableDef.name}" },
                     dataType: 'json',
                     error: function(XMLHttpRequest) {
                         alert(XMLHttpRequest.status+': '+XMLHttpRequest.responseText);
@@ -42,12 +63,12 @@
             'onSave':function (oNode) {
                 return {
                     type: 'POST',
-                    url: '/api/dictionaries/tsave',
+                    url: '${save_url}',
                     data: {
-                        table: '${tableDef.name}',
-                        id: oNode.getId(),
-                        parent: oNode.getParent(),
-                        name: oNode.getName()
+                        <%= Defenitions.FIELDS.TYPE %>: '${tableDef.name}',
+                        <%= Defenitions.FIELDS.ID %>: oNode.getId(),
+                        <%= Defenitions.FIELDS.PARENT_ID %>: oNode.getParent(),
+                        <%= Defenitions.FIELDS.NAME %>: oNode.getName()
                     },
                     dataType: 'json',
                     error: function(XMLHttpRequest) {
@@ -58,7 +79,11 @@
             'onDelete':function (oNode) {
                 return {
                     type: 'POST',
-                    url: '/api/dictionaries/tdelete?table=${tableDef.name}&id=' + oNode.getId(),
+                    url: '${delete_url}',
+                    data: {
+                        <%= Defenitions.FIELDS.TYPE %>: '${tableDef.name}',
+                        <%= Defenitions.FIELDS.ID %>: oNode.getId()
+                    },
                     dataType: 'json',
                     error: function(XMLHttpRequest) {
                         alert(XMLHttpRequest.status+': '+XMLHttpRequest.responseText);

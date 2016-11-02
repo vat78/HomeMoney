@@ -85,9 +85,9 @@ class ApiTools {
         CommonEntry result;
 
         if (params.get(Defenitions.FIELDS.ID) != null && parseId(params.get(Defenitions.FIELDS.ID)) != 0 ) {
-            result = loadEntryFromDb(service, params.get(Defenitions.FIELDS.TABLE), params.get(Defenitions.FIELDS.ID));
+            result = loadEntryFromDb(service, params.get(Defenitions.FIELDS.TYPE), params.get(Defenitions.FIELDS.ID));
         } else {
-            result = service.getNewEntry(params.get(Defenitions.FIELDS.TABLE));
+            result = service.getNewEntry(params.get(Defenitions.FIELDS.TYPE));
         }
 
         if (result == null) {

@@ -24,7 +24,6 @@
     <script src="/resources/lumino/js/respond.min.js"></script>
     <![endif]-->
     <script src="/resources/lumino/js/jquery-1.11.1.min.js"></script>
-    <script src="/resources/lumino/js/jquery-ui.js"></script>
 
 </head>
 
@@ -82,6 +81,12 @@
         <tiles:insertAttribute name="content" />
     </div>	<!--/.main-->
 
+    <div class="col-sm-9 col-sm-offset-3 col-lg-10 col-lg-offset-2 panel-footer">
+        <div class="container-fluid">
+            <tiles:insertAttribute name="footer" />
+        </div>
+    </div>
+
     <script src="/resources/lumino/js/bootstrap.min.js"></script>
     <script src="/resources/lumino/js/chart.min.js"></script>
     <script src="/resources/lumino/js/chart-data.js"></script>
@@ -89,6 +94,7 @@
     <script src="/resources/lumino/js/easypiechart-data.js"></script>
     <script src="/resources/lumino/js/bootstrap-datepicker.js"></script>
     <script src="/resources/lumino/js/bootstrap-table.js"></script>
+    <script src="/resources/lumino/js/bootstrap-select.js"></script>
     <script>
         $('#calendar').datepicker({
         });

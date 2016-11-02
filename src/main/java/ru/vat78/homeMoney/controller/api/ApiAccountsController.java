@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import ru.vat78.homeMoney.controller.ControlTerms;
 import ru.vat78.homeMoney.model.Defenitions;
 import ru.vat78.homeMoney.model.User;
 import ru.vat78.homeMoney.model.accounts.Account;
@@ -21,7 +22,7 @@ import java.util.Map;
 
 @Controller
 @Secured({"ROLE_USER","ROLE_ADMIN"})
-@RequestMapping("/api/accounts")
+@RequestMapping(ControlTerms.API_ACCOUNTS)
 public class ApiAccountsController {
 
     @Autowired
@@ -36,12 +37,12 @@ public class ApiAccountsController {
     @Autowired
     MyGsonBuilder gsonBuilder;
 
-    @RequestMapping(value = "/data.json", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
+    @RequestMapping(value = ControlTerms.API_TABLE_DATA, method = RequestMethod.GET, produces = ControlTerms.API_FORMAT)
     @ResponseBody
     public String getTable(@RequestParam Map<String,String> allRequestParams){
 
         List<Account> list;
-        String table = allRequestParams.get(Defenitions.FIELDS.TABLE);
+        String table = allRequestParams.get(Defenitions.FIELDS.TYPE);
         if (table == null || table.length() == 0){
             table = Defenitions.TABLES.ACCOUNTS;
         }
@@ -62,7 +63,7 @@ public class ApiAccountsController {
         return gson.toJson(list);
     }
 
-    @RequestMapping(value = "/save", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    @RequestMapping(value = ControlTerms.SAVE, method = RequestMethod.POST, produces = ControlTerms.API_FORMAT)
     @ResponseBody
     public String saveEntry(@RequestParam Map<String,String> allRequestParams){
 
@@ -78,12 +79,12 @@ public class ApiAccountsController {
         return gson.toJson(res);
     }
 
-    @RequestMapping(value = "/delete", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    @RequestMapping(value = ControlTerms.DELETE, method = RequestMethod.POST, produces = ControlTerms.API_FORMAT)
     @ResponseBody
     public String deleteEntry(@RequestParam Map<String,String> allRequestParams){
 
         Response result = new Response();
-        ApiTools.deleteEntry(accountsService, allRequestParams.get("table"), allRequestParams.get("id"), result);
+        ApiTools.deleteEntry(accountsService, allRequestParams.get(ControlTerms.OBJECT_TYPE), allRequestParams.get(Defenitions.FIELDS.ID), result);
 
         return gsonBuilder.getGsonBuilder().create().toJson(result);
     }

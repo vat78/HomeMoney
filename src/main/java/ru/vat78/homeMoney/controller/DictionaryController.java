@@ -15,7 +15,7 @@ import java.util.*;
 
 @Controller
 @Secured({"ROLE_USER","ROLE_ADMIN"})
-@RequestMapping("/dictionaries")
+@RequestMapping(ControlTerms.DICTIONARIES)
 public class DictionaryController {
 
     @Autowired

@@ -18,26 +18,26 @@ import java.util.Date;
 @Table(name = Defenitions.TABLES.TRANSACTIONS)
 public class Transaction extends CommonEntry {
 
-    @UIDef(caption = "Date", shown = true, editable = true, num = 20)
+    @UIDef(caption = "Date", shown = true, editable = true, order = 20)
     @DateTimeFormat(pattern=Defenitions.DATE_FORMAT)
     @Column(name = Defenitions.FIELDS.DATE, nullable = false)
     private Date date;
 
     @NotNull
-    @UIDef(caption = "Account", shown = false, num = 10)
+    @UIDef(caption = "Account", shown = false, order = 10)
     @ManyToOne(cascade = {CascadeType.REFRESH})
     @JoinColumn(name= Defenitions.FIELDS.ACCOUNT_ID, referencedColumnName = Defenitions.FIELDS.ID)
     private Account account;
 
-    @UIDef(caption = "Summ", shown = true, editable = true, num = 50)
+    @UIDef(caption = "Summ", shown = true, editable = true, order = 50)
     @Column(name = Defenitions.FIELDS.SUM)
     float sum;
 
-    @UIDef(caption = "Operation", shown = false, editable = true, num = 40)
+    @UIDef(caption = "Operation", shown = false, editable = true, order = 40)
     @Column(name = Defenitions.FIELDS.OPERATION_TYPE)
     int operation;
 
-    @UIDef(caption = "Contractor", shown = false, editable = true, num = 30)
+    @UIDef(caption = "Contractor", shown = false, editable = true, order = 30)
     @ManyToOne(cascade = {CascadeType.REFRESH})
     @JoinColumn(name= Defenitions.FIELDS.CONTRACTOR_ID, referencedColumnName = Defenitions.FIELDS.ID)
     private Contractor contractor;

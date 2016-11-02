@@ -40,8 +40,6 @@ public final class Defenitions {
         public static final String TRANSFERS = "Transfer";
         public static final String USERS = "users";
 
-        public static final String COLUMNS = "columns";
-        public static final String TABLE_SETTINGS = "tables";
         public static final String ELEMENTS = "interface";
 
     }
@@ -55,6 +53,8 @@ public final class Defenitions {
         public static final String MODIFY_BY = "modifiedBy";
         public static final String GROUP = "component";
         public static final String TYPE = "type";
+
+        public static final String POSITION = "position";
 
         public static final String NAME = "name";
         public static final String SEARCH_NAME = "searchingName";
@@ -90,11 +90,8 @@ public final class Defenitions {
         public static final String QUANTITY = "quantity";
         public static final String COMMENTS = "comments";
 
-        public static final String TABLE = "table";
+        //public static final String TABLE = "table";
         public static final String USER = "user";
-        public static final String VISIBLE = "visible";
-        public static final String CAPTION = "caption";
-        public static final String NUM = "num";
 
         public static final String SORT_COLUMN = "sortColumn";
         public static final String SORT_ORDER = "sortOrder";
@@ -121,4 +118,5 @@ public final class Defenitions {
         public static final int EXPENSE = -1;
 
     }
+
 }

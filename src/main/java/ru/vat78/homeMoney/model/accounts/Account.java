@@ -17,22 +17,22 @@ import java.util.Date;
 @Table(name = Defenitions.TABLES.ACCOUNTS)
 public class Account extends Dictionary {
 
-    @UIDef(caption = "Active", shown = true, editable = true, num = 40, type = "checkbox")
+    @UIDef(caption = "Active", shown = true, editable = true, order = 40, control = UIDef.CHECKBOX)
     @Column(name = Defenitions.FIELDS.ACTIVE)
     boolean active = true;
 
-    @UIDef(caption = "Open date", shown = true, editable = true, num = 20, type = "date")
+    @UIDef(caption = "Open date", shown = true, editable = true, order = 20, control = UIDef.DATE)
     @DateTimeFormat(pattern=Defenitions.DATE_FORMAT)
     @Column(name = Defenitions.FIELDS.OPENING_DATE)
     Date openingDate;
 
-    @UIDef(caption = "Currency", shown = true, editable = true, num = 30)
+    @UIDef(caption = "Currency", shown = true, editable = true, order = 30, control = UIDef.SELECT, source = Defenitions.TABLES.CURRENCY)
     @NotNull(message = "Please, select currency")
     @ManyToOne(cascade = {CascadeType.REFRESH})
     @JoinColumn(name=Defenitions.FIELDS.CURRENCY, referencedColumnName = Defenitions.FIELDS.ID)
     private Currency currency;
 
-    //@UIDef(caption = "Type", shown = false, editable = true, num = 50, type = "text")
+    //@UIDef(caption = "Type", shown = false, editable = true, order = 50, control = "text")
     //@Column(name = Defenitions.FIELDS.ACCOUNT_TYPE)
     //private String accountType;
 

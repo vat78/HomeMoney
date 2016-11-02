@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import ru.vat78.homeMoney.controller.ControlTerms;
 import ru.vat78.homeMoney.model.Defenitions;
 import ru.vat78.homeMoney.model.User;
 import ru.vat78.homeMoney.model.dictionaries.Dictionary;
@@ -22,7 +23,7 @@ import java.util.Set;
 
 @Controller
 @Secured({"ROLE_USER","ROLE_ADMIN"})
-@RequestMapping("/api/dictionaries")
+@RequestMapping(ControlTerms.API_DICTIONARIES)
 public class ApiDictionaryController {
 
     @Autowired
@@ -34,16 +35,36 @@ public class ApiDictionaryController {
     @Autowired
     MyGsonBuilder gsonBuilder;
 
-    @RequestMapping(value = "/data.json", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
+    @RequestMapping(value = ControlTerms.API_ONE_ELEMENT, method = RequestMethod.GET, produces = ControlTerms.API_FORMAT)
+    @ResponseBody
+    public String getElement(@RequestParam Map<String,String> allRequestParams){
+
+        Dictionary result = dictionaryService.getRecordById(
+                allRequestParams.get(ControlTerms.OBJECT_TYPE),
+                ApiTools.parseId(allRequestParams.get(Defenitions.FIELDS.ID)));
+
+        if (result == null) result = dictionaryService.getNewEntry(allRequestParams.get(ControlTerms.OBJECT_TYPE));
+        if (result == null) return "";
+
+        Gson gson = gsonBuilder.getGsonBuilder()
+                .disableInnerClassSerialization()
+                .serializeNulls()
+                .registerTypeAdapter(User.class, GsonSerializerBuilder.getSerializer(User.class))
+                .setDateFormat(Defenitions.DATE_FORMAT)
+                .create();
+        return gson.toJson(result);
+    }
+
+    @RequestMapping(value = ControlTerms.API_TABLE_DATA, method = RequestMethod.GET, produces = ControlTerms.API_FORMAT)
     @ResponseBody
     public String getTable(@RequestParam Map<String,String> allRequestParams){
 
         List<Dictionary> result = dictionaryService.getRecords(
-                allRequestParams.get("table"),
-                Integer.valueOf(allRequestParams.get("offset")),
-                Integer.valueOf(allRequestParams.get("limit")),
-                allRequestParams.get("sort"),allRequestParams.get("order"),
-                allRequestParams.get("search"));
+                allRequestParams.get(ControlTerms.OBJECT_TYPE),
+                Integer.valueOf(allRequestParams.get(ControlTerms.DATA_OFFSET)),
+                Integer.valueOf(allRequestParams.get(ControlTerms.DATA_LIMIT)),
+                allRequestParams.get(ControlTerms.SORT_COLUMN),allRequestParams.get(ControlTerms.SORT_ORDER),
+                allRequestParams.get(ControlTerms.SEARCH_STRING));
         if (result == null) result = Collections.emptyList();
 
         TableForJson table = new TableForJson();
@@ -59,16 +80,16 @@ public class ApiDictionaryController {
         return gson.toJson(table);
     }
 
-    @RequestMapping(value = "/tree.json", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
+    @RequestMapping(value = ControlTerms.API_TREE_DATA, method = RequestMethod.GET, produces = ControlTerms.API_FORMAT)
     @ResponseBody
     public String getTree(@RequestParam Map<String,String> allRequestParams){
 
-        Class entryType = dictionaryService.getDictionaryClass(allRequestParams.get("table"));
+        Class entryType = dictionaryService.getDictionaryClass(allRequestParams.get(ControlTerms.OBJECT_TYPE));
         if (entryType==null) return "";
 
         Set<Dictionary> result = dictionaryService.getTreeRecords(
-                allRequestParams.get("table"),
-                ApiTools.parseId(allRequestParams.get("id"))
+                allRequestParams.get(ControlTerms.OBJECT_TYPE),
+                ApiTools.parseId(allRequestParams.get(Defenitions.FIELDS.ID))
         );
         if (result == null) result = Collections.emptySet();
 
@@ -85,36 +106,43 @@ public class ApiDictionaryController {
         return gson.toJson(answer);
     }
 
-    @RequestMapping(value = "/typeahead.json", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
+    @RequestMapping(value = ControlTerms.API_SELECT_DATA, method = RequestMethod.GET, produces = ControlTerms.API_FORMAT)
     @ResponseBody
-    public String getValuesForFields(@RequestParam Map<String,String> allRequestParams){
+    public String getValuesForSelect(@RequestParam Map<String,String> allRequestParams){
 
-        if (allRequestParams.get("table") == null || allRequestParams.get("term") == null || allRequestParams.get("term").length() == 1)
+        if (allRequestParams.get(ControlTerms.OBJECT_TYPE) == null)
             return "";
 
         List<Dictionary> result = dictionaryService.getRecords(
-                allRequestParams.get("table"),
+                allRequestParams.get(ControlTerms.OBJECT_TYPE),
                 0,
-                15,
+                0,
                 Defenitions.FIELDS.NAME,"asc",
-                allRequestParams.get("term"));
-        if (result == null) return "";
+                allRequestParams.get(ControlTerms.SEARCH_STRING));
 
-        String arr[] = new String[result.size()];
-        int i = 0;
-        for (Dictionary element :  result) {
-            arr[i] = element.getFullName();
-            i++;
-        }
-
-        Gson gson = gsonBuilder.getGsonBuilder()
-                .disableInnerClassSerialization()
-                .serializeNulls()
-                .create();
-        return gson.toJson(arr);
+        return getOnlyNames(result);
     }
 
-    @RequestMapping(value = "/save", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    @RequestMapping(value = ControlTerms.API_TYPEAHEAD_DATA, method = RequestMethod.GET, produces = ControlTerms.API_FORMAT)
+    @ResponseBody
+    public String getValuesForFields(@RequestParam Map<String,String> allRequestParams){
+
+        if (allRequestParams.get(ControlTerms.OBJECT_TYPE) == null
+                || allRequestParams.get(ControlTerms.SEARCH_STRING) == null
+                || allRequestParams.get(ControlTerms.SEARCH_STRING).length() == 1)
+            return "";
+
+        List<Dictionary> result = dictionaryService.getRecords(
+                allRequestParams.get(ControlTerms.OBJECT_TYPE),
+                0,
+                ControlTerms.MAX_SELECT_DATA,
+                Defenitions.FIELDS.NAME,"asc",
+                allRequestParams.get(ControlTerms.SEARCH_STRING));
+
+        return getOnlyNames(result);
+    }
+
+    @RequestMapping(value = ControlTerms.SAVE, method = RequestMethod.POST, produces = ControlTerms.API_FORMAT)
     @ResponseBody
     public String saveEntry(@RequestParam Map<String,String> allRequestParams){
 
@@ -130,18 +158,18 @@ public class ApiDictionaryController {
         return gson.toJson(res);
     }
 
-    @RequestMapping(value = "/delete", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    @RequestMapping(value = ControlTerms.DELETE, method = RequestMethod.POST, produces = ControlTerms.API_FORMAT)
     @ResponseBody
     public String deleteEntry(@RequestParam Map<String,String> allRequestParams){
 
         Response result = new Response();
-        ApiTools.deleteEntry(dictionaryService, allRequestParams.get("table"), allRequestParams.get("id"), result);
+        ApiTools.deleteEntry(dictionaryService, allRequestParams.get(Defenitions.FIELDS.TYPE), allRequestParams.get(Defenitions.FIELDS.ID), result);
 
         return gsonBuilder.getGsonBuilder().create().toJson(result);
     }
 
 
-    @RequestMapping(value = "/tsave", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    @RequestMapping(value = ControlTerms.SAVE_TREE_NODE, method = RequestMethod.POST, produces = ControlTerms.API_FORMAT)
     @ResponseBody
     public String saveTreeEntry(@RequestParam Map<String,String> allRequestParams){
 
@@ -180,7 +208,7 @@ public class ApiDictionaryController {
 
         if (result != null){
 
-            Long parentId = ApiTools.parseId(params.get("parent"));
+            Long parentId = ApiTools.parseId(params.get(Defenitions.FIELDS.PARENT_ID));
 
             if (parentId == 0) {
 
@@ -194,5 +222,22 @@ public class ApiDictionaryController {
         }
 
         return result;
+    }
+
+    private String getOnlyNames(List<Dictionary> list){
+
+        if (list == null) return "";
+        String arr[] = new String[list.size()];
+        int i = 0;
+        for (Dictionary element :  list) {
+            arr[i] = element.getFullName();
+            i++;
+        }
+
+        Gson gson = gsonBuilder.getGsonBuilder()
+                .disableInnerClassSerialization()
+                .serializeNulls()
+                .create();
+        return gson.toJson(arr);
     }
 }

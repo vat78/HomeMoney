@@ -1,8 +1,35 @@
-
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ attribute name="caption" required="true" rtexprvalue="true" %>
-<%@ attribute name="table" required="true" rtexprvalue="true" %>
-<%@ attribute name="columns" required="true" type="java.util.Collection" %>
+<%@ taglib prefix="s" uri="http://www.springframework.org/tags"%>
+<%@ taglib prefix="html" tagdir="/WEB-INF/tags/html" %>
+<%@ taglib prefix="ajax" tagdir="/WEB-INF/tags/ajax" %>
+<%@ page import = "ru.vat78.homeMoney.controller.ControlTerms, ru.vat78.homeMoney.model.Defenitions.FIELDS" %>
+
+<s:url value="{api}{operation}?{param}={type}" var="data_url">
+    <s:param name="type" value="${tableDef.name}" />
+    <s:param name="api" value="${ControlTerms.API_DICTIONARIES}" />
+    <s:param name="operation" value="${ControlTerms.API_TABLE_DATA}" />
+    <s:param name="param" value="${ControlTerms.OBJECT_TYPE}" />
+</s:url>
+
+<s:url value="{api}{operation}" var="save_url">
+    <s:param name="api" value="${ControlTerms.API_DICTIONARIES}" />
+    <s:param name="operation" value="${ControlTerms.SAVE}" />
+</s:url>
+
+<s:url value="{api}{operation}" var="delete_url">
+    <s:param name="api" value="${ControlTerms.API_DICTIONARIES}" />
+    <s:param name="operation" value="${ControlTerms.DELETE}" />
+</s:url>
+
+<s:url value="{section}/view/{tableName}" var="page_url">
+    <s:param name="tableName" value="${tableDef.name}" />
+    <s:param name="section" value="${ControlTerms.DICTIONARIES}" />
+</s:url>
+
+<c:set var = "fieldGroup" value="<%= FIELDS.GROUP %>" />
+<c:set var = "fieldType" value="<%= FIELDS.TYPE %>" />
+<c:set var = "fieldId" value="<%= FIELDS.ID %>" />
 
 <!-- Modal -->
 <div class="modal fade" id="formModal" tabindex="-1" role="dialog" aria-labelledby="formModalLabel">
@@ -10,18 +37,18 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="myModalLabel"> ${caption} </h4>
+                <h4 class="modal-title" id="myModalLabel"> ${tableDef.parameters['caption']} </h4>
             </div>
             <div class="modal-body">
                 <form role="form" name="editForm" id="editForm" action="">
                     <fieldset>
-                        <input class="form-control" type="hidden" id="${Defenitions.FIELDS.GROUP}" name="${Defenitions.FIELDS.GROUP}" value="" />
-                        <input class="form-control" type="hidden" id="${FIELDS.TYPE}" name="${FIELDS.TYPE}" value="${table}" />
-                        <input class="form-control" type="hidden" id="${FIELDS.ID}" name="${FIELDS.ID}" value="0" />
+                        <input class="form-control" type="hidden" id="${fieldGroup}" name="${fieldGroup}" value="" />
+                        <input class="form-control" type="hidden" id="${fieldType}" name="${fieldType}" value="${tableDef.name}" />
+                        <input class="form-control" type="hidden" id="${fieldId}" name="${fieldId}" value="0" />
 
                         <c:forEach var="column" items="${columns}">
 
-                            <c:if test="${column.parameters['editable'] == 'true' && column.name != FIELDS.ID}">
+                            <c:if test="${column.parameters['editable'] == 'true' && column.name != fieldId}">
                                 <div class="form-group" id="${column.name}ControlGroup">
                                     <label class="control-label"> <c:out value="${column.parameters['caption']}" /> </label>
 
@@ -92,23 +119,21 @@
         var $inputs = $form.find('input');
 
         for (var i = 0; i < $inputs.length; i++){
-           if ($inputs[i].name != 'table'){
-               if ($inputs[i].name != 'id') {
-                   $inputs[i].focus();
-                   break;
-               }
-           }
-        }
-    });
-
-    $('#formModal').on('hide.bs.modal', function () {
-        var $form = $('#editForm');
-        var $inputs = $form.find('input');
-        for (var i = 0; i < $inputs.length; i++) {
-            if ($inputs[i].name != 'table') {
-                $inputs[i].value = '';
+            if ($inputs[i].name != '${fieldGroup}'){
+                if ($inputs[i].name != '${fieldType}') {
+                    if ($inputs[i].name != '${fieldId}') {
+                        $inputs[i].focus();
+                        break;
+                    }
+                }
             }
         }
     });
 
+    $('#formModal').on('hide.bs.modal', function () {
+
+    });
+
 </script>
+
+<ajax:formValidate formName="#editForm" urlJsonValidate="${save_url}" pageUrl="${page_url}" />

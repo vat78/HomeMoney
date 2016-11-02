@@ -69,6 +69,7 @@ public class UserSettingsService {
         result.getParameters().put("sortColumn",Defenitions.FIELDS.ID);
         result.getParameters().put("sortOrder","asc");
 
+        result.setChildren(new TreeSet<UIElement>());
         getTableColumns(result);
 
         return result;
@@ -124,11 +125,11 @@ public class UserSettingsService {
                 newCol.setName(field.getName());
                 newCol.setUser(table.getUser());
                 newCol.setType("field");
+                newCol.setPosition(a[0].order());
 
                 newCol.getParameters().put("editable", String.valueOf(a[0].editable()));
                 newCol.getParameters().put("shown", String.valueOf(a[0].shown()));
-                newCol.getParameters().put("num", String.valueOf(a[0].num()));
-                newCol.getParameters().put("type",a[0].type());
+                newCol.getParameters().put("control",a[0].control());
                 newCol.getParameters().put("visible", String.valueOf(field.getName().equals(Defenitions.FIELDS.NAME)));
                 table.getChildren().add(newCol);
             }

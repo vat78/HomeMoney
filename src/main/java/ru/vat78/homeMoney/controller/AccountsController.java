@@ -18,7 +18,7 @@ import java.util.*;
 
 @Controller
 @Secured({"ROLE_USER","ROLE_ADMIN"})
-@RequestMapping("/accounts")
+@RequestMapping(ControlTerms.ACCOUNTS)
 public class AccountsController {
 
     @Autowired

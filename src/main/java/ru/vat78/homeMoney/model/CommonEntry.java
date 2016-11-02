@@ -23,23 +23,23 @@ public abstract class CommonEntry implements Serializable {
     @Column(name = Defenitions.FIELDS.TYPE)
     private String type;
 
-    @UIDef(caption = "Create on", shown = true, editable = false, num = 101)
+    @UIDef(caption = "Create on", shown = true, editable = false, order = 101)
     @DateTimeFormat(pattern=Defenitions.DATE_FORMAT)
     @Column(name = Defenitions.FIELDS.CREATE_ON, nullable = false)
     private Date createOn;
 
-    @UIDef(caption = "Create by", shown = true, editable = false, num = 102)
+    @UIDef(caption = "Create by", shown = true, editable = false, order = 102)
     @NotNull
     @ManyToOne(cascade = {CascadeType.REFRESH})
     @JoinColumn(name= Defenitions.FIELDS.CREATE_BY, referencedColumnName = Defenitions.FIELDS.ID)
     private User createBy;
 
-    @UIDef(caption = "Modify on", shown = true, editable = false, num = 103)
+    @UIDef(caption = "Modify on", shown = true, editable = false, order = 103)
     @DateTimeFormat(pattern=Defenitions.DATE_FORMAT)
     @Column(name = Defenitions.FIELDS.MODIFY_ON, nullable = false)
     private Date modifyOn;
 
-    @UIDef(caption = "Modify by", shown = true, editable = false, num = 104)
+    @UIDef(caption = "Modify by", shown = true, editable = false, order = 104)
     @NotNull
     @ManyToOne(cascade = {CascadeType.REFRESH})
     @JoinColumn(name= Defenitions.FIELDS.MODIFY_BY, referencedColumnName = Defenitions.FIELDS.ID)

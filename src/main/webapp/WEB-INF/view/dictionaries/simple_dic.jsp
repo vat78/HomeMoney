@@ -3,12 +3,39 @@
 <%@ taglib prefix="s" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="html" tagdir="/WEB-INF/tags/html" %>
 <%@ taglib prefix="ajax" tagdir="/WEB-INF/tags/ajax" %>
+<%@ page import = "ru.vat78.homeMoney.controller.ControlTerms" %>
+<%@ page import="ru.vat78.homeMoney.model.Defenitions" %>
 
-<s:url value="/api/dictionaries/data.json?table={tableName}" var="data_url">
-    <s:param name="tableName" value="${tableDef.name}" />
+<c:set var="fieldId" value="<%= Defenitions.FIELDS.ID %>" />
+
+<s:url value="{api}{operation}?{param}={type}" var="data_url">
+    <s:param name="type" value="${tableDef.name}" />
+    <s:param name="api" value="<%= ControlTerms.API_DICTIONARIES %>" />
+    <s:param name="operation" value="<%= ControlTerms.API_TABLE_DATA %>" />
+    <s:param name="param" value="<%= ControlTerms.OBJECT_TYPE %>" />
 </s:url>
-<s:url value="/dictionaries/view/{tableName}" var="page_url">
+
+<s:url value="{api}{operation}?{param}={type}&{id}=" var="get_url">
+    <s:param name="type" value="${tableDef.name}" />
+    <s:param name="api" value="<%= ControlTerms.API_DICTIONARIES %>" />
+    <s:param name="operation" value="<%= ControlTerms.API_ONE_ELEMENT %>" />
+    <s:param name="param" value="<%= ControlTerms.OBJECT_TYPE %>" />
+    <s:param name="id" value="${fieldId}" />
+</s:url>
+
+<s:url value="{api}{operation}" var="save_url">
+    <s:param name="api" value="<%= ControlTerms.API_DICTIONARIES %>" />
+    <s:param name="operation" value="<%= ControlTerms.SAVE %>" />
+</s:url>
+
+<s:url value="{api}{operation}" var="delete_url">
+    <s:param name="api" value="<%= ControlTerms.API_DICTIONARIES %>" />
+    <s:param name="operation" value="<%= ControlTerms.DELETE %>" />
+</s:url>
+
+<s:url value="{section}/view/{tableName}" var="page_url">
     <s:param name="tableName" value="${tableDef.name}" />
+    <s:param name="section" value="<%= ControlTerms.DICTIONARIES %>" />
 </s:url>
 
 <div class="col-lg-12">
@@ -20,7 +47,7 @@
 
             <div id="toolbar">
                 <div class="btn-group">
-                    <button class="btn btn-default" type="button" name="add" title="Add" data-toggle="modal" data-target="#formModal">
+                    <button class="btn btn-default btn-add" type="button" name="add" title="Add">
                         <i class="glyphicon glyphicon-plus icon-plus"></i>
                     </button>
                 </div>
@@ -59,10 +86,10 @@
 
 <script>
     $('.menu').find('[name = <c:out value="${tableDef.name}" />]').addClass("active");
+    $('.btn-add').click(function(){
+        prepareAndOpenForm('${get_url}0');
+    });
 </script>
 
-<ajax:actionsInRow table = "${tableDef.name}" editUrl="/api/dictionaries/save" deleteUrl="/api/dictionaries/delete" />
+<ajax:actionsInRow table = "${tableDef.name}" getUrl="${get_url}" deleteUrl="${delete_url}" fieldId="${fieldId}"/>
 
-<html:editDictionaryForm caption="Adding new ${tableDef.parameters['caption']}" table="${tableDef.name}" columns="${columns}" />
-
-<ajax:formValidate formName="#editForm" urlJsonValidate="/api/dictionaries/save" pageUrl="${page_url}" />

@@ -11,12 +11,12 @@ import javax.persistence.*;
 @PrimaryKeyJoinColumn(name = Defenitions.FIELDS.ID)
 public class CreditAccount extends Account {
 
-    @UIDef(caption = "Bank", shown = true, editable = true, num = 33)
+    @UIDef(caption = "Bank", shown = true, editable = true, order = 33)
     @ManyToOne(cascade = {CascadeType.REFRESH})
     @JoinColumn(name= Defenitions.FIELDS.ORGANIZATION, referencedColumnName = Defenitions.FIELDS.ID)
     private Contractor creditOrganization;
 
-    @UIDef(caption = "Credit rate", shown = true, editable = true, num = 37, type = "number")
+    @UIDef(caption = "Credit rate", shown = true, editable = true, order = 37, control = UIDef.NUMERIC)
     @Column(name = Defenitions.FIELDS.CREDIT_RATE)
     private float rate;
 

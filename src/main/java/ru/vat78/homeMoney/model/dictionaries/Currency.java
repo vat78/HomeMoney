@@ -13,7 +13,7 @@ import javax.validation.constraints.Size;
 @Table(name = Defenitions.TABLES.CURRENCY, uniqueConstraints = {@UniqueConstraint(columnNames = Defenitions.FIELDS.SEARCH_NAME)})
 public class Currency extends Dictionary {
 
-    @UIDef(caption = "Symbol", shown = true, editable = true, num = 20)
+    @UIDef(caption = "Symbol", shown = true, editable = true, order = 20)
     @Size(min=Defenitions.CURRNECY_SYMBOL_MIN, max=Defenitions.CURRNECY_SYMBOL_MAX,
             message = "Short name must be less than 5 symbols")
     @Column(name = Defenitions.FIELDS.SYMBOL)
