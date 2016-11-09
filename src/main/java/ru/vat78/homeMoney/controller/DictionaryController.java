@@ -43,6 +43,7 @@ public class DictionaryController {
             } else {
                 mv = new ModelAndView("simple_dictionary");
             }
+            mv.addObject("apiGroup", ControlTerms.API_DICTIONARIES);
             return prepareDictionaryPage(name, mv);
         }
 
@@ -54,9 +55,7 @@ public class DictionaryController {
         UIElement settings = userSettingsService.getTableSettings(securityService.getCurrentUser(),dictionary);
         mv.addObject("tableDef", settings);
 
-        Set<UIElement> columns = new HashSet<UIElement>();
-        columns.addAll(settings.getChildren());
-        mv.addObject("columns", columns);
+        mv.addObject("columns", settings.getChildren());
 
         return mv;
     }

@@ -7,25 +7,22 @@
 
 <s:url value="{api}{operation}?{param}={type}" var="data_url">
     <s:param name="type" value="${tableDef.name}" />
-    <s:param name="api" value="${ControlTerms.API_DICTIONARIES}" />
+    <s:param name="api" value="${apiGroup}" />
     <s:param name="operation" value="${ControlTerms.API_TABLE_DATA}" />
     <s:param name="param" value="${ControlTerms.OBJECT_TYPE}" />
 </s:url>
 
 <s:url value="{api}{operation}" var="save_url">
-    <s:param name="api" value="${ControlTerms.API_DICTIONARIES}" />
+    <s:param name="api" value="${apiGroup}" />
     <s:param name="operation" value="${ControlTerms.SAVE}" />
 </s:url>
 
 <s:url value="{api}{operation}" var="delete_url">
-    <s:param name="api" value="${ControlTerms.API_DICTIONARIES}" />
+    <s:param name="api" value="${apiGroup}" />
     <s:param name="operation" value="${ControlTerms.DELETE}" />
 </s:url>
 
-<s:url value="{section}/view/{tableName}" var="page_url">
-    <s:param name="tableName" value="${tableDef.name}" />
-    <s:param name="section" value="${ControlTerms.DICTIONARIES}" />
-</s:url>
+<s:url value="${requestScope['javax.servlet.forward.request_uri']}" var="page_url" />
 
 <c:set var = "fieldGroup" value="<%= FIELDS.GROUP %>" />
 <c:set var = "fieldType" value="<%= FIELDS.TYPE %>" />
@@ -75,20 +72,25 @@
                                             <select class="form-control selectpicker" title="Choose one of the following..." data-size="5" id="${column.name}" name="${column.name}">
                                             </select>
 
+                                            <s:url value="{api}{select}?{type}={dictionary}" var="selectUrl" >
+                                                <s:param name="api" value="<%= ControlTerms.API_DICTIONARIES%>" />
+                                                <s:param name="select" value="<%= ControlTerms.API_SELECT_DATA%>" />
+                                                <s:param name="type" value="<%= ControlTerms.OBJECT_TYPE%>" />
+                                                <s:param name="dictionary" value="${column.parameters['dataSource']}" />
+                                            </s:url>
+
                                             <script>
                                                 $(document).ready(function () {
                                                     var request = $.ajax({
                                                         type: 'GET',
-                                                        url: '${ControlTerms.API_DICTIONARIES}${ControlTerms.API_SELECT_DATA}?${ControlTerms.OBJECT_TYPE}=' + column.parameters['dataSource'],
+                                                        url: '${selectUrl}',
                                                     });
                                                     request.done(function(data){
-                                                        $("${column.name}").empty();
-                                                        for (var i = 0; i < data.length; i++) {
-                                                            $("${column.name}").append(
-                                                                    $("<option></option>").attr(
-                                                                            "value", data[i][0]).text(data[i][1])
-                                                            );
-                                                        }
+                                                        var my_select = $('#${column.name}');
+                                                        my_select.empty();
+                                                        $.each(data, function(index, item) {
+                                                            my_select.append(new Option(item, item));
+                                                        });
                                                     })
                                                 })
 

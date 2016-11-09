@@ -36,6 +36,7 @@ public class AccountsController {
     @RequestMapping(method = RequestMethod.GET)
     public ModelAndView showAccountsPage(@RequestParam(defaultValue = Defenitions.TABLES.ACCOUNTS) String type){
         ModelAndView result = new ModelAndView("accounts");
+        result.addObject("apiGroup", ControlTerms.API_ACCOUNTS);
         result.addObject("accountTypes", accountsService.getAccountsTypes());
         result.addObject("currencies", dictionaryService.getRecords(Defenitions.TABLES.CURRENCY,0,100, Defenitions.FIELDS.NAME,"asc",""));
         result.addObject("dateFormat", "dd.mm.yyyy");
@@ -48,9 +49,7 @@ public class AccountsController {
         settings.getParameters().put("setAddBtn", String.valueOf(!(tableName.equals(Defenitions.TABLES.ACCOUNTS) || tableName.equals("closed"))));
         mv.addObject("tableDef", settings);
 
-        Set<UIElement> columns = new HashSet<UIElement>();
-        columns.addAll(settings.getChildren());
-        mv.addObject("columns", columns);
+        mv.addObject("columns", settings.getChildren());
 
         return mv;
     }

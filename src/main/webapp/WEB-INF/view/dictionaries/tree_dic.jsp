@@ -8,6 +8,7 @@
 
 <c:set var="fieldId" value="<%= Defenitions.FIELDS.ID %>" />
 <c:set var="fieldType" value="<%= Defenitions.FIELDS.TYPE %>" />
+<c:set var="apiGroup" value="<%= ControlTerms.API_DICTIONARIES %>" />
 
 <s:url value="{api}{operation}?{param}={type}" var="data_url">
     <s:param name="type" value="${tableDef.name}" />

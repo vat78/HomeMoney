@@ -22,6 +22,10 @@ class GsonSerializerBuilder {
         return null;
     }
 
+    static JsonSerializer getSerializerOnlyNames(){
+        return new DictionarySerializer();
+    }
+
     private static class UserSerializer implements JsonSerializer<User>{
 
         public JsonElement serialize(User src, Type typeOfSrc, JsonSerializationContext context){

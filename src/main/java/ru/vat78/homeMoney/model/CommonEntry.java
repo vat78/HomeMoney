@@ -20,6 +20,7 @@ public abstract class CommonEntry implements Serializable {
     @Column(name = Defenitions.FIELDS.GROUP)
     private String component;
 
+    @UIDef(caption = "Type", shown = true, editable = false, order = 101)
     @Column(name = Defenitions.FIELDS.TYPE)
     private String type;
 

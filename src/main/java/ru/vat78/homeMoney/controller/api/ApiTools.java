@@ -37,7 +37,7 @@ class ApiTools {
                 response.setStatus(Response.SUCCESS);
                 response.setResult(entity);
             } else {
-                response.setError("", "edit.error.unknown");
+                response.setError(Defenitions.FIELDS.NAME, "edit.error.unknown");
             }
         }
     }

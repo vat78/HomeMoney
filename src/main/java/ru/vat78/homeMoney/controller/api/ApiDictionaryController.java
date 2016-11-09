@@ -35,7 +35,7 @@ public class ApiDictionaryController {
     @Autowired
     MyGsonBuilder gsonBuilder;
 
-    @RequestMapping(value = ControlTerms.API_ONE_ELEMENT, method = RequestMethod.GET, produces = ControlTerms.API_FORMAT)
+    @RequestMapping(value = ControlTerms.API_ONE_ELEMENT, method = RequestMethod.POST, produces = ControlTerms.API_FORMAT)
     @ResponseBody
     public String getElement(@RequestParam Map<String,String> allRequestParams){
 

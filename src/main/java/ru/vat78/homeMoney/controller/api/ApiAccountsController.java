@@ -37,6 +37,27 @@ public class ApiAccountsController {
     @Autowired
     MyGsonBuilder gsonBuilder;
 
+    @RequestMapping(value = ControlTerms.API_ONE_ELEMENT, method = RequestMethod.POST, produces = ControlTerms.API_FORMAT)
+    @ResponseBody
+    public String getElement(@RequestParam Map<String,String> allRequestParams){
+
+        Account result = accountsService.getRecordById(
+                allRequestParams.get(ControlTerms.OBJECT_TYPE),
+                ApiTools.parseId(allRequestParams.get(Defenitions.FIELDS.ID)));
+
+        if (result == null) result = accountsService.getNewEntry(allRequestParams.get(ControlTerms.OBJECT_TYPE));
+        if (result == null) return "";
+
+        Gson gson = gsonBuilder.getGsonBuilder()
+                .disableInnerClassSerialization()
+                .serializeNulls()
+                .registerTypeAdapter(User.class, GsonSerializerBuilder.getSerializer(User.class))
+                .registerTypeAdapter(Currency.class, GsonSerializerBuilder.getSerializerOnlyNames())
+                .setDateFormat(Defenitions.DATE_FORMAT)
+                .create();
+        return gson.toJson(result);
+    }
+
     @RequestMapping(value = ControlTerms.API_TABLE_DATA, method = RequestMethod.GET, produces = ControlTerms.API_FORMAT)
     @ResponseBody
     public String getTable(@RequestParam Map<String,String> allRequestParams){
@@ -53,6 +74,10 @@ public class ApiAccountsController {
             list = accountsService.getActiveAccountsByType(table);
         }
 
+        TableForJson result = new TableForJson();
+        result.setTotal(list.size());
+        result.setRows(list);
+
         Gson gson = gsonBuilder.getGsonBuilder()
                 .disableInnerClassSerialization()
                 .serializeNulls()
@@ -60,7 +85,7 @@ public class ApiAccountsController {
                 .registerTypeAdapter(Currency.class, GsonSerializerBuilder.getSerializer(Currency.class))
                 .setDateFormat(Defenitions.DATE_FORMAT)
                 .create();
-        return gson.toJson(list);
+        return gson.toJson(result);
     }
 
     @RequestMapping(value = ControlTerms.SAVE, method = RequestMethod.POST, produces = ControlTerms.API_FORMAT)

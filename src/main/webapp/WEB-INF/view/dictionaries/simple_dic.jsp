@@ -7,6 +7,8 @@
 <%@ page import="ru.vat78.homeMoney.model.Defenitions" %>
 
 <c:set var="fieldId" value="<%= Defenitions.FIELDS.ID %>" />
+<c:set var="fieldType" value="<%= Defenitions.FIELDS.TYPE %>" />
+<c:set var="apiGroup" value="<%= ControlTerms.API_DICTIONARIES %>" />
 
 <s:url value="{api}{operation}?{param}={type}" var="data_url">
     <s:param name="type" value="${tableDef.name}" />
@@ -15,12 +17,9 @@
     <s:param name="param" value="<%= ControlTerms.OBJECT_TYPE %>" />
 </s:url>
 
-<s:url value="{api}{operation}?{param}={type}&{id}=" var="get_url">
-    <s:param name="type" value="${tableDef.name}" />
+<s:url value="{api}{operation}" var="get_url">
     <s:param name="api" value="<%= ControlTerms.API_DICTIONARIES %>" />
     <s:param name="operation" value="<%= ControlTerms.API_ONE_ELEMENT %>" />
-    <s:param name="param" value="<%= ControlTerms.OBJECT_TYPE %>" />
-    <s:param name="id" value="${fieldId}" />
 </s:url>
 
 <s:url value="{api}{operation}" var="save_url">
@@ -91,5 +90,5 @@
     });
 </script>
 
-<ajax:actionsInRow table = "${tableDef.name}" getUrl="${get_url}" deleteUrl="${delete_url}" fieldId="${fieldId}"/>
+<ajax:actionsInRow table = "${tableDef.name}" getUrl="${get_url}" deleteUrl="${delete_url}" fieldId="${fieldId}" fieldType="${fieldType}" />
 

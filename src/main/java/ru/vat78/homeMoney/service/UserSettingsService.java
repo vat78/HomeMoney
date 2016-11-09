@@ -36,6 +36,7 @@ public class UserSettingsService {
             tablesSettingsDao.save(res);
         }
 
+
         Locale l = user.getLocale();
 
         String s;
@@ -69,7 +70,7 @@ public class UserSettingsService {
         result.getParameters().put("sortColumn",Defenitions.FIELDS.ID);
         result.getParameters().put("sortOrder","asc");
 
-        result.setChildren(new TreeSet<UIElement>());
+        result.resetChildren();
         getTableColumns(result);
 
         return result;
@@ -130,6 +131,7 @@ public class UserSettingsService {
                 newCol.getParameters().put("editable", String.valueOf(a[0].editable()));
                 newCol.getParameters().put("shown", String.valueOf(a[0].shown()));
                 newCol.getParameters().put("control",a[0].control());
+                newCol.getParameters().put("dataSource",a[0].source());
                 newCol.getParameters().put("visible", String.valueOf(field.getName().equals(Defenitions.FIELDS.NAME)));
                 table.getChildren().add(newCol);
             }

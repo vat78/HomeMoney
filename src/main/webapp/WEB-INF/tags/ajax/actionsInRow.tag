@@ -3,17 +3,19 @@
 <%@ attribute name="getUrl" required="true" rtexprvalue="true" %>
 <%@ attribute name="deleteUrl" required="true" rtexprvalue="true" %>
 <%@ attribute name="fieldId" required="true" rtexprvalue="true" %>
+<%@ attribute name="fieldType" required="true" rtexprvalue="true" %>
 
 <script type="text/javascript">
     window.operateEvents = {
         'click .edit': function (e, value, row) {
 
-            var full_url = '${getUrl}' + row['${fieldId}'];
-            prepareAndOpenForm(full_url);
+            var $url = '${getUrl}';
+            var $data = {<%= Defenitions.FIELDS.TYPE %>: row['${fieldType}'], <%= Defenitions.FIELDS.ID %>: row['${fieldId}']};
+            prepareAndOpenForm($url, $data);
         },
         'click .remove': function (e, value, row) {
             var $conf = 'Are you want to delete "' + row['name'] + '"?';
-            var $data = {<%= Defenitions.FIELDS.TYPE %>: '${table}', <%= Defenitions.FIELDS.ID %>: row['id']};
+            var $data = {<%= Defenitions.FIELDS.TYPE %>: row['${fieldType}'], <%= Defenitions.FIELDS.ID %>: row['${fieldId}']};
             if (confirm($conf))
             {
                 $.post('${deleteUrl}', $data, function(response) {
@@ -42,8 +44,8 @@
     }
 
 
-    function prepareAndOpenForm(url) {
-        $.get(url, function(data) {
+    function prepareAndOpenForm(url, param) {
+        $.post(url, param, function(data) {
             var $form = $('#editForm');
             var $inputs = $form.find('input, select');
             for (var i = 0; i < $inputs.length; i++) {

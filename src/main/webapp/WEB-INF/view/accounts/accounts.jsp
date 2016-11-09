@@ -3,9 +3,39 @@
 <%@ taglib prefix="s" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="html" tagdir="/WEB-INF/tags/html" %>
 <%@ taglib prefix="ajax" tagdir="/WEB-INF/tags/ajax" %>
+<%@ page import = "ru.vat78.homeMoney.controller.ControlTerms" %>
+<%@ page import="ru.vat78.homeMoney.model.Defenitions" %>
 
-<s:url value="/api/accounts/data.json?type={tableName}" var="data_url">
+<c:set var="fieldId" value="<%= Defenitions.FIELDS.ID %>" />
+<c:set var="fieldName" value="<%= Defenitions.FIELDS.NAME %>" />
+<c:set var="fieldType" value="<%= Defenitions.FIELDS.TYPE %>" />
+<c:set var="apiGroup" value="<%= ControlTerms.API_ACCOUNTS %>" />
+
+<s:url value="{api}{operation}?{param}={type}" var="data_url">
+    <s:param name="type" value="${tableDef.name}" />
+    <s:param name="api" value="<%= ControlTerms.API_ACCOUNTS %>" />
+    <s:param name="operation" value="<%= ControlTerms.API_TABLE_DATA %>" />
+    <s:param name="param" value="<%= ControlTerms.OBJECT_TYPE %>" />
+</s:url>
+
+<s:url value="{api}{operation}" var="get_url">
+    <s:param name="api" value="<%= ControlTerms.API_ACCOUNTS %>" />
+    <s:param name="operation" value="<%= ControlTerms.API_ONE_ELEMENT %>" />
+</s:url>
+
+<s:url value="{api}{operation}" var="save_url">
+    <s:param name="api" value="<%= ControlTerms.API_ACCOUNTS %>" />
+    <s:param name="operation" value="<%= ControlTerms.SAVE %>" />
+</s:url>
+
+<s:url value="{api}{operation}" var="delete_url">
+    <s:param name="api" value="<%= ControlTerms.API_ACCOUNTS %>" />
+    <s:param name="operation" value="<%= ControlTerms.DELETE %>" />
+</s:url>
+
+<s:url value="{section}?type={tableName}" var="page_url">
     <s:param name="tableName" value="${tableDef.name}" />
+    <s:param name="section" value="<%= ControlTerms.ACCOUNTS %>" />
 </s:url>
 
 <div class="col-lg-12">
@@ -15,10 +45,10 @@
         </div>
         <div class="panel-body">
 
-            <c:if test="${tableDef.parameters['addBtn']}">
+            <c:if test="${tableDef.parameters['setAddBtn']}">
                 <div id="toolbar">
                     <div class="btn-group">
-                        <button class="btn btn-default" type="button" name="add" title="Add" data-toggle="modal" data-target="#formModal">
+                        <button class="btn btn-default btn-add" type="button" name="add" title="Add">
                             <i class="glyphicon glyphicon-plus icon-plus"></i>
                         </button>
                     </div>
@@ -33,20 +63,29 @@
                    data-show-columns="true"
                    data-search="true"
                    data-select-item-name="toolbar1"
-                   data-pagination="false"
-                   data-sort-name="name"
-                   data-sort-order="asc"
-                   data-reorderable-columns="false"
-                   data-show-export="false"
+                   data-pagination="true"
+                   data-side-pagination="server"
+                   data-sort-name="${tableDef.parameters['sortColumn']}"
+                   data-sort-order="${tableDef.parameters['sortOrder']}"
+                   data-reorderable-columns="true"
+                   data-show-export="true"
             >
 
                 <thead>
                 <tr>
                     <th data-field="action" data-formatter="operateFormatter" data-events="operateEvents" class="td2icon">&nbsp;</th>
-                    <th data-field="name" data-formatter="nameFormatter" data-sortable="true" data-visible = "true"> Name </th>
                     <c:forEach var="column" items="${columns}">
-                        <c:if test="${column.parameters['shown'] == 'true' && column.name != 'name'}">
-                            <th data-field="${column.name}" data-sortable="true" data-visible = ${column.parameters['visible']}><c:out value="${column.parameters['caption']}" /> </th>
+                        <c:if test="${column.parameters['shown'] == 'true'}" >
+                            <c:if test="${column.name == fieldName}" >
+                                <th data-field="${column.name}" data-formatter="nameFormatter" data-sortable="true" data-visible = ${column.parameters['visible']} >
+                                    <c:out value="${column.parameters['caption']}" />
+                                </th>
+                            </c:if>
+                            <c:if test="${column.name != fieldName}" >
+                                <th data-field="${column.name}" data-sortable="true" data-visible = ${column.parameters['visible']} >
+                                    <c:out value="${column.parameters['caption']}" />
+                                </th>
+                            </c:if>
                         </c:if>
                     </c:forEach>
                 </tr>
@@ -57,13 +96,18 @@
     </div>
 </div>
 
-<ajax:actionsInRow table = "${tableDef.name}" editUrl="/api/accounts/save" deleteUrl="/api/accounts/delete" />
+<ajax:actionsInRow table = "${tableDef.name}" getUrl="${get_url}" deleteUrl="${delete_url}" fieldId="${fieldId}" fieldType="${fieldType}"  />
 
 <script>
+    $('.menu').find('[name = <c:out value="${tableDef.name}" />]').addClass("active");
+    $('.btn-add').click(function(){
+        prepareAndOpenForm('${get_url}');
+    });
+
     function nameFormatter(value, row, index) {
         return [
             '<a href="transactions?account=',
-            row.id,
+            row[<%= Defenitions.FIELDS.ID %>],
             '">',
             value,
             '</a>'
@@ -72,10 +116,6 @@
 </script>
 
 
-
-    <html:editAccountForm caption="Adding new ${tableDef.parameters['caption']}" table="${tableDef.name}" columns="${columns}" currencies="${currencies}" />
-
-    <ajax:formValidate formName="#editForm" urlJsonValidate="/api/accounts/save" pageUrl="${page_url}" />
 
 
 

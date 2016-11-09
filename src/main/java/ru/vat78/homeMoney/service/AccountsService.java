@@ -26,13 +26,16 @@ public class AccountsService extends CommonService<Account> {
     }
 
     @Override
-    public Account getRecordById(String dictionary, Long id) {
-        return null;
+    public Account getRecordById(String type, Long id) {
+
+        if (!isTypeExist(type)) return null;
+        return (Account) accountsDao.findById(type, id);
     }
 
     @Override
     public boolean isTypeExist(String type) {
-        return false;
+        //ToDo: dog-nail
+        return getAccountsTypes().contains(type);
     }
 
     @Override
