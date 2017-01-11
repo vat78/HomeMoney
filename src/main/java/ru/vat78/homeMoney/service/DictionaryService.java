@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import ru.vat78.homeMoney.dao.dictionaries.*;
 import ru.vat78.homeMoney.model.CommonEntry;
 import ru.vat78.homeMoney.model.dictionaries.Dictionary;
+import ru.vat78.homeMoney.model.exceptions.WrongTypeException;
 
 import java.util.*;
 
@@ -14,18 +15,18 @@ public class DictionaryService extends CommonService<Dictionary> {
     @Autowired
     DictionaryDao dictionaryDao;
 
-    public long getCount(String dictionary){
-        if (!isTypeExist(dictionary)) return 0;
+    public long getCount(String dictionary) throws WrongTypeException {
+        if (!isTypeExist(dictionary)) throw new WrongTypeException(dictionary);
         return dictionaryDao.getCount(dictionary);
     }
 
-    public List<Dictionary> getRecords(String dictionary, int offset, int size, String sortColumn, String sortOrder, String searchString){
-        if (!isTypeExist(dictionary)) return Collections.emptyList();
+    public List<Dictionary> getRecords(String dictionary, int offset, int size, String sortColumn, String sortOrder, String searchString) throws WrongTypeException {
+        if (!isTypeExist(dictionary)) throw new WrongTypeException(dictionary);
         return dictionaryDao.getPart(dictionary,offset,size,sortColumn,sortOrder,searchString);
     }
 
-    public Dictionary getRecordByName(String dictionary, String name){
-        if (!isTypeExist(dictionary)) return null;
+    public Dictionary getRecordByName(String dictionary, String name) throws WrongTypeException {
+        if (!isTypeExist(dictionary)) throw new WrongTypeException(dictionary);
         return dictionaryDao.findByName(dictionary, name);
     }
 
@@ -35,8 +36,6 @@ public class DictionaryService extends CommonService<Dictionary> {
 
     public boolean saveRecord(Dictionary entity){
 
-        if (!isTypeExist(entity.getType())) return false;
-
         try {
             entity = (Dictionary) dictionaryDao.save(entity);
         } catch (Exception ignored) {return false;}
@@ -44,9 +43,9 @@ public class DictionaryService extends CommonService<Dictionary> {
         return entity != null;
     }
 
-    public boolean deleteRecordById(String dictionary, Long id){
+    public boolean deleteRecordById(String dictionary, Long id) throws WrongTypeException {
 
-        if (!isTypeExist(dictionary)) return false;
+        if (!isTypeExist(dictionary)) throw new WrongTypeException(dictionary);
         try {
             dictionaryDao.deleteById(dictionary, id);
         } catch (Exception ignored) {return false;}
@@ -68,20 +67,20 @@ public class DictionaryService extends CommonService<Dictionary> {
         return result;
     }
 
-    public Set<Dictionary> getTreeRecords(String dictionary, Long id) {
-        if (!isTypeExist(dictionary)) return Collections.emptySet();
+    public Set<Dictionary> getTreeRecords(String dictionary, Long id) throws WrongTypeException {
+        if (!isTypeExist(dictionary)) throw new WrongTypeException(dictionary);
         Set<Dictionary>  result = dictionaryDao.getAllChildrenById(dictionary, id);
         if (id == 0 && result.size() < 1) return insertFirstElement(dictionary);
         return result;
     }
 
-    public Dictionary getRecordById(String dictionary, Long id) {
-        if (!isTypeExist(dictionary)) return null;
-        return (Dictionary) dictionaryDao.findById(dictionary, id);
+    public Dictionary getRecordById(String type, Long id) throws WrongTypeException {
+        if (!isTypeExist(type)) throw new WrongTypeException(type);
+        return (Dictionary) dictionaryDao.findById(type, id);
     }
 
-    private Set<Dictionary> insertFirstElement(String dictionary) {
-        if (!isTypeExist(dictionary)) return Collections.emptySet();
+    private Set<Dictionary> insertFirstElement(String dictionary) throws WrongTypeException {
+        if (!isTypeExist(dictionary)) throw new WrongTypeException(dictionary);
         Dictionary element = getNewEntry(dictionary);
         element.setName("Sample value");
         dictionaryDao.save(element);

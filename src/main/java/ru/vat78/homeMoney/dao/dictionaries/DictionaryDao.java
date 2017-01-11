@@ -18,7 +18,6 @@ import java.util.Set;
 import java.util.TreeSet;
 
 @Repository("dictionaryDao")
-@Transactional
 public class DictionaryDao<T extends Dictionary> extends CommonEntryDao {
 
     public Class<T> getEntityClass(String type) {

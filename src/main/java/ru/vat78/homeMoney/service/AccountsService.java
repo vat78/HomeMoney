@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import ru.vat78.homeMoney.dao.accounts.AccountsDao;
 import ru.vat78.homeMoney.model.Defenitions;
 import ru.vat78.homeMoney.model.accounts.Account;
+import ru.vat78.homeMoney.model.exceptions.WrongTypeException;
 
 import java.util.*;
 
@@ -20,15 +21,15 @@ public class AccountsService extends CommonService<Account> {
     }
 
     @Override
-    public Account getRecordByName(String accountType, String accountName) {
-        if (!isTypeExist(accountType)) return null;
+    public Account getRecordByName(String accountType, String accountName) throws WrongTypeException {
+        if (!isTypeExist(accountType)) throw new WrongTypeException(accountType);
         return accountsDao.findByName(accountType, accountName);
     }
 
     @Override
-    public Account getRecordById(String type, Long id) {
+    public Account getRecordById(String type, Long id) throws WrongTypeException {
 
-        if (!isTypeExist(type)) return null;
+        if (!isTypeExist(type)) throw new WrongTypeException(type);
         return (Account) accountsDao.findById(type, id);
     }
 
@@ -41,7 +42,6 @@ public class AccountsService extends CommonService<Account> {
     @Override
     public boolean saveRecord(Account entity) {
 
-        if (!isTypeExist(entity.getType())) return false;
         try {
             entity = (Account) accountsDao.save(entity);
         } catch (Exception ignored) {return false;}
@@ -55,9 +55,9 @@ public class AccountsService extends CommonService<Account> {
     }
 
     @Override
-    public boolean deleteRecordById(String accountType, Long id) {
+    public boolean deleteRecordById(String accountType, Long id) throws WrongTypeException {
 
-        if (!isTypeExist(accountType)) return false;
+        if (!isTypeExist(accountType)) throw new WrongTypeException(accountType);
         try {
             accountsDao.deleteById(accountType, id);
         } catch (Exception ignored) {return false;}
@@ -79,8 +79,8 @@ public class AccountsService extends CommonService<Account> {
         return accountsDao.getAccountsByStatus(active);
     }
 
-    public List<Account> getActiveAccountsByType(String accountType){
-        if (!isTypeExist(accountType)) return Collections.EMPTY_LIST;
+    public List<Account> getActiveAccountsByType(String accountType) throws WrongTypeException {
+        if (!isTypeExist(accountType)) throw new WrongTypeException(accountType);
         return accountsDao.getAccountsByStatus(accountType, true);
     }
 

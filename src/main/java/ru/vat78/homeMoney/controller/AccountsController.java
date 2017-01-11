@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import ru.vat78.homeMoney.model.Defenitions;
+import ru.vat78.homeMoney.model.exceptions.WrongTypeException;
 import ru.vat78.homeMoney.model.tools.UIElement;
 import ru.vat78.homeMoney.service.AccountsService;
 import ru.vat78.homeMoney.service.DictionaryService;
@@ -34,7 +35,7 @@ public class AccountsController {
     UserSettingsService userSettingsService;
 
     @RequestMapping(method = RequestMethod.GET)
-    public ModelAndView showAccountsPage(@RequestParam(defaultValue = Defenitions.TABLES.ACCOUNTS) String type){
+    public ModelAndView showAccountsPage(@RequestParam(defaultValue = Defenitions.TABLES.ACCOUNTS) String type) throws WrongTypeException{
         ModelAndView result = new ModelAndView("accounts");
         result.addObject("apiGroup", ControlTerms.API_ACCOUNTS);
         result.addObject("accountTypes", accountsService.getAccountsTypes());

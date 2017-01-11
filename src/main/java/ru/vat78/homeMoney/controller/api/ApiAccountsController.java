@@ -1,18 +1,20 @@
 package ru.vat78.homeMoney.controller.api;
 
-import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import ru.vat78.homeMoney.controller.ControlTerms;
 import ru.vat78.homeMoney.model.Defenitions;
-import ru.vat78.homeMoney.model.User;
 import ru.vat78.homeMoney.model.accounts.Account;
 import ru.vat78.homeMoney.model.dictionaries.Currency;
+import ru.vat78.homeMoney.model.dictionaries.Dictionary;
+import ru.vat78.homeMoney.model.exceptions.DbOperationException;
+import ru.vat78.homeMoney.model.exceptions.ValidationException;
+import ru.vat78.homeMoney.model.exceptions.WrongTypeException;
 import ru.vat78.homeMoney.service.AccountsService;
 import ru.vat78.homeMoney.service.DictionaryService;
 import ru.vat78.homeMoney.service.SecurityService;
@@ -37,86 +39,66 @@ public class ApiAccountsController {
     @Autowired
     MyGsonBuilder gsonBuilder;
 
-    @RequestMapping(value = ControlTerms.API_ONE_ELEMENT, method = RequestMethod.POST, produces = ControlTerms.API_FORMAT)
-    @ResponseBody
-    public String getElement(@RequestParam Map<String,String> allRequestParams){
+    @RequestMapping(value = "/{objectType}/{objectId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<Account> getElement(@PathVariable String objectType, @PathVariable Long objectId) throws WrongTypeException {
 
-        Account result = accountsService.getRecordById(
-                allRequestParams.get(ControlTerms.OBJECT_TYPE),
-                ApiTools.parseId(allRequestParams.get(Defenitions.FIELDS.ID)));
+        Account result = accountsService.getRecordById(objectType, objectId);
+        //ToDo: is it right to make emty object?
+        if (result == null) result = accountsService.getNewEntry(objectType);
 
-        if (result == null) result = accountsService.getNewEntry(allRequestParams.get(ControlTerms.OBJECT_TYPE));
-        if (result == null) return "";
-
-        Gson gson = gsonBuilder.getGsonBuilder()
-                .disableInnerClassSerialization()
-                .serializeNulls()
-                .registerTypeAdapter(User.class, GsonSerializerBuilder.getSerializer(User.class))
-                .registerTypeAdapter(Currency.class, GsonSerializerBuilder.getSerializerOnlyNames())
-                .setDateFormat(Defenitions.DATE_FORMAT)
-                .create();
-        return gson.toJson(result);
+        return new ResponseEntity<Account>(result, HttpStatus.OK);
     }
 
-    @RequestMapping(value = ControlTerms.API_TABLE_DATA, method = RequestMethod.GET, produces = ControlTerms.API_FORMAT)
-    @ResponseBody
-    public String getTable(@RequestParam Map<String,String> allRequestParams){
+    @RequestMapping(value = "/{objectType}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<TableForJson> getTable(@PathVariable String objectType) throws WrongTypeException {
 
         List<Account> list;
-        String table = allRequestParams.get(Defenitions.FIELDS.TYPE);
-        if (table == null || table.length() == 0){
-            table = Defenitions.TABLES.ACCOUNTS;
+
+        if (objectType == null || objectType.length() == 0){
+            objectType = Defenitions.TABLES.ACCOUNTS;
         }
 
-        if (table.equals(Defenitions.TABLES.ACCOUNTS) || table.equals("closed")){
-            list = accountsService.getAllAccounts(table.equals(Defenitions.TABLES.ACCOUNTS));
+        if (objectType.equals(Defenitions.TABLES.ACCOUNTS) || objectType.equals("closed")){
+            list = accountsService.getAllAccounts(objectType.equals(Defenitions.TABLES.ACCOUNTS));
         } else {
-            list = accountsService.getActiveAccountsByType(table);
+            list = accountsService.getActiveAccountsByType(objectType);
         }
 
+        //ToDo: do I need this additional conversion?
         TableForJson result = new TableForJson();
         result.setTotal(list.size());
         result.setRows(list);
 
-        Gson gson = gsonBuilder.getGsonBuilder()
-                .disableInnerClassSerialization()
-                .serializeNulls()
-                .registerTypeAdapter(User.class, GsonSerializerBuilder.getSerializer(User.class))
-                .registerTypeAdapter(Currency.class, GsonSerializerBuilder.getSerializer(Currency.class))
-                .setDateFormat(Defenitions.DATE_FORMAT)
-                .create();
-        return gson.toJson(result);
+        return new ResponseEntity<TableForJson>(result, HttpStatus.OK);
     }
 
-    @RequestMapping(value = ControlTerms.SAVE, method = RequestMethod.POST, produces = ControlTerms.API_FORMAT)
-    @ResponseBody
-    public String saveEntry(@RequestParam Map<String,String> allRequestParams){
+    @RequestMapping(value = "/{objectType}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<Void> createEntry(@PathVariable String objectType, @RequestParam Map<String,String> allRequestParams) throws WrongTypeException, ValidationException {
 
-        Response res = new Response();
+        buildAndSaveEntity(accountsService.getNewEntry(objectType), allRequestParams);
 
-        Account entity = loadEntryFromParams(allRequestParams, res);
-
-        ApiTools.validateEntry(entity, res);
-        ApiTools.checkUniqueName(accountsService, entity, res);
-        ApiTools.saveEntityToDb(accountsService, entity, res);
-
-        Gson gson = gsonBuilder.getGsonBuilder().create();
-        return gson.toJson(res);
+        return new ResponseEntity<Void>(HttpStatus.CREATED);
     }
 
-    @RequestMapping(value = ControlTerms.DELETE, method = RequestMethod.POST, produces = ControlTerms.API_FORMAT)
-    @ResponseBody
-    public String deleteEntry(@RequestParam Map<String,String> allRequestParams){
+    @RequestMapping(value = "/{objectType}/{objectId}", method = {RequestMethod.POST, RequestMethod.PUT}, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<Void> saveEntry(@PathVariable String objectType, @PathVariable Long objectId, @RequestParam Map<String,String> allRequestParams) throws WrongTypeException, ValidationException {
 
-        Response result = new Response();
-        ApiTools.deleteEntry(accountsService, allRequestParams.get(ControlTerms.OBJECT_TYPE), allRequestParams.get(Defenitions.FIELDS.ID), result);
+        buildAndSaveEntity(accountsService.getRecordById(objectId), allRequestParams);
+        return new ResponseEntity<Void>(HttpStatus.OK);
 
-        return gsonBuilder.getGsonBuilder().create().toJson(result);
     }
 
-    private Account loadEntryFromParams(Map<String, String> params, Response response) {
+    @RequestMapping(value = "/{objectType}/{objectId}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<Void> deleteEntry(@PathVariable String objectType, @PathVariable Long objectId) throws WrongTypeException, DbOperationException {
 
-        Account result = (Account) ApiTools.buildEntryFromParams(accountsService, params, response);
+        ApiTools.deleteEntry(accountsService, objectType, objectId);
+        return new ResponseEntity<Void>(HttpStatus.OK);
+
+    }
+
+    private void buildAndSaveEntity(Account entity, Map<String, String> params) throws WrongTypeException, ValidationException {
+
+        Account result = (Account) ApiTools.buildEntryFromParams(entity, params);
 
         if (result != null) {
             result.setModifyBy(securityService.getCurrentUser());
@@ -124,7 +106,9 @@ public class ApiAccountsController {
             result.setCurrency((Currency) dictionaryService.getRecordByName(Defenitions.TABLES.CURRENCY, params.get(Defenitions.FIELDS.CURRENCY)));
         }
 
-        return result;
+        ApiTools.validateEntry(result);
+        ApiTools.checkUniqueName(accountsService, result);
+        ApiTools.saveEntityToDb(accountsService, result);
     }
 
 }

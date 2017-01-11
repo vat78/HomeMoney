@@ -13,7 +13,6 @@ import ru.vat78.homeMoney.model.accounts.Account;
 import java.util.List;
 
 @Repository("accountsDao")
-@Transactional
 public class AccountsDao extends DictionaryDao<Account> {
 
     @Override
@@ -26,6 +25,7 @@ public class AccountsDao extends DictionaryDao<Account> {
         return (Account) getNewEntity(Defenitions.GROUPS.ACCOUNTS, type);
     }
 
+    @Transactional(readOnly = true)
     public List<Account> getAccountsByStatus(boolean active){
         Criteria criteria = getCriteria(getEntityClass(Defenitions.TABLES.ACCOUNTS));
         criteria.add(Restrictions.eq(Defenitions.FIELDS.ACTIVE, active));
@@ -33,6 +33,7 @@ public class AccountsDao extends DictionaryDao<Account> {
         return criteria.list();
     }
 
+    @Transactional(readOnly = true)
     public List<Account> getAccountsByStatus(String type, boolean active){
         Criteria criteria = getCriteria(getEntityClass(type));
         criteria.add(Restrictions.eq(Defenitions.FIELDS.ACTIVE, active));
@@ -40,6 +41,7 @@ public class AccountsDao extends DictionaryDao<Account> {
         return criteria.list();
     }
 
+    @Transactional(readOnly = true)
     public Account findById(Long id) {
         Account acc = (Account) findById(Defenitions.TABLES.ACCOUNTS, id);
         return (Account) findById(acc.getType(), id);

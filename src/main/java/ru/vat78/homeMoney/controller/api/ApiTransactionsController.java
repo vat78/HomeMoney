@@ -2,18 +2,21 @@ package ru.vat78.homeMoney.controller.api;
 
 import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import ru.vat78.homeMoney.controller.ControlTerms;
 import ru.vat78.homeMoney.model.Defenitions;
 import ru.vat78.homeMoney.model.User;
 import ru.vat78.homeMoney.model.accounts.Account;
+import ru.vat78.homeMoney.model.exceptions.ValidationException;
+import ru.vat78.homeMoney.model.exceptions.WrongTypeException;
 import ru.vat78.homeMoney.model.transactions.Transaction;
 import ru.vat78.homeMoney.service.AccountsService;
+import ru.vat78.homeMoney.service.SecurityService;
 import ru.vat78.homeMoney.service.TransactionsService;
 
 import java.util.List;
@@ -31,17 +34,19 @@ public class ApiTransactionsController {
     AccountsService accountsService;
 
     @Autowired
+    SecurityService securityService;
+
+    @Autowired
     MyGsonBuilder gsonBuilder;
 
-    @RequestMapping(value = ControlTerms.API_TABLE_DATA, method = RequestMethod.GET, produces = ControlTerms.API_FORMAT)
-    @ResponseBody
-    public String getTable(@RequestParam Map<String,String> allRequestParams){
+    @RequestMapping(value = "/{objectType}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<List<Transaction>> getTable(@PathVariable String objectType,
+                                                      @RequestParam Map<String,String> allRequestParams) throws WrongTypeException {
 
         long accountId = ApiTools.parseId(allRequestParams.get("account"));
         Account account = accountsService.getRecordById(accountId);
 
-        List<Transaction> list;
-        list = transactionsService.getTransactionsByAccount(
+        List<Transaction> list = transactionsService.getTransactionsByAccount(
                 account,
                 Integer.valueOf(allRequestParams.get(ControlTerms.DATA_OFFSET)),
                 Integer.valueOf(allRequestParams.get(ControlTerms.DATA_LIMIT)),
@@ -49,33 +54,22 @@ public class ApiTransactionsController {
                 allRequestParams.get(ControlTerms.SEARCH_STRING)
         );
 
-        Gson gson = gsonBuilder.getGsonBuilder()
-                .disableInnerClassSerialization()
-                .serializeNulls()
-                .registerTypeAdapter(User.class, GsonSerializerBuilder.getSerializer(User.class))
-                .setDateFormat(Defenitions.DATE_FORMAT)
-                .create();
-        return gson.toJson(list);
+        return new ResponseEntity<List<Transaction>>(list, HttpStatus.OK);
     }
 
-    @RequestMapping(value = ControlTerms.SAVE, method = RequestMethod.POST, produces = ControlTerms.API_FORMAT)
-    @ResponseBody
-    public String saveEntry(@RequestParam Map<String,String> allRequestParams){
+    @RequestMapping(value = "/{objectType}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<Void> createEntry(@PathVariable String objectType,
+                                            @RequestParam Map<String,String> allRequestParams) throws WrongTypeException, ValidationException {
 
-        Response res = new Response();
+        Transaction entity = loadEntryFromParams(transactionsService.getNewEntry(objectType), allRequestParams);
+        validateAndSaveEntity(entity);
 
-        Transaction entity = loadEntryFromParams(allRequestParams, res);
-
-        ApiTools.validateEntry(entity, res);
-        ApiTools.saveEntityToDb(accountsService, entity, res);
-
-        Gson gson = gsonBuilder.getGsonBuilder().create();
-        return gson.toJson(res);
+        return new ResponseEntity<Void>(HttpStatus.CREATED);
     }
 
-    private Transaction loadEntryFromParams(Map<String, String> data, Response response) {
+    private Transaction loadEntryFromParams(Transaction entry, Map<String, String> data) {
 
-        Transaction result = (Transaction) ApiTools.loadEntryFromDb(transactionsService, data.get(Defenitions.FIELDS.OPERATION_TYPE), data.get(Defenitions.FIELDS.ID));
+        Transaction result = (Transaction) ApiTools.buildEntryFromParams(entry, data);
 
         /*
         if (result.getSum() == 0) {
@@ -101,5 +95,15 @@ public class ApiTransactionsController {
         */
 
         return result;
+    }
+
+    private void validateAndSaveEntity(Transaction entity) throws WrongTypeException, ValidationException {
+
+        if (entity != null) {
+            entity.setModifyBy(securityService.getCurrentUser());
+        }
+
+        ApiTools.validateEntry(entity);
+        ApiTools.saveEntityToDb(transactionsService, entity);
     }
 }

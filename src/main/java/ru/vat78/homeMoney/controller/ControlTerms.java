@@ -28,7 +28,4 @@ public class ControlTerms {
 
     public final static int MAX_SELECT_DATA = 6;
 
-    public final static String API_FORMAT = "application/json;charset=UTF-8";
-
-
 }

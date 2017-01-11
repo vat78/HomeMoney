@@ -29,7 +29,7 @@ public class TransactionsService extends CommonService<Transaction> {
     }
 
     @Override
-    public Transaction getRecordById(String dictionary, Long id) {
+    public Transaction getRecordById(String type, Long id) {
         return null;
     }
 
@@ -62,7 +62,6 @@ public class TransactionsService extends CommonService<Transaction> {
     }
 
     public boolean saveRecord(Transaction entity) {
-        if (!isTypeExist(entity.getType())) return false;
         try {
             entity = (Transaction) transactionsDao.save(entity);
         } catch (Exception ignored) {return false;}

@@ -6,6 +6,9 @@ import org.springframework.web.bind.WebDataBinder;
 import ru.vat78.homeMoney.model.CommonEntry;
 import ru.vat78.homeMoney.model.Defenitions;
 import ru.vat78.homeMoney.model.dictionaries.Dictionary;
+import ru.vat78.homeMoney.model.exceptions.DbOperationException;
+import ru.vat78.homeMoney.model.exceptions.ValidationException;
+import ru.vat78.homeMoney.model.exceptions.WrongTypeException;
 import ru.vat78.homeMoney.service.CommonService;
 
 import javax.validation.ConstraintViolation;
@@ -19,95 +22,44 @@ import java.util.Set;
 
 class ApiTools {
 
-    static void checkUniqueName(@NotNull CommonService service, @NotNull Dictionary entity, @NotNull Response response){
+    static void checkUniqueName(@NotNull CommonService service, @NotNull Dictionary entity) throws WrongTypeException, ValidationException{
 
         String objectType = entity.getType();
-        if (!response.isResultSet()) {
-            CommonEntry inDB = service.getRecordByName(objectType, entity.getName());
-            if (inDB != null && !inDB.getId().equals(entity.getId())){
-                response.setError(Defenitions.FIELDS.NAME, "edit.error.nameExists");
-            }
+        CommonEntry inDB = service.getRecordByName(objectType, entity.getName());
+        if (inDB != null && !inDB.getId().equals(entity.getId())){
+            throw new ValidationException(Defenitions.FIELDS.NAME, "edit.error.nameExists");
         }
     }
 
-    static void saveEntityToDb(@NotNull CommonService service, @NotNull CommonEntry entity, @NotNull Response response) {
+    static void saveEntityToDb(@NotNull CommonService service, @NotNull CommonEntry entity) throws ValidationException {
 
-        if (!response.isResultSet()) {
-            if (service.saveRecord(entity)) {
-                response.setStatus(Response.SUCCESS);
-                response.setResult(entity);
-            } else {
-                response.setError(Defenitions.FIELDS.NAME, "edit.error.unknown");
-            }
+        if (!service.saveRecord(entity)) {
+            throw new ValidationException(Defenitions.FIELDS.NAME, "edit.error.unknown");
         }
     }
 
-    static void deleteEntry(@NotNull CommonService service, String objectType, String id, @NotNull Response response) {
+    static void deleteEntry(@NotNull CommonService service, String objectType, Long id) throws WrongTypeException, DbOperationException {
 
-        CommonEntry entry = loadEntryFromDb(service, objectType, id);
-
-        if (entry == null) {
-
-            response.setError("", "edit.error.noObject");
-
-        } else {
-
-            if (service.deleteRecord(entry)) {
-                response.setStatus(Response.SUCCESS);
-            } else {
-                response.setError("", "edit.error.objectIsUsed");
-            }
+        if (!service.deleteRecordById(objectType, id)) {
+            throw new DbOperationException("operation.delete", objectType, id);
         }
     }
 
-    static void validateEntry(@NotNull CommonEntry entity, @NotNull Response response) {
+    static void validateEntry(@NotNull CommonEntry entity) throws ValidationException {
 
-        if (!response.isResultSet()) {
+        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+        Validator validator = factory.getValidator();
+        Set result = validator.validate(entity);
 
-            ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-            Validator validator = factory.getValidator();
-            Set result = validator.validate(entity);
-
-            if (result.size() > 0) {
-                response.setStatus(Response.ERROR);
-                List<ErrorMessage> errorMesages = new ArrayList<ErrorMessage>();
-                for (Object val : result) {
-                    ConstraintViolation error = (ConstraintViolation) val;
-                    errorMesages.add(new ErrorMessage(error.getPropertyPath().toString(), new LocaleMessage(error.getMessage())));
-                }
-                response.setResult(errorMesages);
-            }
-        }
+        if (result.size() > 0) throw new ValidationException(result);
     }
 
-    static CommonEntry buildEntryFromParams(@NotNull CommonService service, @NotNull Map<String,String> params, @NotNull Response response) {
+    static CommonEntry buildEntryFromParams(@NotNull CommonEntry entry, @NotNull Map<String,String> params) {
 
-        CommonEntry result;
+        WebDataBinder binder = new WebDataBinder(entry);
+        binder.bind(new MutablePropertyValues(params));
 
-        if (params.get(Defenitions.FIELDS.ID) != null && parseId(params.get(Defenitions.FIELDS.ID)) != 0 ) {
-            result = loadEntryFromDb(service, params.get(Defenitions.FIELDS.TYPE), params.get(Defenitions.FIELDS.ID));
-        } else {
-            result = service.getNewEntry(params.get(Defenitions.FIELDS.TYPE));
-        }
-
-        if (result == null) {
-
-            response.setError("", "edit.error.noType");
-
-        } else {
-
-            WebDataBinder binder = new WebDataBinder(result);
-            binder.bind(new MutablePropertyValues(params));
-        }
-
-        return result;
-    }
-
-    static CommonEntry loadEntryFromDb(@NotNull CommonService service, String type, String id) {
-
-        if (type == null || parseId(id) == 0) return null;
-
-        return service.getRecordById(type, parseId(id));
+        return entry;
     }
 
     static Long parseId(String id) {

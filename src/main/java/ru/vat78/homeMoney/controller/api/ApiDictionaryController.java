@@ -1,25 +1,25 @@
 package ru.vat78.homeMoney.controller.api;
 
 import com.google.gson.Gson;
+import org.springframework.beans.DirectFieldAccessor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import ru.vat78.homeMoney.controller.ControlTerms;
 import ru.vat78.homeMoney.model.Defenitions;
-import ru.vat78.homeMoney.model.User;
 import ru.vat78.homeMoney.model.dictionaries.Dictionary;
 import ru.vat78.homeMoney.model.dictionaries.TreeDictionary;
+import ru.vat78.homeMoney.model.exceptions.DbOperationException;
+import ru.vat78.homeMoney.model.exceptions.ValidationException;
+import ru.vat78.homeMoney.model.exceptions.WrongTypeException;
 import ru.vat78.homeMoney.service.DictionaryService;
 import ru.vat78.homeMoney.service.SecurityService;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @Controller
 @Secured({"ROLE_USER","ROLE_ADMIN"})
@@ -35,32 +35,23 @@ public class ApiDictionaryController {
     @Autowired
     MyGsonBuilder gsonBuilder;
 
-    @RequestMapping(value = ControlTerms.API_ONE_ELEMENT, method = RequestMethod.POST, produces = ControlTerms.API_FORMAT)
-    @ResponseBody
-    public String getElement(@RequestParam Map<String,String> allRequestParams){
+    @RequestMapping(value = "/{objectType}/{objectId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<Dictionary> getElement(@PathVariable String objectType,
+                                                 @PathVariable Long objectId) throws WrongTypeException {
 
-        Dictionary result = dictionaryService.getRecordById(
-                allRequestParams.get(ControlTerms.OBJECT_TYPE),
-                ApiTools.parseId(allRequestParams.get(Defenitions.FIELDS.ID)));
+        Dictionary result = dictionaryService.getRecordById(objectType, objectId);
+        //ToDo: is it right to make emty object?
+        if (result == null) result = dictionaryService.getNewEntry(objectType);
 
-        if (result == null) result = dictionaryService.getNewEntry(allRequestParams.get(ControlTerms.OBJECT_TYPE));
-        if (result == null) return "";
-
-        Gson gson = gsonBuilder.getGsonBuilder()
-                .disableInnerClassSerialization()
-                .serializeNulls()
-                .registerTypeAdapter(User.class, GsonSerializerBuilder.getSerializer(User.class))
-                .setDateFormat(Defenitions.DATE_FORMAT)
-                .create();
-        return gson.toJson(result);
+        return new ResponseEntity<Dictionary>(result, HttpStatus.OK);
     }
 
-    @RequestMapping(value = ControlTerms.API_TABLE_DATA, method = RequestMethod.GET, produces = ControlTerms.API_FORMAT)
-    @ResponseBody
-    public String getTable(@RequestParam Map<String,String> allRequestParams){
+    @RequestMapping(value = "/{objectType}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<TableForJson> getTable(@PathVariable String objectType,
+                                                 @RequestParam Map<String,String> allRequestParams) throws WrongTypeException {
 
         List<Dictionary> result = dictionaryService.getRecords(
-                allRequestParams.get(ControlTerms.OBJECT_TYPE),
+                objectType,
                 Integer.valueOf(allRequestParams.get(ControlTerms.DATA_OFFSET)),
                 Integer.valueOf(allRequestParams.get(ControlTerms.DATA_LIMIT)),
                 allRequestParams.get(ControlTerms.SORT_COLUMN),allRequestParams.get(ControlTerms.SORT_ORDER),
@@ -68,148 +59,102 @@ public class ApiDictionaryController {
         if (result == null) result = Collections.emptyList();
 
         TableForJson table = new TableForJson();
-        table.setTotal(dictionaryService.getCount(allRequestParams.get("table")));
+        table.setTotal(dictionaryService.getCount(objectType));
         table.setRows(result);
 
-        Gson gson = gsonBuilder.getGsonBuilder()
-                .disableInnerClassSerialization()
-                .serializeNulls()
-                .registerTypeAdapter(User.class, GsonSerializerBuilder.getSerializer(User.class))
-                .setDateFormat(Defenitions.DATE_FORMAT)
-                .create();
-        return gson.toJson(table);
+        return new ResponseEntity<TableForJson>(table, HttpStatus.OK);
     }
 
-    @RequestMapping(value = ControlTerms.API_TREE_DATA, method = RequestMethod.GET, produces = ControlTerms.API_FORMAT)
-    @ResponseBody
-    public String getTree(@RequestParam Map<String,String> allRequestParams){
+    @RequestMapping(value = "/tree/{objectType}/{objectId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<Set<Dictionary>> getTree(@PathVariable String objectType,
+                                                   @PathVariable Long objectId) throws WrongTypeException {
 
-        Class entryType = dictionaryService.getDictionaryClass(allRequestParams.get(ControlTerms.OBJECT_TYPE));
-        if (entryType==null) return "";
-
-        Set<Dictionary> result = dictionaryService.getTreeRecords(
-                allRequestParams.get(ControlTerms.OBJECT_TYPE),
-                ApiTools.parseId(allRequestParams.get(Defenitions.FIELDS.ID))
-        );
+        Set<Dictionary> result = dictionaryService.getTreeRecords(objectType, objectId);
         if (result == null) result = Collections.emptySet();
 
-        Gson gson = gsonBuilder.getGsonBuilder()
-                .disableInnerClassSerialization()
-                .serializeNulls()
-                .registerTypeAdapter(entryType, GsonSerializerBuilder.getSerializer(TreeDictionary.class))
-                .setDateFormat(Defenitions.DATE_FORMAT)
-                .create();
-        Response answer = new Response();
-        answer.setStatus(Response.SUCCESS);
-        answer.setResult(result);
-
-        return gson.toJson(answer);
+        return new ResponseEntity<Set<Dictionary>>(result, HttpStatus.OK);
     }
 
-    @RequestMapping(value = ControlTerms.API_SELECT_DATA, method = RequestMethod.GET, produces = ControlTerms.API_FORMAT)
-    @ResponseBody
-    public String getValuesForSelect(@RequestParam Map<String,String> allRequestParams){
-
-        if (allRequestParams.get(ControlTerms.OBJECT_TYPE) == null)
-            return "";
+    @RequestMapping(value = "/values/{objectType}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<Set<String>> getValuesForSelect(@PathVariable String objectType,
+                                                          @RequestParam(required = false, name = ControlTerms.SEARCH_STRING) String searchString,
+                                                          @RequestParam(required = false, name = ControlTerms.DATA_LIMIT) Integer maxSelect) throws WrongTypeException {
 
         List<Dictionary> result = dictionaryService.getRecords(
-                allRequestParams.get(ControlTerms.OBJECT_TYPE),
+                objectType,
                 0,
-                0,
+                maxSelect,
                 Defenitions.FIELDS.NAME,"asc",
-                allRequestParams.get(ControlTerms.SEARCH_STRING));
+                searchString);
 
-        return getOnlyNames(result);
+        return new ResponseEntity<Set<String>>(getOnlyNames(result),HttpStatus.OK);
     }
 
-    @RequestMapping(value = ControlTerms.API_TYPEAHEAD_DATA, method = RequestMethod.GET, produces = ControlTerms.API_FORMAT)
-    @ResponseBody
-    public String getValuesForFields(@RequestParam Map<String,String> allRequestParams){
+    @RequestMapping(value = "/{objectType}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<Void> createEntry(@PathVariable String objectType,
+                                            @RequestParam Map<String,String> allRequestParams) throws WrongTypeException, ValidationException {
 
-        if (allRequestParams.get(ControlTerms.OBJECT_TYPE) == null
-                || allRequestParams.get(ControlTerms.SEARCH_STRING) == null
-                || allRequestParams.get(ControlTerms.SEARCH_STRING).length() == 1)
-            return "";
+        Dictionary entity = loadEntryFromParams(dictionaryService.getNewEntry(objectType), allRequestParams);
+        validateAndSaveEntity(entity);
 
-        List<Dictionary> result = dictionaryService.getRecords(
-                allRequestParams.get(ControlTerms.OBJECT_TYPE),
-                0,
-                ControlTerms.MAX_SELECT_DATA,
-                Defenitions.FIELDS.NAME,"asc",
-                allRequestParams.get(ControlTerms.SEARCH_STRING));
-
-        return getOnlyNames(result);
+        return new ResponseEntity<Void>(HttpStatus.CREATED);
     }
 
-    @RequestMapping(value = ControlTerms.SAVE, method = RequestMethod.POST, produces = ControlTerms.API_FORMAT)
-    @ResponseBody
-    public String saveEntry(@RequestParam Map<String,String> allRequestParams){
+    @RequestMapping(value = "/{objectType}/{objectId}", method = {RequestMethod.POST, RequestMethod.PUT}, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<Void> saveEntry(@PathVariable String objectType,
+                                          @PathVariable Long objectId,
+                                          @RequestParam Map<String,String> allRequestParams) throws WrongTypeException, ValidationException {
 
-        Response res = new Response();
+        Dictionary entity = loadEntryFromParams(dictionaryService.getRecordById(objectType, objectId), allRequestParams);
+        validateAndSaveEntity(entity);
 
-        Dictionary entity = loadEntryFromParams(allRequestParams, res);
+        return new ResponseEntity<Void>(HttpStatus.OK);
 
-        ApiTools.validateEntry(entity, res);
-        ApiTools.checkUniqueName(dictionaryService, entity, res);
-        ApiTools.saveEntityToDb(dictionaryService, entity, res);
-
-        Gson gson = gsonBuilder.getGsonBuilder().create();
-        return gson.toJson(res);
     }
 
-    @RequestMapping(value = ControlTerms.DELETE, method = RequestMethod.POST, produces = ControlTerms.API_FORMAT)
-    @ResponseBody
-    public String deleteEntry(@RequestParam Map<String,String> allRequestParams){
+    @RequestMapping(value = "/{objectType}/{objectId}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<Void> deleteEntry(@PathVariable String objectType, @PathVariable Long objectId) throws WrongTypeException, DbOperationException {
 
-        Response result = new Response();
-        ApiTools.deleteEntry(dictionaryService, allRequestParams.get(Defenitions.FIELDS.TYPE), allRequestParams.get(Defenitions.FIELDS.ID), result);
+        ApiTools.deleteEntry(dictionaryService, objectType, objectId);
+        return new ResponseEntity<Void>(HttpStatus.OK);
 
-        return gsonBuilder.getGsonBuilder().create().toJson(result);
     }
 
+    @RequestMapping(value = "/tree/{objectType}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<Void> saveTreeEntry(@PathVariable String objectType,
+                                              @RequestParam Map<String,String> allRequestParams) throws WrongTypeException, ValidationException {
 
-    @RequestMapping(value = ControlTerms.SAVE_TREE_NODE, method = RequestMethod.POST, produces = ControlTerms.API_FORMAT)
-    @ResponseBody
-    public String saveTreeEntry(@RequestParam Map<String,String> allRequestParams){
+        TreeDictionary entry = loadTreeEntryFromParams(dictionaryService.getNewEntry(objectType), allRequestParams);
+        validateAndSaveEntity(entry);
 
-        Response result = new Response();
+        return new ResponseEntity<Void>(HttpStatus.OK);
 
-        TreeDictionary entry = loadTreeEntryFromParams(allRequestParams, result);
-
-        ApiTools.validateEntry(entry, result);
-        ApiTools.checkUniqueName(dictionaryService, entry, result);
-        ApiTools.saveEntityToDb(dictionaryService, entry, result);
-
-        Gson gson = gsonBuilder.getGsonBuilder()
-                .disableInnerClassSerialization()
-                .serializeNulls()
-                .registerTypeAdapter(entry.getClass(), GsonSerializerBuilder.getSerializer(TreeDictionary.class))
-                .setDateFormat(Defenitions.DATE_FORMAT)
-                .create();
-
-        return gson.toJson(result);
     }
 
-    private Dictionary loadEntryFromParams(Map<String,String> params, Response response){
+    @RequestMapping(value = "/tree/{objectType}/{objectId}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<Void> saveTreeEntry(@PathVariable String objectType,
+                                          @PathVariable Long objectId,
+                                          @RequestParam Map<String,String> allRequestParams) throws WrongTypeException, ValidationException {
 
-        Dictionary result = (Dictionary) ApiTools.buildEntryFromParams(dictionaryService, params, response);
+        TreeDictionary entry = loadTreeEntryFromParams(dictionaryService.getRecordById(objectType, objectId), allRequestParams);
+        validateAndSaveEntity(entry);
 
-        if (result != null) {
-            result.setModifyBy(securityService.getCurrentUser());
-        }
+        return new ResponseEntity<Void>(HttpStatus.OK);
 
-        return result;
     }
 
-    private TreeDictionary loadTreeEntryFromParams(Map<String,String> params, Response response){
+    private Dictionary loadEntryFromParams(Dictionary entry, Map<String,String> params){
 
-        TreeDictionary result = (TreeDictionary) ApiTools.buildEntryFromParams(dictionaryService, params, response);
+        return  (Dictionary) ApiTools.buildEntryFromParams(entry, params);
+    }
+
+    private TreeDictionary loadTreeEntryFromParams(Dictionary entry, Map<String,String> params) throws WrongTypeException{
+
+        TreeDictionary result = (TreeDictionary) ApiTools.buildEntryFromParams(entry, params);
 
         if (result != null){
 
             Long parentId = ApiTools.parseId(params.get(Defenitions.FIELDS.PARENT_ID));
-
             if (parentId == 0) {
 
                 result.setParent(null);
@@ -224,20 +169,27 @@ public class ApiDictionaryController {
         return result;
     }
 
-    private String getOnlyNames(List<Dictionary> list){
+    private Set<String> getOnlyNames(List<Dictionary> list){
 
-        if (list == null) return "";
-        String arr[] = new String[list.size()];
-        int i = 0;
+        if (list == null) return Collections.EMPTY_SET;
+
+        Set<String> result = new HashSet<String>(list.size());
+
         for (Dictionary element :  list) {
-            arr[i] = element.getFullName();
-            i++;
+            result.add(element.getFullName());
         }
 
-        Gson gson = gsonBuilder.getGsonBuilder()
-                .disableInnerClassSerialization()
-                .serializeNulls()
-                .create();
-        return gson.toJson(arr);
+        return result;
+    }
+
+    private void validateAndSaveEntity(Dictionary entity) throws WrongTypeException, ValidationException {
+
+        if (entity != null) {
+            entity.setModifyBy(securityService.getCurrentUser());
+        }
+
+        ApiTools.validateEntry(entity);
+        ApiTools.checkUniqueName(dictionaryService, entity);
+        ApiTools.saveEntityToDb(dictionaryService, entity);
     }
 }

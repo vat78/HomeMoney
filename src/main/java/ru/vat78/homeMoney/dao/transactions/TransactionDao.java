@@ -14,7 +14,6 @@ import java.util.Collections;
 import java.util.List;
 
 @Repository("transactionsDao")
-@Transactional
 public class TransactionDao extends CommonEntryDao {
 
 
@@ -27,6 +26,7 @@ public class TransactionDao extends CommonEntryDao {
         return (Transaction) getNewEntity(Defenitions.GROUPS.DICTIONARIES, type);
     }
 
+    @Transactional(readOnly = true)
     public List<Transaction> getAllForAccount(Account account) {
 
         if (account == null) return Collections.emptyList();
@@ -36,6 +36,7 @@ public class TransactionDao extends CommonEntryDao {
         return criteria.list();
     }
 
+    @Transactional(readOnly = true)
     public List<Transaction> getPartForAccount(Account account, int offset, int size, String sortColumn, String sortOrder, String searchString) {
 
         if (account == null) return Collections.emptyList();
